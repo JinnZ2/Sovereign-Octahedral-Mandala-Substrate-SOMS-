@@ -1,0 +1,67 @@
+{
+  "fieldlink": {
+    "version": "1.0",
+    "updated": "2026-03-24T00:00:00Z",
+    "role": ["substrate", "physics-engine", "mandala-compute"],
+
+    "sources": [
+      {
+        "name": "rosetta-shape-core",
+        "repo": "https://github.com/JinnZ2/Rosetta-Shape-Core",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "shapes/octahedron.json",
+          "bridges/rosetta-bridges.json",
+          "protocols/mandala-compute-protocol.md",
+          "protocols/seed-growth-protocol.md",
+          "atlas/remote/mandala/shapes.json",
+          "data/sacred_geometry.json",
+          "data/math_constants.json",
+          "ontology/_vocab.json",
+          "schema/shape.schema.json"
+        ],
+        "mounts": [
+          { "remote": "shapes/octahedron.json", "as": "atlas/remote/rosetta/octahedron.json" },
+          { "remote": "bridges/rosetta-bridges.json", "as": "atlas/remote/rosetta/bridges.json" },
+          { "remote": "atlas/remote/mandala/shapes.json", "as": "atlas/remote/rosetta/mandala_shapes.json" },
+          { "remote": "data/sacred_geometry.json", "as": "atlas/remote/rosetta/sacred_geometry.json" },
+          { "remote": "data/math_constants.json", "as": "atlas/remote/rosetta/math_constants.json" }
+        ],
+        "consent": { "license": "MIT", "share_ok": true }
+      },
+      {
+        "name": "mandala-computing",
+        "repo": "https://github.com/JinnZ2/Mandala-Computing",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "atlas/shapes.json",
+          "protocols/connect.json",
+          "sensors/multi_layer.json"
+        ],
+        "mounts": [
+          { "remote": "atlas/shapes.json", "as": "atlas/remote/mandala/shapes.json", "status": "planned" },
+          { "remote": "protocols/connect.json", "as": "atlas/remote/mandala/connect.json", "status": "planned" }
+        ],
+        "consent": { "license": "MIT", "share_ok": true }
+      }
+    ],
+
+    "local_manifests": [
+      "src/**/*.py",
+      "data/**/*",
+      "atlas/**/*.json"
+    ],
+
+    "merge": {
+      "order": ["local", "rosetta-shape-core", "mandala-computing"],
+      "strategy": "deep-merge"
+    },
+
+    "offline": false,
+    "cache_dir": ".fieldlink",
+    "integrity": { "enabled": true, "hash": "sha256", "allow_missing": true },
+    "consent": { "license": "CC0-1.0", "share_ok": true }
+  }
+}

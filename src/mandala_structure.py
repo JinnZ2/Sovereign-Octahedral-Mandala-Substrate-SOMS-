@@ -1,11 +1,14 @@
 import numpy as np
 
-class Mandala_Map:
+
+class MandalaMap:
+    """Generate Fibonacci-scaled 8-petal mandala geometry in 2D."""
+
     def __init__(self, u=20, depth=7):
-        self.u = u # Unit scale 20nm
+        self.u = u  # Unit scale (nm)
         self.phi = (1 + 5**0.5) / 2
-        self.pos = [[0, 0]] # Root
-        
+        self.pos = [[0, 0]]  # Root cell at origin
+
         for d in range(1, depth + 1):
             r = self.u * (self.phi**d)
             for p in range(8):
