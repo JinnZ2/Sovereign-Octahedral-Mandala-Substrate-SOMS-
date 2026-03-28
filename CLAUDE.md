@@ -19,10 +19,11 @@ This repo is a **fieldlink peer** of [Rosetta-Shape-Core](https://github.com/Jin
 
 ```
 src/
-  __init__.py              — Package init, exports SOMSEngine, MandalaMap, PhiCalculator
+  __init__.py              — Package init, exports all public classes
   octahedral_physics.py    — FRET coupling + energy landscape (SOMSEngine)
   mandala_structure.py     — Fibonacci-scaled 8-petal geometry (MandalaMap)
   phi_calculator.py        — Integrated Information metric Φ (PhiCalculator)
+  constraint_agent.py      — Seed-based geometric agent lifecycle (ConstraintAgent)
 data/
   GDSII_Coordinates.txt    — 100-cell nanometer layout for fabrication
 docs/
@@ -76,7 +77,7 @@ This repo connects to Rosetta-Shape-Core via `.fieldlink.json`:
 
 ## Key Conventions
 
-- **Class names:** PascalCase — `SOMSEngine`, `MandalaMap`, `PhiCalculator`
+- **Class names:** PascalCase — `SOMSEngine`, `MandalaMap`, `PhiCalculator`, `ConstraintAgent`
 - **Module names:** snake_case — `octahedral_physics.py`, `mandala_structure.py`
 - **Rosetta entity IDs:** dot-namespaced — `SHAPE.OCTA`, `CONST.PHI`, `PROTO.MANDALA_COMPUTE`
 - **Fieldlink mounts:** under `atlas/remote/<source-name>/`
@@ -91,6 +92,11 @@ GDSII layout                          energy landscape
                                     relaxation → ground state
                                               ↓
                                     PhiCalculator → sovereignty check (Φ > 3.0)
+
+ConstraintAgent lifecycle (seed-growth protocol):
+  COMPRESSED → bloom(depth) → EXPANDING → explore() → EXPLORING
+       ↑                                                    ↓
+       └──────────── compress() ← CONTRACTING ←────────────┘
 ```
 
 ## Do Not
