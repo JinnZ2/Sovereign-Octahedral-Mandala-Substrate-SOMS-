@@ -33,7 +33,19 @@ docs/
   Low-cost-fun.md          — DIY macro-scale experiment instructions
 atlas/
   remote/rosetta/          — Mounted data from Rosetta-Shape-Core (via fieldlink)
+    octahedron.json        — SHAPE.OCTA definition (8 faces, 12 edges, 6 vertices)
+    bridges.json           — Cross-repo bridge map (shapes ↔ sensors ↔ defenses)
+    seed_catalog.json      — Canonical seed definitions (5 Platonic solids)
+    sacred_geometry.json   — Sacred geometry constants and forms
+    math_constants.json    — PHI, PI, E, harmonic ratios
+    interaction_ontology.json — DRILL/FUSE/AMPLIFY operations
+    id_registry.json       — Namespace → authoritative source mapping
+    expand.jsonl           — Transformation rules (EXPAND, STRUCTURE, ALIGN)
   remote/mandala/          — Mounted data from Mandala-Computing (via fieldlink)
+    shapes.json            — Geometric primitives, energy model, fractal ring schema
+    glyphs.json            — State-to-glyph mappings (⊕⊖⊗⊘⊙⊚⊛⊜)
+    connect.json           — Fieldlink handshake protocol v1.0
+    sensors.json           — Multi-layer sensor definitions (energy, convergence, quantum)
 ```
 
 ## Common Commands
