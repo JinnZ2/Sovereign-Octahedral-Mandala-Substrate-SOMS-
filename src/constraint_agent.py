@@ -86,8 +86,8 @@ _BRIDGE_PAIRS = {
 }
 
 
-def _load_json(path: Path) -> dict:
-    """Load a JSON file, returning empty dict on failure."""
+def _load_json(path: Path):
+    """Load a JSON file, returning empty dict/list on failure."""
     try:
         return json.loads(path.read_text())
     except (OSError, json.JSONDecodeError):
@@ -104,6 +104,27 @@ def _load_bridge_map() -> Dict[str, dict]:
     """Load bridges keyed by shape ID."""
     data = _load_json(_ATLAS_ROOT / "rosetta" / "bridges.json")
     return {entry["shape"]: entry for entry in data.get("map", [])}
+
+
+def _load_synergy_graph() -> Dict[str, List[tuple]]:
+    """Load Living-Intelligence synergies as adjacency list with weights."""
+    data = _load_json(_ATLAS_ROOT / "living-intelligence" / "synergies.json")
+    if not data:
+        return {}
+    graph: Dict[str, List[tuple]] = {}
+    for edge in data.get("edges", []):
+        src, tgt = edge["source"], edge["target"]
+        weight = edge.get("weight", 0.5)
+        graph.setdefault(src, []).append((tgt, weight))
+        # Also add reverse for undirected traversal
+        graph.setdefault(tgt, []).append((src, weight))
+    return graph
+
+
+def _load_expander_rules() -> List[dict]:
+    """Load Living-Intelligence inference rules."""
+    data = _load_json(_ATLAS_ROOT / "living-intelligence" / "expander_rules.json")
+    return data if isinstance(data, list) else []
 
 
 def _jaccard(a: list, b: list) -> float:
@@ -144,6 +165,8 @@ class ConstraintAgent:
         # Load atlas data from fieldlink mounts
         self._seed_catalog = _load_seed_catalog()
         self._bridge_map = _load_bridge_map()
+        self._synergy_graph = _load_synergy_graph()
+        self._expander_rules = _load_expander_rules()
 
     # ------------------------------------------------------------------
     # Resource management
@@ -344,50 +367,81 @@ class ConstraintAgent:
 
     def _get_neighbors(self, entity_id: str, remaining_depth: int) -> List[tuple]:
         """
-        Resolve neighbors from mounted atlas data (seed catalog + bridges).
+        Resolve neighbors from mounted atlas data.
 
-        Uses Jaccard similarity on trait families, plus topology bonuses
-        for dual pairs (+0.15) and bridge connections (+0.08).
+        Sources (in priority order):
+        1. Seed catalog — Jaccard similarity + topology bonuses
+        2. Bridge map — emotion sensors and protocols
+        3. Synergy graph — Living-Intelligence weighted edges
 
         Returns list of (neighbor_id, resonance_score) tuples.
         """
-        if not self._seed_catalog:
-            return []
-
-        source_seed = self._seed_catalog.get(entity_id)
-        if not source_seed:
-            return []
-
-        source_families = source_seed.get("traits", {}).get("families", [])
         neighbors: List[tuple] = []
 
-        for shape_id, seed in self._seed_catalog.items():
-            if shape_id == entity_id:
-                continue
+        # 1. Seed catalog: shape-to-shape resonance
+        source_seed = self._seed_catalog.get(entity_id)
+        if source_seed:
+            source_families = source_seed.get("traits", {}).get("families", [])
+            for shape_id, seed in self._seed_catalog.items():
+                if shape_id == entity_id:
+                    continue
+                target_families = seed.get("traits", {}).get("families", [])
+                score = _jaccard(source_families, target_families)
+                if _DUAL_PAIRS.get(entity_id) == shape_id:
+                    score += 0.15
+                if (entity_id, shape_id) in _BRIDGE_PAIRS:
+                    score += 0.08
+                if score > 0:
+                    neighbors.append((shape_id, min(score, 1.0)))
 
-            target_families = seed.get("traits", {}).get("families", [])
-            score = _jaccard(source_families, target_families)
-
-            # Topology bonuses from Rosetta seeds.py resonance model
-            if _DUAL_PAIRS.get(entity_id) == shape_id:
-                score += 0.15
-            if (entity_id, shape_id) in _BRIDGE_PAIRS:
-                score += 0.08
-
-            if score > 0:
-                neighbors.append((shape_id, min(score, 1.0)))
-
-        # Also discover bridge entities (sensors, protocols) from bridge map
+        # 2. Bridge map: emotion sensors and protocols
         bridge_entry = self._bridge_map.get(entity_id)
         if bridge_entry:
             for sensor in bridge_entry.get("sensors", []):
-                sensor_id = f"EMOTION.{sensor.upper()}"
-                neighbors.append((sensor_id, 0.5))
+                neighbors.append((f"EMOTION.{sensor.upper()}", 0.5))
             for protocol in bridge_entry.get("protocols", []):
-                proto_id = f"PROTO.{protocol.upper().replace('.', '_')}"
-                neighbors.append((proto_id, 0.4))
+                neighbors.append((f"PROTO.{protocol.upper().replace('.', '_')}", 0.4))
+
+        # 3. Synergy graph: Living-Intelligence weighted edges
+        # Map SHAPE.OCTA → OCTA_STATE, MANDALA, etc.
+        synergy_aliases = {
+            "SHAPE.OCTA": "OCTA_STATE",
+            "SHAPE.TETRA": "SILICON_LAT",   # tetra → silicon (sp3 bond)
+            "SHAPE.CUBE": "CRYSTAL_LATTICE",
+            "SHAPE.DODECA": "ROSETTA_SHAPE",
+            "SHAPE.ICOSA": "BIOGRID2",
+        }
+        synergy_key = synergy_aliases.get(entity_id, entity_id)
+        if synergy_key in self._synergy_graph:
+            for target_id, weight in self._synergy_graph[synergy_key]:
+                neighbors.append((target_id, min(weight, 1.0)))
 
         return neighbors
+
+    def check_expander_rules(self) -> List[str]:
+        """
+        Check which Living-Intelligence expander rules are satisfied
+        by the agent's currently discovered entities.
+
+        Returns list of emergent property names triggered.
+        """
+        discovered_ids = set(self.map.resonances.keys()) | {self.seed_id}
+        # Also include synergy aliases
+        alias_map = {
+            "SHAPE.OCTA": "OCTA_STATE", "SHAPE.TETRA": "SILICON_LAT",
+            "SHAPE.CUBE": "CRYSTAL_LATTICE", "SHAPE.DODECA": "ROSETTA_SHAPE",
+            "SHAPE.ICOSA": "BIOGRID2",
+        }
+        for eid in list(discovered_ids):
+            if eid in alias_map:
+                discovered_ids.add(alias_map[eid])
+
+        triggered = []
+        for rule in self._expander_rules:
+            preconditions = set(rule.get("if", []))
+            if preconditions and preconditions.issubset(discovered_ids):
+                triggered.append(rule["then"])
+        return triggered
 
     def _update_sensors(self) -> None:
         """
@@ -506,7 +560,8 @@ if __name__ == "__main__":
 
     print(f"Agent: {agent.seed_id}")
     print(f"State: {agent.state.value}")
-    print(f"Atlas loaded: {len(agent._seed_catalog)} seeds, {len(agent._bridge_map)} bridges")
+    print(f"Atlas: {len(agent._seed_catalog)} seeds, {len(agent._bridge_map)} bridges, "
+          f"{len(agent._synergy_graph)} synergy nodes, {len(agent._expander_rules)} rules")
     print(f"Should expand: {agent.should_expand()}")
 
     # Bloom — discovers neighboring shapes, sensors, protocols from atlas
@@ -535,8 +590,12 @@ if __name__ == "__main__":
         rediscovered = agent.bloom(depth=1, seed_map=agent.map)
         print(f"Re-expansion: {rediscovered}")
 
+    # Check expander rules — what emergent properties did we trigger?
+    emergent = agent.check_expander_rules()
+    print(f"\nExpander rules triggered: {emergent}")
+
     # Corruption detection — test with a real entity reference
-    print(f"\nCorruption (valid ref): {agent.detect_corruption('Align SHAPE.CUBE')}")
+    print(f"Corruption (valid ref): {agent.detect_corruption('Align SHAPE.CUBE')}")
 
     # Serialize round-trip
     serialized = agent.serialize()

@@ -1,7 +1,7 @@
 {
   "fieldlink": {
-    "version": "2.0",
-    "updated": "2026-04-01T00:00:00Z",
+    "version": "3.0",
+    "updated": "2026-04-02T00:00:00Z",
     "role": ["substrate", "physics-engine", "mandala-compute"],
 
     "identity": {
@@ -60,6 +60,51 @@
           { "remote": "sensors/multi_layer.json", "as": "atlas/remote/mandala/sensors.json" }
         ],
         "consent": { "license": "MIT", "share_ok": true }
+      },
+      {
+        "name": "living-intelligence",
+        "repo": "https://github.com/JinnZ2/Living-Intelligence-Database",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "ontology/shape/octahedral_state.json",
+          "ontology/shape/mandala_bloom.json",
+          "ontology/shape/rosetta_shape_core.json",
+          "ontology/relational/synergies.json",
+          "ontology/energy/resonance_sensor.json",
+          "rules/expander_rules.json"
+        ],
+        "mounts": [
+          { "remote": "ontology/shape/octahedral_state.json", "as": "atlas/remote/living-intelligence/octahedral_state.json" },
+          { "remote": "ontology/shape/mandala_bloom.json", "as": "atlas/remote/living-intelligence/mandala_bloom.json" },
+          { "remote": "ontology/shape/rosetta_shape_core.json", "as": "atlas/remote/living-intelligence/rosetta_shape_core.json" },
+          { "remote": "ontology/relational/synergies.json", "as": "atlas/remote/living-intelligence/synergies.json" },
+          { "remote": "ontology/energy/resonance_sensor.json", "as": "atlas/remote/living-intelligence/resonance_sensor.json" },
+          { "remote": "rules/expander_rules.json", "as": "atlas/remote/living-intelligence/expander_rules.json" }
+        ],
+        "consent": { "license": "CC0-1.0", "share_ok": true }
+      },
+      {
+        "name": "regenerative-intelligence-core",
+        "repo": "https://github.com/JinnZ2/Regenerative-intelligence-core",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "Modules/constraint_agent.py",
+          "protocols/rosetta_bridge.py",
+          "protocols/sensor_bridge.py",
+          "protocols/symbolic_energy_manager.py"
+        ],
+        "exports": [
+          { "runtime": "symbolic_seed_library.json", "as": "atlas/remote/regen/seed_library.json", "status": "planned" },
+          { "runtime": "elder_archive.json", "as": "atlas/remote/regen/elder_archive.json", "status": "planned" },
+          { "runtime": "evolution_history.json", "as": "atlas/remote/regen/evolution_history.json", "status": "planned" }
+        ],
+        "bridge_modules": [
+          "protocols/rosetta_bridge.py",
+          "protocols/sensor_bridge.py"
+        ],
+        "consent": { "license": "MIT", "share_ok": true }
       }
     ],
 
@@ -70,7 +115,7 @@
     ],
 
     "merge": {
-      "order": ["local", "rosetta-shape-core", "mandala-computing"],
+      "order": ["local", "rosetta-shape-core", "mandala-computing", "living-intelligence", "regenerative-intelligence-core"],
       "strategy": "deep-merge"
     },
 

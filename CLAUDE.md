@@ -46,6 +46,14 @@ atlas/
     glyphs.json            — State-to-glyph mappings (⊕⊖⊗⊘⊙⊚⊛⊜)
     connect.json           — Fieldlink handshake protocol v1.0
     sensors.json           — Multi-layer sensor definitions (energy, convergence, quantum)
+  remote/living-intelligence/ — Mounted data from Living-Intelligence-Database (via fieldlink)
+    octahedral_state.json  — OCTA_STATE entity (8-vertex 3-bit encoding)
+    mandala_bloom.json     — MANDALA bloom architecture (φ-radial expansion)
+    rosetta_shape_core.json — Cross-domain geometric decoder entity
+    synergies.json         — 80+ entity synergy graph (weighted edges)
+    expander_rules.json    — 43 inference rules (BLOOM_RESONANCE, GEOMETRIC_COMPUTATION, etc.)
+    resonance_sensor.json  — 22-channel parallel-field compositor
+  remote/regen/            — Mounted data from Regenerative-Intelligence-Core (via fieldlink)
 ```
 
 ## Common Commands

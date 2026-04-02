@@ -1,0 +1,29 @@
+{
+  "id": "MANDALA",
+  "name": "Mandala Bloom",
+  "emoji": "🪷",
+  "ontology": "shape",
+  "symbolic_code": "[MANDALA_BLOOM_φ_RADIAL]",
+  "description": "Radial expansion architecture mapping octahedral symmetry to 8 petals with topological attention. Each petal corresponds to an O_h vertex state, with Golden Ratio spacing between bloom layers. Topological protection through winding number invariants preserves charge under deformation. Vortex memory anchors position at write-time.",
+  "core_attributes": {
+    "pattern": "radial expansion, 8-petal octahedral mapping, topological attention, vortex memory",
+    "geometry_type": "radial symmetric manifold",
+    "geometry_class": "radial-topological",
+    "dimension": 3,
+    "harmonic_ratios": [1.618, 6.283, 1.732],
+    "applications": ["topological memory systems", "bloom-layer computation", "fractal coupling", "reflection field architecture"]
+  },
+  "links": [
+    { "relation": "synergy", "target": "OCTA_STATE" },
+    { "relation": "synergy", "target": "NEGENTROPY" },
+    { "relation": "resonance", "target": "SPIRAL" },
+    { "relation": "resonance", "target": "FRACTAL" },
+    { "relation": "geometry_link", "target": "TORUS" },
+    { "relation": "connected_to", "target": "ROSETTA_SHAPE" }
+  ],
+  "co_creation": true,
+  "validation_meta": {
+    "schema": "shape_intelligence.schema.json",
+    "version": "1.1"
+  }
+}
