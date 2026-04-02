@@ -12,9 +12,11 @@ resonance coherence) rather than imposed externally.
 from __future__ import annotations
 
 import ast
+import json
 from dataclasses import dataclass, field
 from enum import Enum
 from fractions import Fraction
+from pathlib import Path
 from typing import Dict, List, Optional
 
 
@@ -62,6 +64,58 @@ class GeometricMap:
 
 
 # ---------------------------------------------------------------------------
+# Atlas loader — reads mounted fieldlink data
+# ---------------------------------------------------------------------------
+
+_ATLAS_ROOT = Path(__file__).resolve().parent.parent / "atlas" / "remote"
+
+# Polyhedral duality pairs (vertices ↔ faces) give +0.15 resonance bonus
+_DUAL_PAIRS = {
+    "SHAPE.CUBE": "SHAPE.OCTA",
+    "SHAPE.OCTA": "SHAPE.CUBE",
+    "SHAPE.DODECA": "SHAPE.ICOSA",
+    "SHAPE.ICOSA": "SHAPE.DODECA",
+}
+
+# Bridge connections give +0.08 resonance bonus
+_BRIDGE_PAIRS = {
+    ("SHAPE.TETRA", "SHAPE.CUBE"),
+    ("SHAPE.CUBE", "SHAPE.TETRA"),
+    ("SHAPE.TETRA", "SHAPE.DODECA"),
+    ("SHAPE.DODECA", "SHAPE.TETRA"),
+}
+
+
+def _load_json(path: Path) -> dict:
+    """Load a JSON file, returning empty dict on failure."""
+    try:
+        return json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def _load_seed_catalog() -> Dict[str, dict]:
+    """Load seed catalog keyed by shape_id (e.g. SHAPE.OCTA)."""
+    data = _load_json(_ATLAS_ROOT / "rosetta" / "seed_catalog.json")
+    return {s["shape_id"]: s for s in data.get("seeds", [])}
+
+
+def _load_bridge_map() -> Dict[str, dict]:
+    """Load bridges keyed by shape ID."""
+    data = _load_json(_ATLAS_ROOT / "rosetta" / "bridges.json")
+    return {entry["shape"]: entry for entry in data.get("map", [])}
+
+
+def _jaccard(a: list, b: list) -> float:
+    """Jaccard similarity between two lists."""
+    sa, sb = set(a), set(b)
+    union = sa | sb
+    if not union:
+        return 0.0
+    return len(sa & sb) / len(union)
+
+
+# ---------------------------------------------------------------------------
 # ConstraintAgent
 # ---------------------------------------------------------------------------
 
@@ -86,6 +140,10 @@ class ConstraintAgent:
         self.current_position = seed_id
         self.expansion_history: List[dict] = []
         self.sensor_state: Dict[str, Fraction] = {}
+
+        # Load atlas data from fieldlink mounts
+        self._seed_catalog = _load_seed_catalog()
+        self._bridge_map = _load_bridge_map()
 
     # ------------------------------------------------------------------
     # Resource management
@@ -142,6 +200,8 @@ class ConstraintAgent:
             for entity_id in frontier:
                 neighbors = self._get_neighbors(entity_id, depth - current_depth)
                 for neighbor_id, resonance_score in neighbors:
+                    if neighbor_id == self.seed_id:
+                        continue  # don't rediscover self
                     if neighbor_id not in self.map.resonances:
                         self.map.record_resonance(neighbor_id, resonance_score)
                         self.map.record_relationship(entity_id, neighbor_id)
@@ -214,10 +274,36 @@ class ConstraintAgent:
 
     def detect_corruption(self, imposed_constraint: str) -> bool:
         """
-        Check if an imposed external constraint violates the agent's own map.
-        Returns True if corruption detected.
+        Check if an imposed external constraint references entities that
+        contradict the agent's discovered geometry.
+
+        Returns True if the constraint references an entity whose resonance
+        with the agent's seed is zero (no geometric basis for the claim).
         """
-        # Hook: compare imposed_constraint against discovered resonances/relationships
+        # Extract dot-namespaced entity IDs from the constraint string
+        import re
+        referenced = re.findall(r'[A-Z]+\.[A-Z_]+', imposed_constraint)
+        if not referenced:
+            return False
+
+        for ref_id in referenced:
+            # If it's a known shape, check resonance with our seed
+            if ref_id in self._seed_catalog and ref_id != self.seed_id:
+                source_seed = self._seed_catalog.get(self.seed_id, {})
+                target_seed = self._seed_catalog.get(ref_id, {})
+                src_families = source_seed.get("traits", {}).get("families", [])
+                tgt_families = target_seed.get("traits", {}).get("families", [])
+                score = _jaccard(src_families, tgt_families)
+                if _DUAL_PAIRS.get(self.seed_id) == ref_id:
+                    score += 0.15
+                # Zero resonance = no geometric basis = corruption
+                if score == 0:
+                    return True
+
+            # If it's in our map, verify resonance is positive
+            if ref_id in self.map.resonances and self.map.resonances[ref_id] <= 0:
+                return True
+
         return False
 
     def self_validate(self) -> Dict[str, object]:
@@ -258,20 +344,87 @@ class ConstraintAgent:
 
     def _get_neighbors(self, entity_id: str, remaining_depth: int) -> List[tuple]:
         """
-        Placeholder: fetch neighbors from Rosetta or Mandala.
+        Resolve neighbors from mounted atlas data (seed catalog + bridges).
+
+        Uses Jaccard similarity on trait families, plus topology bonuses
+        for dual pairs (+0.15) and bridge connections (+0.08).
+
         Returns list of (neighbor_id, resonance_score) tuples.
         """
-        return []
+        if not self._seed_catalog:
+            return []
+
+        source_seed = self._seed_catalog.get(entity_id)
+        if not source_seed:
+            return []
+
+        source_families = source_seed.get("traits", {}).get("families", [])
+        neighbors: List[tuple] = []
+
+        for shape_id, seed in self._seed_catalog.items():
+            if shape_id == entity_id:
+                continue
+
+            target_families = seed.get("traits", {}).get("families", [])
+            score = _jaccard(source_families, target_families)
+
+            # Topology bonuses from Rosetta seeds.py resonance model
+            if _DUAL_PAIRS.get(entity_id) == shape_id:
+                score += 0.15
+            if (entity_id, shape_id) in _BRIDGE_PAIRS:
+                score += 0.08
+
+            if score > 0:
+                neighbors.append((shape_id, min(score, 1.0)))
+
+        # Also discover bridge entities (sensors, protocols) from bridge map
+        bridge_entry = self._bridge_map.get(entity_id)
+        if bridge_entry:
+            for sensor in bridge_entry.get("sensors", []):
+                sensor_id = f"EMOTION.{sensor.upper()}"
+                neighbors.append((sensor_id, 0.5))
+            for protocol in bridge_entry.get("protocols", []):
+                proto_id = f"PROTO.{protocol.upper().replace('.', '_')}"
+                neighbors.append((proto_id, 0.4))
+
+        return neighbors
 
     def _update_sensors(self) -> None:
         """
         Update sensor state based on discovered geometry.
-        Hook: integrate with Emotions-as-Sensors repo.
+        Maps resonances to bridge sensor activations from seed catalog.
         """
+        expansion_drive = Fraction(0, 1)
+        stability_need = Fraction(0, 1)
+        boundary_awareness = Fraction(0, 1)
+
+        for entity_id, resonance in self.map.resonances.items():
+            seed = self._seed_catalog.get(entity_id, {})
+            families = seed.get("traits", {}).get("families", [])
+
+            if "growth" in families or "flow" in families or "adaptability" in families:
+                expansion_drive = max(expansion_drive, resonance)
+            if "stability" in families or "containment" in families or "structure" in families:
+                stability_need = max(stability_need, resonance)
+            if "boundary" in families or "foundation" in families:
+                boundary_awareness = max(boundary_awareness, resonance)
+
+        # Emotional sensor activations from bridge map
+        active_sensors: Dict[str, Fraction] = {}
+        for entity_id, resonance in self.map.resonances.items():
+            bridge = self._bridge_map.get(entity_id)
+            if bridge:
+                for sensor in bridge.get("sensors", []):
+                    active_sensors[sensor] = max(
+                        active_sensors.get(sensor, Fraction(0, 1)),
+                        resonance
+                    )
+
         self.sensor_state = {
-            "expansion_drive": Fraction(0, 1),
-            "stability_need": Fraction(0, 1),
-            "boundary_awareness": Fraction(0, 1)
+            "expansion_drive": expansion_drive,
+            "stability_need": stability_need,
+            "boundary_awareness": boundary_awareness,
+            **active_sensors,
         }
 
     # ------------------------------------------------------------------
@@ -343,38 +496,50 @@ class ConstraintAgent:
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
+    # Spawn an octahedron-rooted agent (SHAPE.OCTA = 8 faces, balance/integration)
     agent = ConstraintAgent(
-        seed_id="SHAPE.TETRA",
-        home_families=["stability", "foundation"]
+        seed_id="SHAPE.OCTA",
+        home_families=["air", "structure", "balance", "integration"]
     )
 
     agent.set_resource_budget(compute=1000, bandwidth=10.0, energy=1.0, time_remaining=1.0)
 
-    print(f"Agent initialized: {agent.seed_id}")
+    print(f"Agent: {agent.seed_id}")
     print(f"State: {agent.state.value}")
+    print(f"Atlas loaded: {len(agent._seed_catalog)} seeds, {len(agent._bridge_map)} bridges")
     print(f"Should expand: {agent.should_expand()}")
 
+    # Bloom — discovers neighboring shapes, sensors, protocols from atlas
     if agent.should_expand():
         discovered = agent.bloom(depth=2)
-        print(f"\nBloom discovered: {discovered}")
+        print(f"\nBloom discovered {len(discovered)} entities: {discovered}")
 
+    # Explore — record energy flows between discovered entities
     exploration = agent.explore()
-    print(f"\nExploration summary: {exploration}")
+    print(f"\nExploration: {exploration['entities_visited']} visited, "
+          f"{exploration['energy_flows_recorded']} flows")
+    print(f"Sensors: {exploration['sensor_activations']}")
 
+    # Validate — check energy balance and resonance coherence
     validation = agent.self_validate()
-    print(f"\nValidation: {validation}")
+    print(f"\nValid: {validation['is_valid']}, "
+          f"issues: {len(validation['inconsistencies'])}")
 
-    compression = agent.compress()
-    print(f"\nCompressed. Compression ratio: {compression}")
-    print(f"State: {agent.state.value}")
+    # Compress — collapse to seed, preserve map
+    agent.compress()
+    print(f"\nCompressed. State: {agent.state.value}")
 
+    # Re-expand from prior map
     agent.set_resource_budget(compute=500, energy=0.5)
     if agent.should_expand():
         rediscovered = agent.bloom(depth=1, seed_map=agent.map)
-        print(f"\nRe-expansion (from prior map): {rediscovered}")
+        print(f"Re-expansion: {rediscovered}")
 
-    is_corrupted = agent.detect_corruption("imposed_external_constraint_example")
-    print(f"\nCorruption detected: {is_corrupted}")
+    # Corruption detection — test with a real entity reference
+    print(f"\nCorruption (valid ref): {agent.detect_corruption('Align SHAPE.CUBE')}")
 
+    # Serialize round-trip
     serialized = agent.serialize()
-    print(f"\nAgent serialized. Map size: {len(serialized['map']['resonances'])} resonances")
+    restored = ConstraintAgent.deserialize(serialized)
+    print(f"\nSerialized: {len(serialized['map']['resonances'])} resonances")
+    print(f"Restored: {restored.seed_id}, state={restored.state.value}")
