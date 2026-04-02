@@ -128,6 +128,25 @@ def load_state_table():
         return []
 
 
+def try_nfs_pipeline(N):
+    """
+    Try the Octahedral NFS pipeline from Resilience repo.
+    Three stages: RIM Sieve → GF(2) Matrix → Sovereign Square Root.
+    Returns (p, q) or None.
+    """
+    pipeline_path = Path(__file__).parent.parent / "atlas" / "remote" / "resilience" / "nfs_pipeline.py"
+    if not pipeline_path.exists():
+        return None
+
+    # Import the pipeline module dynamically
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("nfs_pipeline", pipeline_path)
+    nfs = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(nfs)
+
+    return nfs.factor_number(N, D=50, verbose=False)
+
+
 # ── Main ─────────────────────────────────────────────────────────────────
 
 def main():
@@ -220,6 +239,18 @@ def main():
             print(f"    {s['state']:>2} {s['vertex_bits']:>4} {s['gray_code']:>4} "
                   f"{s['label']:<8} {s['glyph_unicode']:<4} {s['geis_token']:<8} "
                   f"{s['phi_coherence']:>5.2f}")
+
+    # ── Step 7: Octahedral NFS pipeline ─────────────────────────────
+    nfs_N = N if N > 81 else 1003  # NFS needs composite > 81
+    nfs_result = try_nfs_pipeline(nfs_N)
+    if nfs_result:
+        print(f"\n[7] OCTAHEDRAL NFS PIPELINE")
+        print(f"    RIM Sieve → GF(2) Matrix → Sovereign Square Root")
+        print(f"    {nfs_N} = {nfs_result[0]} × {nfs_result[1]}")
+    elif nfs_N > 81:
+        print(f"\n[7] OCTAHEDRAL NFS PIPELINE")
+        print(f"    Pipeline available (atlas/remote/resilience/)")
+        print(f"    Stages: RIM Sieve (O(1)/octahedron) → GF(2) → Square Root")
 
     # ── Summary ───────────────────────────────────────────────────────
     print(f"\n{'=' * 60}")
