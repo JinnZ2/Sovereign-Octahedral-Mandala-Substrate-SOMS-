@@ -105,6 +105,28 @@
           "protocols/sensor_bridge.py"
         ],
         "consent": { "license": "MIT", "share_ok": true }
+      },
+      {
+        "name": "geometric-to-binary",
+        "repo": "https://github.com/JinnZ2/Geometric-to-Binary-Computational-Bridge",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "mappings/octahedral_state_encoding.json",
+          "bridges/sensor_suite.json",
+          "glyph_to_geometric_bridge.json",
+          "GEIS/octahedral_state.py",
+          "GEIS/state_tensor.py",
+          "Engine/kt_annealer.py",
+          "Silicon/seed_expansion.py",
+          "Silicon/FRET/substrate_fret_coupling.py"
+        ],
+        "mounts": [
+          { "remote": "mappings/octahedral_state_encoding.json", "as": "atlas/remote/g2b/octahedral_state_encoding.json" },
+          { "remote": "bridges/sensor_suite.json", "as": "atlas/remote/g2b/sensor_suite.json" },
+          { "remote": "glyph_to_geometric_bridge.json", "as": "atlas/remote/g2b/glyph_bridge.json" }
+        ],
+        "consent": { "license": "MIT", "share_ok": true }
       }
     ],
 
@@ -115,7 +137,7 @@
     ],
 
     "merge": {
-      "order": ["local", "rosetta-shape-core", "mandala-computing", "living-intelligence", "regenerative-intelligence-core"],
+      "order": ["local", "rosetta-shape-core", "mandala-computing", "living-intelligence", "regenerative-intelligence-core", "geometric-to-binary"],
       "strategy": "deep-merge"
     },
 
