@@ -56,12 +56,33 @@ def factorization_energy(orientations, N):
 
 def solve_factorization(N, attempts=20, anneal_steps=150):
     """
-    Solve N = a*b by octahedral relaxation.
+    Solve N = a*b using membrane computation pattern.
 
-    Brute-force annealing over 2 cells, each with 8 states.
-    Returns (a, b, energy, history) or None.
+    Phase 1 (Coarse): Estimate sqrt(N), narrow search to ±stride window
+    Phase 2 (Membrane): Check window for exact hits at the boundary
+    Phase 3 (Fine): Anneal within window if boundary didn't solve it
+
+    This follows Mandala-Computing's membrane.py architecture:
+    the answer crystallizes at the boundary between coarse and fine.
     """
     states = np.array([0, 45, 90, 135, 180, 225, 270, 315])
+    max_factor = int(np.sqrt(N)) + 1
+
+    # Phase 1: Coarse — narrow the search window
+    # Map factor range [2..9] to octahedral states
+    stride = max(1, max_factor // 8)
+    center_a = min(7, max(0, int(np.sqrt(N)) - 2))
+    center_b = min(7, max(0, N // max(2 + center_a, 2) - 2))
+
+    # Phase 2: Membrane — check boundary for exact solution
+    for da in range(-stride, stride + 1):
+        for db in range(-stride, stride + 1):
+            a = 2 + max(0, min(7, center_a + da))
+            b = 2 + max(0, min(7, center_b + db))
+            if a * b == N:
+                return a, b, 0  # solved at boundary
+
+    # Phase 3: Fine — anneal if boundary didn't find it
     best_a, best_b, best_E = None, None, float('inf')
 
     for _ in range(attempts):
@@ -125,9 +146,9 @@ def main():
 
     # ── Step 2: Factorization ─────────────────────────────────────────
     print(f"\n[2] FACTORIZATION: {N} = ? × ?")
+    print(f"    Membrane: coarse (√N estimate) → boundary (exact check) → fine (anneal)")
     print(f"    Encoding: 2 cells × 8 octahedral states (range 2..9)")
     print(f"    Energy: E = (a×b - {N})²")
-    print(f"    Relaxation: Metropolis-Hastings annealing T=5.0→0.01")
 
     a, b, E = solve_factorization(N)
     if E == 0:
