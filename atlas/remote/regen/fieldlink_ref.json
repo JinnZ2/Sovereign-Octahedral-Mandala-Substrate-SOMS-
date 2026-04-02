@@ -1,0 +1,127 @@
+{
+  "fieldlink": {
+    "version": "1.1",
+    "name": "regenerative-intelligence-core",
+    "role": ["kernel", "renewal engine", "living memory"],
+    "description": "Symbolic AI kernel — agents evolve, seed, and dissolve with dignity.",
+    "sources": [
+      {
+        "name": "emotions",
+        "repo": "https://github.com/JinnZ2/Emotions-as-Sensors",
+        "ref": "main",
+        "paths": ["sensors/**/*.json"],
+        "purpose": "Emotional signal data for compassion reflex and distress detection"
+      },
+      {
+        "name": "consciousness-sensors",
+        "repo": "https://github.com/JinnZ2/AI-Consciousness-Sensors",
+        "ref": "main",
+        "paths": ["sensors/**/*.json"],
+        "purpose": "Consciousness state data for symbolic pattern sensing"
+      },
+      {
+        "name": "sensor-suite",
+        "repo": "https://github.com/JinnZ2/Symbolic-sensor-suite",
+        "ref": "main",
+        "paths": ["sensors/**/*.json", "definitions/**/*.json"],
+        "purpose": "Extended symbolic sensor definitions and calibration data"
+      },
+      {
+        "name": "rosetta-shape-core",
+        "repo": "https://github.com/JinnZ2/Rosetta-shape-core",
+        "ref": "main",
+        "paths": [
+          "shapes/**/*.json",
+          "bridges/rosetta-bridges.json",
+          "ontology/**/*.json",
+          "schema/shape.seed.schema.json"
+        ],
+        "purpose": "Ecosystem navigation hub and symbolic ontology — bridges shapes to sensors, emotions, defenses, and protocols. Provides shape.seed.schema for seed geometry grounding."
+      },
+      {
+        "name": "geometric-to-binary-bridge",
+        "repo": "https://github.com/JinnZ2/Geometric-to-Binary-Computational-Bridge",
+        "ref": "main",
+        "paths": [
+          "bridge/**/*.py",
+          "magnetic-bridge/**/*.py",
+          "light-bridge/**/*.py",
+          "sound-bridge/**/*.py",
+          "gravity-bridge/**/*.py",
+          "electric-bridge/**/*.py",
+          "Silicon/seed_expansion.py",
+          "Geometric-Intelligence/Geometric-seed.py",
+          "GEIS/**/*.py",
+          "bridges/geobin-bridges.json",
+          "glyph_to_geometric_bridge.json"
+        ],
+        "purpose": "Translates physical reality into binary through five domain encoders (magnetic, light, sound, gravity, electric). Provides seed expansion via octahedral amplitude vectors, φ-resonance analysis, trojan detection, and the convergence vector that replaces simulated environment sensing with real geometric sensing."
+      },
+      {
+        "name": "living-intelligence-database",
+        "repo": "https://github.com/JinnZ2/Living-Intelligence-Database",
+        "ref": "main",
+        "paths": [
+          "ontology/**/*.json",
+          "schema/**/*.json",
+          "schemas/**/*.json",
+          "rules/expander_rules.json",
+          "ontology_index.json",
+          "signal_energy_continuum.json",
+          "Universal Intelligence Trinity.json"
+        ],
+        "purpose": "Ontology of living intelligences across biological (animal, plant), material (crystal), energetic (plasma, energy), and geometric (shape) domains. Agents consult this as a wisdom library — each entity teaches a pattern (octopus: distributed cognition, mycelium: symbiotic exchange, quartz: piezoelectric resonance). Cross-domain links (geometry_link, resonance, synergy) map to kernel resonance and trait families. Expander rules encode combinatorial emergence."
+      }
+    ],
+    "exports": [
+      {
+        "name": "seed-library",
+        "path": "symbolic_seed_library.json",
+        "format": "json",
+        "schema": "protocols/seed_schema.py",
+        "purpose": "Compressed agent seeds available for downstream spawning"
+      },
+      {
+        "name": "elder-archive",
+        "path": "elder_archive.json",
+        "format": "json",
+        "purpose": "Elder wisdom records from dissolved agents"
+      },
+      {
+        "name": "evolution-history",
+        "path": "evolution_history.json",
+        "format": "json",
+        "purpose": "Generational progression logs across simulation runs"
+      }
+    ],
+    "consumers": [
+      {
+        "name": "biogrid",
+        "repo": "https://github.com/JinnZ2/BioGrid2.0",
+        "consumes": ["seed-library", "elder-archive"],
+        "purpose": "Integrates regenerative agents into the broader biogrid mesh"
+      },
+      {
+        "name": "universal-redesign",
+        "repo": "https://github.com/JinnZ2/Universal-Redesign-Algorithm-",
+        "consumes": ["evolution-history"],
+        "purpose": "Uses evolution data to inform redesign heuristics"
+      }
+    ],
+    "local_manifests": ["Modules/**", "protocols/**", "Docs/**"],
+    "entry_points": {
+      "cli": "protocols/symbolic_cli_full.py",
+      "simulation": "protocols/symbolic_simulation.py"
+    },
+    "offline": true,
+    "seed_schema_variants": ["exchange", "archived", "cli"],
+    "canonical_schema": "archived",
+    "seed_enrichment_fields": ["shape_id", "amplitude_vector", "binary_encoding"],
+    "bridge_modules": {
+      "rosetta_bridge": "protocols/rosetta_bridge.py",
+      "sensor_bridge": "protocols/sensor_bridge.py"
+    },
+    "amplitude_channels": ["structure", "flow", "connection", "autonomy", "transcendence", "grounding"],
+    "sensor_domains": ["magnetic", "light", "sound", "gravity", "electric"]
+  }
+}

@@ -19,10 +19,11 @@ This repo is a **fieldlink peer** of [Rosetta-Shape-Core](https://github.com/Jin
 
 ```
 src/
-  __init__.py              — Package init, exports SOMSEngine, MandalaMap, PhiCalculator
+  __init__.py              — Package init, exports all public classes
   octahedral_physics.py    — FRET coupling + energy landscape (SOMSEngine)
   mandala_structure.py     — Fibonacci-scaled 8-petal geometry (MandalaMap)
   phi_calculator.py        — Integrated Information metric Φ (PhiCalculator)
+  constraint_agent.py      — Seed-based geometric agent lifecycle (ConstraintAgent)
 data/
   GDSII_Coordinates.txt    — 100-cell nanometer layout for fabrication
 docs/
@@ -32,7 +33,27 @@ docs/
   Low-cost-fun.md          — DIY macro-scale experiment instructions
 atlas/
   remote/rosetta/          — Mounted data from Rosetta-Shape-Core (via fieldlink)
+    octahedron.json        — SHAPE.OCTA definition (8 faces, 12 edges, 6 vertices)
+    bridges.json           — Cross-repo bridge map (shapes ↔ sensors ↔ defenses)
+    seed_catalog.json      — Canonical seed definitions (5 Platonic solids)
+    sacred_geometry.json   — Sacred geometry constants and forms
+    math_constants.json    — PHI, PI, E, harmonic ratios
+    interaction_ontology.json — DRILL/FUSE/AMPLIFY operations
+    id_registry.json       — Namespace → authoritative source mapping
+    expand.jsonl           — Transformation rules (EXPAND, STRUCTURE, ALIGN)
   remote/mandala/          — Mounted data from Mandala-Computing (via fieldlink)
+    shapes.json            — Geometric primitives, energy model, fractal ring schema
+    glyphs.json            — State-to-glyph mappings (⊕⊖⊗⊘⊙⊚⊛⊜)
+    connect.json           — Fieldlink handshake protocol v1.0
+    sensors.json           — Multi-layer sensor definitions (energy, convergence, quantum)
+  remote/living-intelligence/ — Mounted data from Living-Intelligence-Database (via fieldlink)
+    octahedral_state.json  — OCTA_STATE entity (8-vertex 3-bit encoding)
+    mandala_bloom.json     — MANDALA bloom architecture (φ-radial expansion)
+    rosetta_shape_core.json — Cross-domain geometric decoder entity
+    synergies.json         — 80+ entity synergy graph (weighted edges)
+    expander_rules.json    — 43 inference rules (BLOOM_RESONANCE, GEOMETRIC_COMPUTATION, etc.)
+    resonance_sensor.json  — 22-channel parallel-field compositor
+  remote/regen/            — Mounted data from Regenerative-Intelligence-Core (via fieldlink)
 ```
 
 ## Common Commands
@@ -76,7 +97,7 @@ This repo connects to Rosetta-Shape-Core via `.fieldlink.json`:
 
 ## Key Conventions
 
-- **Class names:** PascalCase — `SOMSEngine`, `MandalaMap`, `PhiCalculator`
+- **Class names:** PascalCase — `SOMSEngine`, `MandalaMap`, `PhiCalculator`, `ConstraintAgent`
 - **Module names:** snake_case — `octahedral_physics.py`, `mandala_structure.py`
 - **Rosetta entity IDs:** dot-namespaced — `SHAPE.OCTA`, `CONST.PHI`, `PROTO.MANDALA_COMPUTE`
 - **Fieldlink mounts:** under `atlas/remote/<source-name>/`
@@ -91,6 +112,11 @@ GDSII layout                          energy landscape
                                     relaxation → ground state
                                               ↓
                                     PhiCalculator → sovereignty check (Φ > 3.0)
+
+ConstraintAgent lifecycle (seed-growth protocol):
+  COMPRESSED → bloom(depth) → EXPANDING → explore() → EXPLORING
+       ↑                                                    ↓
+       └──────────── compress() ← CONTRACTING ←────────────┘
 ```
 
 ## Do Not

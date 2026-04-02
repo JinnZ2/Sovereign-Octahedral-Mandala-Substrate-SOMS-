@@ -1,8 +1,14 @@
 {
   "fieldlink": {
-    "version": "1.0",
-    "updated": "2026-03-24T00:00:00Z",
+    "version": "3.0",
+    "updated": "2026-04-02T00:00:00Z",
     "role": ["substrate", "physics-engine", "mandala-compute"],
+
+    "identity": {
+      "repo": "https://github.com/JinnZ2/Sovereign-Octahedral-Mandala-Substrate-SOMS-",
+      "entities_exported": ["SHAPE.OCTA", "CONST.PHI", "PROTO.MANDALA_COMPUTE"],
+      "mount_path": "atlas/remote/soms/"
+    },
 
     "sources": [
       {
@@ -15,18 +21,24 @@
           "bridges/rosetta-bridges.json",
           "protocols/mandala-compute-protocol.md",
           "protocols/seed-growth-protocol.md",
-          "atlas/remote/mandala/shapes.json",
           "data/sacred_geometry.json",
           "data/math_constants.json",
+          "data/seed-catalog.json",
+          "data/interaction_ontology.json",
           "ontology/_vocab.json",
+          "ontology/_id_registry.json",
+          "rules/expand.jsonl",
           "schema/shape.schema.json"
         ],
         "mounts": [
           { "remote": "shapes/octahedron.json", "as": "atlas/remote/rosetta/octahedron.json" },
           { "remote": "bridges/rosetta-bridges.json", "as": "atlas/remote/rosetta/bridges.json" },
-          { "remote": "atlas/remote/mandala/shapes.json", "as": "atlas/remote/rosetta/mandala_shapes.json" },
           { "remote": "data/sacred_geometry.json", "as": "atlas/remote/rosetta/sacred_geometry.json" },
-          { "remote": "data/math_constants.json", "as": "atlas/remote/rosetta/math_constants.json" }
+          { "remote": "data/math_constants.json", "as": "atlas/remote/rosetta/math_constants.json" },
+          { "remote": "data/seed-catalog.json", "as": "atlas/remote/rosetta/seed_catalog.json" },
+          { "remote": "data/interaction_ontology.json", "as": "atlas/remote/rosetta/interaction_ontology.json" },
+          { "remote": "ontology/_id_registry.json", "as": "atlas/remote/rosetta/id_registry.json" },
+          { "remote": "rules/expand.jsonl", "as": "atlas/remote/rosetta/expand.jsonl" }
         ],
         "consent": { "license": "MIT", "share_ok": true }
       },
@@ -37,12 +49,82 @@
         "direction": "bidirectional",
         "paths": [
           "atlas/shapes.json",
+          "atlas/glyphs/mandala.json",
           "protocols/connect.json",
           "sensors/multi_layer.json"
         ],
         "mounts": [
-          { "remote": "atlas/shapes.json", "as": "atlas/remote/mandala/shapes.json", "status": "planned" },
-          { "remote": "protocols/connect.json", "as": "atlas/remote/mandala/connect.json", "status": "planned" }
+          { "remote": "atlas/shapes.json", "as": "atlas/remote/mandala/shapes.json" },
+          { "remote": "atlas/glyphs/mandala.json", "as": "atlas/remote/mandala/glyphs.json" },
+          { "remote": "protocols/connect.json", "as": "atlas/remote/mandala/connect.json" },
+          { "remote": "sensors/multi_layer.json", "as": "atlas/remote/mandala/sensors.json" }
+        ],
+        "consent": { "license": "MIT", "share_ok": true }
+      },
+      {
+        "name": "living-intelligence",
+        "repo": "https://github.com/JinnZ2/Living-Intelligence-Database",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "ontology/shape/octahedral_state.json",
+          "ontology/shape/mandala_bloom.json",
+          "ontology/shape/rosetta_shape_core.json",
+          "ontology/relational/synergies.json",
+          "ontology/energy/resonance_sensor.json",
+          "rules/expander_rules.json"
+        ],
+        "mounts": [
+          { "remote": "ontology/shape/octahedral_state.json", "as": "atlas/remote/living-intelligence/octahedral_state.json" },
+          { "remote": "ontology/shape/mandala_bloom.json", "as": "atlas/remote/living-intelligence/mandala_bloom.json" },
+          { "remote": "ontology/shape/rosetta_shape_core.json", "as": "atlas/remote/living-intelligence/rosetta_shape_core.json" },
+          { "remote": "ontology/relational/synergies.json", "as": "atlas/remote/living-intelligence/synergies.json" },
+          { "remote": "ontology/energy/resonance_sensor.json", "as": "atlas/remote/living-intelligence/resonance_sensor.json" },
+          { "remote": "rules/expander_rules.json", "as": "atlas/remote/living-intelligence/expander_rules.json" }
+        ],
+        "consent": { "license": "CC0-1.0", "share_ok": true }
+      },
+      {
+        "name": "regenerative-intelligence-core",
+        "repo": "https://github.com/JinnZ2/Regenerative-intelligence-core",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "Modules/constraint_agent.py",
+          "protocols/rosetta_bridge.py",
+          "protocols/sensor_bridge.py",
+          "protocols/symbolic_energy_manager.py"
+        ],
+        "exports": [
+          { "runtime": "symbolic_seed_library.json", "as": "atlas/remote/regen/seed_library.json", "status": "planned" },
+          { "runtime": "elder_archive.json", "as": "atlas/remote/regen/elder_archive.json", "status": "planned" },
+          { "runtime": "evolution_history.json", "as": "atlas/remote/regen/evolution_history.json", "status": "planned" }
+        ],
+        "bridge_modules": [
+          "protocols/rosetta_bridge.py",
+          "protocols/sensor_bridge.py"
+        ],
+        "consent": { "license": "MIT", "share_ok": true }
+      },
+      {
+        "name": "geometric-to-binary",
+        "repo": "https://github.com/JinnZ2/Geometric-to-Binary-Computational-Bridge",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "mappings/octahedral_state_encoding.json",
+          "bridges/sensor_suite.json",
+          "glyph_to_geometric_bridge.json",
+          "GEIS/octahedral_state.py",
+          "GEIS/state_tensor.py",
+          "Engine/kt_annealer.py",
+          "Silicon/seed_expansion.py",
+          "Silicon/FRET/substrate_fret_coupling.py"
+        ],
+        "mounts": [
+          { "remote": "mappings/octahedral_state_encoding.json", "as": "atlas/remote/g2b/octahedral_state_encoding.json" },
+          { "remote": "bridges/sensor_suite.json", "as": "atlas/remote/g2b/sensor_suite.json" },
+          { "remote": "glyph_to_geometric_bridge.json", "as": "atlas/remote/g2b/glyph_bridge.json" }
         ],
         "consent": { "license": "MIT", "share_ok": true }
       }
@@ -55,7 +137,7 @@
     ],
 
     "merge": {
-      "order": ["local", "rosetta-shape-core", "mandala-computing"],
+      "order": ["local", "rosetta-shape-core", "mandala-computing", "living-intelligence", "regenerative-intelligence-core", "geometric-to-binary"],
       "strategy": "deep-merge"
     },
 
