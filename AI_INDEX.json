@@ -6,7 +6,7 @@
   "lang": "python3.9+",
   "deps": ["numpy", "scipy"],
   "license": "CC0-1.0",
-  "tests": "python -m pytest tests/",
+  "tests": "python -m pytest tests/  # 98 tests",
   "demo": "python src/demo.py",
 
   "modules": {
@@ -51,6 +51,11 @@
     "src/atlas_loader.py": {
       "exports": ["load_seed_catalog", "load_synergies", "DUAL_PAIRS", "BRIDGE_PAIRS", "SYNERGY_ALIASES"],
       "does": "JSON loaders for atlas/ data files."
+    },
+    "src/lattice_handshake.py": {
+      "exports": ["OctahedralLattice", "PulseChip", "feltscore", "local_anxiety"],
+      "does": "CVP handshake on octahedral eigenvalue lattice. PulseChip: single-clock mat-vec hardware model. feltscore: signal coherence (0-1). local_anxiety: high-D divergence metric.",
+      "depends": ["numpy", "src/octahedral_lookup"]
     }
   },
 

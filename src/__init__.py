@@ -25,11 +25,13 @@ from src.octahedral_lookup import (
     phi_stability_score, phi_deviation, state_capacity,
 )
 from src.geometric_encoder import GeometricEncoder
+from src.lattice_handshake import OctahedralLattice, PulseChip, feltscore, local_anxiety
 
 __all__ = [
     "SOMSEngine", "MandalaMap", "PhiCalculator",
     "ConstraintAgent", "AgentState", "ResourceBudget", "GeometricMap",
     "GeometricEncoder",
+    "OctahedralLattice", "PulseChip", "feltscore", "local_anxiety",
     "GRAY_CODES", "GRAY_CODE_TO_STATE", "OCTAHEDRAL_EIGENVALUES",
     "EIGENVALUE_CHARACTERS", "ALLOWED_TRANSITIONS", "POSITIONS",
     "MANDALA_OCTAHEDRAL_MAP", "GRAY_TRANSITION_TABLE",

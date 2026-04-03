@@ -8,7 +8,7 @@ Dual-pathway engine: angular (continuous sin²) + tensor (discrete eigenvalue L2
 
 ```bash
 pip install numpy scipy   # dependencies
-python -m pytest tests/   # 82 tests
+python -m pytest tests/   # 98 tests
 python src/demo.py        # full walkthrough
 ```
 
@@ -25,6 +25,7 @@ src/                         # Core library — import via `from src import *`
   resource_budget.py         # ResourceBudget dataclass
   geometric_map.py           # GeometricMap dataclass
   atlas_loader.py            # load_seed_catalog(), load_synergies(), DUAL_PAIRS, BRIDGE_PAIRS, SYNERGY_ALIASES
+  lattice_handshake.py       # OctahedralLattice (CVP handshake), PulseChip (mat-vec hardware), feltscore()
 tests/                       # pytest suite (82 tests)
 data/GDSII_Coordinates.txt   # 100-cell nanometer fabrication layout
 atlas/remote/                # Fieldlink-mounted data from 6 sibling repos (see .fieldlink.json)
