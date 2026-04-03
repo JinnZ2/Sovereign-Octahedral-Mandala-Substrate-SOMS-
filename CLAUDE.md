@@ -26,6 +26,9 @@ src/
   constraint_agent.py      — Seed-based geometric agent lifecycle (ConstraintAgent)
   octahedral_lookup.py     — Gray codes, eigenvalue tables, φ-stability analysis (from G2B)
   geometric_encoder.py     — Bidirectional geometric token ↔ binary encoder (from G2B)
+  resource_budget.py       — ResourceBudget dataclass (split from constraint_agent)
+  geometric_map.py         — GeometricMap dataclass (split from constraint_agent)
+  atlas_loader.py          — JSON loading functions for fieldlink atlas data (split from constraint_agent)
 data/
   GDSII_Coordinates.txt    — 100-cell nanometer layout for fabrication
 docs/

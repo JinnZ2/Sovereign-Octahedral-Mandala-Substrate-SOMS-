@@ -1,0 +1,6 @@
+{
+  "schema": "regenerative-intelligence/elder-archive@1.0",
+  "status": "stub",
+  "description": "Elder wisdom records from dissolved agents. Populated at runtime by Regenerative-Intelligence-Core.",
+  "elders": []
+}

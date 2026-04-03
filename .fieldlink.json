@@ -96,9 +96,9 @@
           "protocols/symbolic_energy_manager.py"
         ],
         "exports": [
-          { "runtime": "symbolic_seed_library.json", "as": "atlas/remote/regen/seed_library.json", "status": "planned" },
-          { "runtime": "elder_archive.json", "as": "atlas/remote/regen/elder_archive.json", "status": "planned" },
-          { "runtime": "evolution_history.json", "as": "atlas/remote/regen/evolution_history.json", "status": "planned" }
+          { "runtime": "symbolic_seed_library.json", "as": "atlas/remote/regen/seed_library.json", "status": "stub" },
+          { "runtime": "elder_archive.json", "as": "atlas/remote/regen/elder_archive.json", "status": "stub" },
+          { "runtime": "evolution_history.json", "as": "atlas/remote/regen/evolution_history.json", "status": "stub" }
         ],
         "bridge_modules": [
           "protocols/rosetta_bridge.py",

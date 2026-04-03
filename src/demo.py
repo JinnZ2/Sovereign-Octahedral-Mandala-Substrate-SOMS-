@@ -25,6 +25,10 @@ from src.octahedral_physics import SOMSEngine
 from src.mandala_structure import MandalaMap
 from src.phi_calculator import PhiCalculator
 from src.constraint_agent import ConstraintAgent
+from src.octahedral_lookup import (
+    GRAY_CODES, EIGENVALUE_CHARACTERS, phi_stability_report, state_capacity,
+)
+from src.geometric_encoder import GeometricEncoder
 
 
 # ── Factorization encoding ───────────────────────────────────────────────
@@ -220,6 +224,46 @@ def main():
             print(f"    {s['state']:>2} {s['vertex_bits']:>4} {s['gray_code']:>4} "
                   f"{s['label']:<8} {s['glyph_unicode']:<4} {s['geis_token']:<8} "
                   f"{s['phi_coherence']:>5.2f}")
+
+    # ── Step 7: Phi stability report ─────────────────────────────────
+    print(f"\n[7] PHI-STABILITY ANALYSIS (Golden Ratio Coherence)")
+    report = phi_stability_report()
+    print(f"    {'St':>2} {'Gray':>4} {'Character':<16} {'Dev':>6} {'Ratio':>6} {'Anchor'}")
+    for entry in report:
+        anchor = "  **" if entry["is_anchor"] else ""
+        print(f"    {entry['state']:>2} {entry['gray_code']:>4} "
+              f"{entry['character']:<16} {entry['closest_phi_deviation']:>6.4f} "
+              f"{entry['best_ratio']:>6.4f}{anchor}")
+
+    # ── Step 8: Geometric encoder demo ────────────────────────────────
+    print(f"\n[8] GEOMETRIC ENCODER (GEIS Token <-> Binary)")
+    enc = GeometricEncoder()
+    tokens = ["000|O", "001|I", "010|X", "011/O", "100|Δ", "101||O"]
+    for token in tokens:
+        try:
+            binary = enc.encode_to_binary(token)
+            decoded = enc.decode_from_binary(binary)
+            valid = "OK" if enc.validate_token(token) else "FAIL"
+            print(f"    {token:<8} -> {binary:<8} -> {decoded:<8} [{valid}]")
+        except ValueError as e:
+            print(f"    {token:<8} -> ERROR: {e}")
+
+    # ── Step 9: State capacity ────────────────────────────────────────
+    print(f"\n[9] STATE CAPACITY")
+    for n in [1, len(m.pos), 100]:
+        sc = state_capacity(n)
+        print(f"    {n:>4} cells: {sc['total_bits']:>4} bits, {sc['total_states']:.2e} states")
+
+    # ── Step 10: Mandala Gray code mapping ────────────────────────────
+    print(f"\n[10] MANDALA CELL-STATE MAPPING (Ring 1)")
+    for idx in m.ring_cells(1):
+        state = m.cell_states[idx]
+        gray = m.cell_gray_code(idx)
+        char = m.cell_character(idx)
+        n_transitions = len(m.allowed_neighbors(idx))
+        n_gray = len(m.gray_adjacent_cells(idx))
+        print(f"    Cell {idx:>2}: state={state} gray={gray} "
+              f"({char:<16}) transitions={n_transitions} gray_adj={n_gray}")
 
     # ── Summary ───────────────────────────────────────────────────────
     print(f"\n{'=' * 60}")

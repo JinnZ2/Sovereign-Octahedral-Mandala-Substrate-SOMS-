@@ -14,9 +14,9 @@ Modules:
 from src.octahedral_physics import SOMSEngine
 from src.mandala_structure import MandalaMap
 from src.phi_calculator import PhiCalculator
-from src.constraint_agent import (
-    ConstraintAgent, AgentState, ResourceBudget, GeometricMap,
-)
+from src.resource_budget import ResourceBudget
+from src.geometric_map import GeometricMap
+from src.constraint_agent import ConstraintAgent, AgentState
 from src.octahedral_lookup import (
     GRAY_CODES, GRAY_CODE_TO_STATE, OCTAHEDRAL_EIGENVALUES,
     EIGENVALUE_CHARACTERS, ALLOWED_TRANSITIONS, POSITIONS,
