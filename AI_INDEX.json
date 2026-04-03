@@ -1,0 +1,108 @@
+{
+  "_purpose": "Machine-readable codebase index. AI agents: read this first, then only the files you need.",
+  "_version": "1.0",
+
+  "what": "Physics simulation framework: octahedral 8-state geometry + FRET coupling + mandala substrate → thermodynamic ground-state solving",
+  "lang": "python3.9+",
+  "deps": ["numpy", "scipy"],
+  "license": "CC0-1.0",
+  "tests": "python -m pytest tests/  # 98 tests",
+  "demo": "python src/demo.py",
+
+  "modules": {
+    "src/octahedral_physics.py": {
+      "exports": ["SOMSEngine"],
+      "does": "Dual-pathway FRET engine. angular_energy(sin²) + tensor_energy(eigenvalue L2), α-mixed by problem type. anneal() for ground-state search.",
+      "depends": ["numpy", "src/octahedral_lookup"]
+    },
+    "src/mandala_structure.py": {
+      "exports": ["MandalaMap"],
+      "does": "Fibonacci φ-scaled 8-petal ring geometry. Generates cell positions for SOMSEngine.",
+      "depends": ["numpy", "src/octahedral_lookup"]
+    },
+    "src/phi_calculator.py": {
+      "exports": ["PhiCalculator"],
+      "does": "Integrated Information Φ metric. evaluate_integration() → (phi, is_sovereign). Sovereign if Φ>3.0.",
+      "depends": ["numpy"]
+    },
+    "src/constraint_agent.py": {
+      "exports": ["ConstraintAgent", "AgentState"],
+      "does": "Seed-growth agent lifecycle: COMPRESSED→EXPANDING→EXPLORING→CONTRACTING. Loads atlas data.",
+      "depends": ["src/resource_budget", "src/geometric_map", "src/atlas_loader"]
+    },
+    "src/octahedral_lookup.py": {
+      "exports": ["GRAY_CODES", "OCTAHEDRAL_EIGENVALUES", "ALLOWED_TRANSITIONS", "POSITIONS", "gray_adjacent", "nearest_octahedral_state", "phi_stability_score", "phi_stability_report", "state_capacity"],
+      "does": "Static lookup tables: 8 Gray codes, eigenvalue triples, allowed transitions, φ-stability scoring.",
+      "depends": []
+    },
+    "src/geometric_encoder.py": {
+      "exports": ["GeometricEncoder"],
+      "does": "GEIS token ↔ binary encoder. Token format: [vertex_bits]|[operator][symbol]. encode_to_binary(), decode_from_binary().",
+      "depends": []
+    },
+    "src/resource_budget.py": {
+      "exports": ["ResourceBudget"],
+      "does": "Dataclass: depth, energy, max_connections, ttl."
+    },
+    "src/geometric_map.py": {
+      "exports": ["GeometricMap"],
+      "does": "Dataclass: position, orientation, neighbors, dual_partner."
+    },
+    "src/atlas_loader.py": {
+      "exports": ["load_seed_catalog", "load_synergies", "DUAL_PAIRS", "BRIDGE_PAIRS", "SYNERGY_ALIASES"],
+      "does": "JSON loaders for atlas/ data files."
+    },
+    "src/lattice_handshake.py": {
+      "exports": ["OctahedralLattice", "PulseChip", "feltscore", "local_anxiety"],
+      "does": "CVP handshake on octahedral eigenvalue lattice. PulseChip: single-clock mat-vec hardware model. feltscore: signal coherence (0-1). local_anxiety: high-D divergence metric.",
+      "depends": ["numpy", "src/octahedral_lookup"]
+    }
+  },
+
+  "atlas_sources": {
+    "rosetta":              { "repo": "JinnZ2/Rosetta-Shape-Core",     "key_file": "octahedron.json",            "provides": "SHAPE.OCTA definition, sacred geometry constants" },
+    "mandala":              { "repo": "JinnZ2/Mandala-Computing",       "key_file": "shapes.json",                "provides": "Geometric primitives, glyph mappings (⊕⊖⊗⊘⊙⊚⊛⊜)" },
+    "living-intelligence":  { "repo": "JinnZ2/Living-Intelligence-Database", "key_file": "synergies.json",        "provides": "80+ entity synergy graph, 43 expander rules" },
+    "g2b":                  { "repo": "JinnZ2/Geometric-to-Binary-Computational-Bridge", "key_file": "octahedral_state_encoding.json", "provides": "8-state 3-bit bridge table, sensor suite, GEIS tokens" },
+    "regen":                { "repo": "JinnZ2/Regenerative-intelligence-core", "key_file": null,                  "provides": "Stubs: seed_library, elder_archive, evolution_history" },
+    "resilience":           { "repo": "JinnZ2/Resilience",              "key_file": "seed_protocol.py",           "provides": "Seed expansion, field system, 8-node coupling matrix, geobin bridge, NFS pipeline" }
+  },
+
+  "constants": {
+    "PHI": 1.618033988749895,
+    "OCTAHEDRAL_STATES": 8,
+    "FRET_EXPONENT": 6,
+    "SOVEREIGNTY_THRESHOLD": 3.0,
+    "TETRAHEDRAL_ANGLE_DEG": 109.47,
+    "FRET_CUTOFF_ANGSTROM": 4.854101966249895
+  },
+
+  "problem_alpha": {
+    "_doc": "α = angular pathway weight (1-α = tensor weight)",
+    "OPTIMIZATION": 0.8,
+    "SAT": 0.7,
+    "TSP": 0.6,
+    "PROTEIN_FOLDING": 0.5,
+    "GRAPH_COLORING": 0.3,
+    "FACTORIZATION": 0.2
+  },
+
+  "gray_codes": {
+    "0": {"bin": "000", "gray": "000", "label": "+x", "glyph": "⊕"},
+    "1": {"bin": "001", "gray": "001", "label": "-x", "glyph": "⊖"},
+    "2": {"bin": "010", "gray": "011", "label": "+y", "glyph": "⊗"},
+    "3": {"bin": "011", "gray": "010", "label": "-y", "glyph": "⊘"},
+    "4": {"bin": "100", "gray": "110", "label": "+z", "glyph": "⊙"},
+    "5": {"bin": "101", "gray": "111", "label": "-z", "glyph": "⊚"},
+    "6": {"bin": "110", "gray": "101", "label": "diag-a", "glyph": "⊛"},
+    "7": {"bin": "111", "gray": "100", "label": "diag-b", "glyph": "⊜"}
+  },
+
+  "rules": [
+    "Classes: PascalCase. Modules: snake_case.",
+    "Spelling: octahedral (never octohedral).",
+    "New files: src/, data/, docs/, or atlas/ only.",
+    "Do not break .fieldlink.json schema.",
+    "Mount pattern: atlas/remote/<source-name>/"
+  ]
+}
