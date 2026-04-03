@@ -65,6 +65,12 @@ atlas/
     glyph_bridge.json        — Glyph-to-geometric primitive mappings (Navier-Stokes, Shannon, etc.)
     geobin_bridges.json      — Shape encoding bridges (ICOSA edge-walk, DODECA face-parity)
   remote/regen/            — Mounted data from Regenerative-Intelligence-Core (via fieldlink)
+  remote/resilience/       — Mounted data from Resilience (via fieldlink)
+    seed_protocol.py       — Stdlib-only seed expansion, 40-bit packet encoding, mesh networking
+    field_system.py        — Regenerative system tracking, constraint layers, ecological coupling
+    coupling_matrix.py     — 8-node physical field coupling matrix (EM, M, C, T, R, F, G, K)
+    geobin_bridge.py       — GEIS pattern <-> substrate reasoning bridge
+    nfs_pipeline.py        — Octahedral NFS: RIM sieve + GF(2) matrix + sovereign sqrt
 ```
 
 ## Common Commands

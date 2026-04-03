@@ -133,6 +133,34 @@
           { "remote": "Silicon/octahedral_state_encoder.json", "as": "atlas/remote/g2b/octahedral_state_encoder.json" }
         ],
         "consent": { "license": "MIT", "share_ok": true }
+      },
+      {
+        "name": "resilience",
+        "repo": "https://github.com/JinnZ2/Resilience",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "sim/seed_protocol.py",
+          "sim/seed_mesh.py",
+          "sim/field_system.py",
+          "sim/ai_delusion_checker.py",
+          "sim/dissipative_systems.py",
+          "sim/geometric_exploration.py",
+          "sim/physical_coupling_matrix.py",
+          "sim/phi_growth.py",
+          "KnowledgeDNA/geobin_bridge.py",
+          "KnowledgeDNA/substrate.py",
+          "octahedral-nfs/src/pipeline.py",
+          "fieldlink.json"
+        ],
+        "mounts": [
+          { "remote": "sim/seed_protocol.py", "as": "atlas/remote/resilience/seed_protocol.py" },
+          { "remote": "sim/field_system.py", "as": "atlas/remote/resilience/field_system.py" },
+          { "remote": "sim/physical_coupling_matrix.py", "as": "atlas/remote/resilience/coupling_matrix.py" },
+          { "remote": "KnowledgeDNA/geobin_bridge.py", "as": "atlas/remote/resilience/geobin_bridge.py" },
+          { "remote": "octahedral-nfs/src/pipeline.py", "as": "atlas/remote/resilience/nfs_pipeline.py" }
+        ],
+        "consent": { "license": "CC0-1.0", "share_ok": true }
       }
     ],
 
@@ -143,7 +171,7 @@
     ],
 
     "merge": {
-      "order": ["local", "rosetta-shape-core", "mandala-computing", "living-intelligence", "regenerative-intelligence-core", "geometric-to-binary"],
+      "order": ["local", "rosetta-shape-core", "mandala-computing", "living-intelligence", "regenerative-intelligence-core", "geometric-to-binary", "resilience"],
       "strategy": "deep-merge"
     },
 
