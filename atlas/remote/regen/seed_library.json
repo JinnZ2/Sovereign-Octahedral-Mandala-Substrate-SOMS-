@@ -1,0 +1,6 @@
+{
+  "schema": "regenerative-intelligence/seed-library@1.0",
+  "status": "stub",
+  "description": "Compressed agent seeds available for downstream spawning. Populated at runtime by Regenerative-Intelligence-Core.",
+  "seeds": []
+}

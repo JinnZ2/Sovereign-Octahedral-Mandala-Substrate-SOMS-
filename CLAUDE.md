@@ -24,6 +24,11 @@ src/
   mandala_structure.py     — Fibonacci-scaled 8-petal geometry (MandalaMap)
   phi_calculator.py        — Integrated Information metric Φ (PhiCalculator)
   constraint_agent.py      — Seed-based geometric agent lifecycle (ConstraintAgent)
+  octahedral_lookup.py     — Gray codes, eigenvalue tables, φ-stability analysis (from G2B)
+  geometric_encoder.py     — Bidirectional geometric token ↔ binary encoder (from G2B)
+  resource_budget.py       — ResourceBudget dataclass (split from constraint_agent)
+  geometric_map.py         — GeometricMap dataclass (split from constraint_agent)
+  atlas_loader.py          — JSON loading functions for fieldlink atlas data (split from constraint_agent)
 data/
   GDSII_Coordinates.txt    — 100-cell nanometer layout for fabrication
 docs/
@@ -53,6 +58,12 @@ atlas/
     synergies.json         — 80+ entity synergy graph (weighted edges)
     expander_rules.json    — 43 inference rules (BLOOM_RESONANCE, GEOMETRIC_COMPUTATION, etc.)
     resonance_sensor.json  — 22-channel parallel-field compositor
+  remote/g2b/              — Mounted data from Geometric-to-Binary-Computational-Bridge (via fieldlink)
+    octahedral_state_encoding.json — 8-state 3-bit canonical bridge table (states, Gray codes, GEIS tokens)
+    octahedral_state_encoder.json  — Silicon tensor encoder (Zeeman basis, THz read/write)
+    sensor_suite.json        — 22-channel parallel-field sensor architecture
+    glyph_bridge.json        — Glyph-to-geometric primitive mappings (Navier-Stokes, Shannon, etc.)
+    geobin_bridges.json      — Shape encoding bridges (ICOSA edge-walk, DODECA face-parity)
   remote/regen/            — Mounted data from Regenerative-Intelligence-Core (via fieldlink)
 ```
 
@@ -82,6 +93,10 @@ print(f'Phi: {phi}, Sovereign: {sov}')
 | FRET exponent | 6 (1/r^6) | Dipole-dipole coupling decay |
 | Sovereignty threshold | Φ > 3.0 | Integrated Information cutoff |
 | Tetrahedral angle | 109.47° | Silicon bond symmetry |
+| FRET cutoff distance | 4.854101966249895 Å | Interaction distance limit |
+| Transition timescale | 0.2–3 ps | Zeeman-basis state switching |
+| Frequency range | 0.3–5 THz | Read/write operational band |
+| Transition energy | 6.626e-4 aJ | h × 1 THz = 4.14 meV |
 
 ## Rosetta-Shape-Core Fieldlink
 
@@ -95,10 +110,37 @@ This repo connects to Rosetta-Shape-Core via `.fieldlink.json`:
 | Relaxation engine | `PROTO.SEED_GROWTH` | Seed-growth protocol v1.0 |
 | FRET coupling | Coupling edge | 1/r^6 weighted edges |
 
+## Geometric-to-Binary Bridge (G2B)
+
+The G2B repo (77+ files) provides the encoding layer between geometric states and binary computation:
+
+| SOMS Module | G2B Source | Function |
+|---|---|---|
+| `octahedral_lookup.py` | `Mandala/octahedral_lookup.py` | Gray codes, eigenvalue tables, φ-stability |
+| `geometric_encoder.py` | `GEIS/geometric_encoder.py` | Token ↔ binary bidirectional encoding |
+| `octahedral_state_encoding.json` | `mappings/` | Canonical 8-state bridge table |
+| `octahedral_state_encoder.json` | `Silicon/` | Physical-layer tensor encoder (Zeeman) |
+| `geobin_bridges.json` | `bridges/geobin-bridges.json` | ICOSA/DODECA shape encoding |
+
+**GEIS Token Format:** `[vertex_bits]|[operator][symbol]` — e.g., `001|O` = state 1, radial, octahedral.
+
+**Gray Code Table:**
+
+| State | Binary | Gray | Label | Glyph |
+|-------|--------|------|-------|-------|
+| 0 | 000 | 000 | +x | ⊕ |
+| 1 | 001 | 001 | -x | ⊖ |
+| 2 | 010 | 011 | +y | ⊗ |
+| 3 | 011 | 010 | -y | ⊘ |
+| 4 | 100 | 110 | +z | ⊙ |
+| 5 | 101 | 111 | -z | ⊚ |
+| 6 | 110 | 101 | diag-a | ⊛ |
+| 7 | 111 | 100 | diag-b | ⊜ |
+
 ## Key Conventions
 
-- **Class names:** PascalCase — `SOMSEngine`, `MandalaMap`, `PhiCalculator`, `ConstraintAgent`
-- **Module names:** snake_case — `octahedral_physics.py`, `mandala_structure.py`
+- **Class names:** PascalCase — `SOMSEngine`, `MandalaMap`, `PhiCalculator`, `ConstraintAgent`, `GeometricEncoder`
+- **Module names:** snake_case — `octahedral_physics.py`, `mandala_structure.py`, `octahedral_lookup.py`, `geometric_encoder.py`
 - **Rosetta entity IDs:** dot-namespaced — `SHAPE.OCTA`, `CONST.PHI`, `PROTO.MANDALA_COMPUTE`
 - **Fieldlink mounts:** under `atlas/remote/<source-name>/`
 

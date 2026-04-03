@@ -7,17 +7,28 @@ Implements the seed-growth protocol from Rosetta-Shape-Core:
 The agent's identity is rooted in a geometric seed (e.g. SHAPE.OCTA).
 Constraints are embedded in the physical laws (energy conservation,
 resonance coherence) rather than imposed externally.
+
+Split architecture:
+    resource_budget.py  — ResourceBudget dataclass
+    geometric_map.py    — GeometricMap dataclass
+    atlas_loader.py     — JSON loading functions and constants
+    constraint_agent.py — ConstraintAgent class (this file)
 """
 
 from __future__ import annotations
 
 import ast
-import json
-from dataclasses import dataclass, field
 from enum import Enum
 from fractions import Fraction
-from pathlib import Path
 from typing import Dict, List, Optional
+
+from src.resource_budget import ResourceBudget
+from src.geometric_map import GeometricMap
+from src.atlas_loader import (
+    load_seed_catalog, load_bridge_map, load_synergy_graph,
+    load_expander_rules, jaccard,
+    DUAL_PAIRS, BRIDGE_PAIRS, SYNERGY_ALIASES,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -30,110 +41,6 @@ class AgentState(Enum):
     EXPANDING = "expanding"
     EXPLORING = "exploring"
     CONTRACTING = "contracting"
-
-
-@dataclass
-class ResourceBudget:
-    """Resource envelope for agent expansion."""
-    compute: int = 0
-    bandwidth: float = 0.0
-    energy: Fraction = field(default_factory=lambda: Fraction(1, 1))
-    time_remaining: Fraction = field(default_factory=lambda: Fraction(1, 1))
-
-    def is_depleted(self) -> bool:
-        return self.energy <= 0 or self.compute <= 0
-
-
-@dataclass
-class GeometricMap:
-    """Agent's discovered constraint/resonance map."""
-    resonances: Dict[str, Fraction] = field(default_factory=dict)
-    relationships: Dict[str, List[str]] = field(default_factory=dict)
-    energy_flows: Dict[tuple, Fraction] = field(default_factory=dict)
-
-    def record_resonance(self, entity_id: str, score: float) -> None:
-        self.resonances[entity_id] = Fraction(score).limit_denominator(10000)
-
-    def record_relationship(self, from_id: str, to_id: str) -> None:
-        self.relationships.setdefault(from_id, [])
-        if to_id not in self.relationships[from_id]:
-            self.relationships[from_id].append(to_id)
-
-    def record_energy_flow(self, from_id: str, to_id: str, amount: Fraction) -> None:
-        self.energy_flows[(from_id, to_id)] = amount
-
-
-# ---------------------------------------------------------------------------
-# Atlas loader — reads mounted fieldlink data
-# ---------------------------------------------------------------------------
-
-_ATLAS_ROOT = Path(__file__).resolve().parent.parent / "atlas" / "remote"
-
-# Polyhedral duality pairs (vertices ↔ faces) give +0.15 resonance bonus
-_DUAL_PAIRS = {
-    "SHAPE.CUBE": "SHAPE.OCTA",
-    "SHAPE.OCTA": "SHAPE.CUBE",
-    "SHAPE.DODECA": "SHAPE.ICOSA",
-    "SHAPE.ICOSA": "SHAPE.DODECA",
-}
-
-# Bridge connections give +0.08 resonance bonus
-_BRIDGE_PAIRS = {
-    ("SHAPE.TETRA", "SHAPE.CUBE"),
-    ("SHAPE.CUBE", "SHAPE.TETRA"),
-    ("SHAPE.TETRA", "SHAPE.DODECA"),
-    ("SHAPE.DODECA", "SHAPE.TETRA"),
-}
-
-
-def _load_json(path: Path):
-    """Load a JSON file, returning empty dict/list on failure."""
-    try:
-        return json.loads(path.read_text())
-    except (OSError, json.JSONDecodeError):
-        return {}
-
-
-def _load_seed_catalog() -> Dict[str, dict]:
-    """Load seed catalog keyed by shape_id (e.g. SHAPE.OCTA)."""
-    data = _load_json(_ATLAS_ROOT / "rosetta" / "seed_catalog.json")
-    return {s["shape_id"]: s for s in data.get("seeds", [])}
-
-
-def _load_bridge_map() -> Dict[str, dict]:
-    """Load bridges keyed by shape ID."""
-    data = _load_json(_ATLAS_ROOT / "rosetta" / "bridges.json")
-    return {entry["shape"]: entry for entry in data.get("map", [])}
-
-
-def _load_synergy_graph() -> Dict[str, List[tuple]]:
-    """Load Living-Intelligence synergies as adjacency list with weights."""
-    data = _load_json(_ATLAS_ROOT / "living-intelligence" / "synergies.json")
-    if not data:
-        return {}
-    graph: Dict[str, List[tuple]] = {}
-    for edge in data.get("edges", []):
-        src, tgt = edge["source"], edge["target"]
-        weight = edge.get("weight", 0.5)
-        graph.setdefault(src, []).append((tgt, weight))
-        # Also add reverse for undirected traversal
-        graph.setdefault(tgt, []).append((src, weight))
-    return graph
-
-
-def _load_expander_rules() -> List[dict]:
-    """Load Living-Intelligence inference rules."""
-    data = _load_json(_ATLAS_ROOT / "living-intelligence" / "expander_rules.json")
-    return data if isinstance(data, list) else []
-
-
-def _jaccard(a: list, b: list) -> float:
-    """Jaccard similarity between two lists."""
-    sa, sb = set(a), set(b)
-    union = sa | sb
-    if not union:
-        return 0.0
-    return len(sa & sb) / len(union)
 
 
 # ---------------------------------------------------------------------------
@@ -163,10 +70,10 @@ class ConstraintAgent:
         self.sensor_state: Dict[str, Fraction] = {}
 
         # Load atlas data from fieldlink mounts
-        self._seed_catalog = _load_seed_catalog()
-        self._bridge_map = _load_bridge_map()
-        self._synergy_graph = _load_synergy_graph()
-        self._expander_rules = _load_expander_rules()
+        self._seed_catalog = load_seed_catalog()
+        self._bridge_map = load_bridge_map()
+        self._synergy_graph = load_synergy_graph()
+        self._expander_rules = load_expander_rules()
 
     # ------------------------------------------------------------------
     # Resource management
@@ -316,8 +223,8 @@ class ConstraintAgent:
                 target_seed = self._seed_catalog.get(ref_id, {})
                 src_families = source_seed.get("traits", {}).get("families", [])
                 tgt_families = target_seed.get("traits", {}).get("families", [])
-                score = _jaccard(src_families, tgt_families)
-                if _DUAL_PAIRS.get(self.seed_id) == ref_id:
+                score = jaccard(src_families, tgt_families)
+                if DUAL_PAIRS.get(self.seed_id) == ref_id:
                     score += 0.15
                 # Zero resonance = no geometric basis = corruption
                 if score == 0:
@@ -386,10 +293,10 @@ class ConstraintAgent:
                 if shape_id == entity_id:
                     continue
                 target_families = seed.get("traits", {}).get("families", [])
-                score = _jaccard(source_families, target_families)
-                if _DUAL_PAIRS.get(entity_id) == shape_id:
+                score = jaccard(source_families, target_families)
+                if DUAL_PAIRS.get(entity_id) == shape_id:
                     score += 0.15
-                if (entity_id, shape_id) in _BRIDGE_PAIRS:
+                if (entity_id, shape_id) in BRIDGE_PAIRS:
                     score += 0.08
                 if score > 0:
                     neighbors.append((shape_id, min(score, 1.0)))
@@ -403,15 +310,7 @@ class ConstraintAgent:
                 neighbors.append((f"PROTO.{protocol.upper().replace('.', '_')}", 0.4))
 
         # 3. Synergy graph: Living-Intelligence weighted edges
-        # Map SHAPE.OCTA → OCTA_STATE, MANDALA, etc.
-        synergy_aliases = {
-            "SHAPE.OCTA": "OCTA_STATE",
-            "SHAPE.TETRA": "SILICON_LAT",   # tetra → silicon (sp3 bond)
-            "SHAPE.CUBE": "CRYSTAL_LATTICE",
-            "SHAPE.DODECA": "ROSETTA_SHAPE",
-            "SHAPE.ICOSA": "BIOGRID2",
-        }
-        synergy_key = synergy_aliases.get(entity_id, entity_id)
+        synergy_key = SYNERGY_ALIASES.get(entity_id, entity_id)
         if synergy_key in self._synergy_graph:
             for target_id, weight in self._synergy_graph[synergy_key]:
                 neighbors.append((target_id, min(weight, 1.0)))
@@ -427,14 +326,9 @@ class ConstraintAgent:
         """
         discovered_ids = set(self.map.resonances.keys()) | {self.seed_id}
         # Also include synergy aliases
-        alias_map = {
-            "SHAPE.OCTA": "OCTA_STATE", "SHAPE.TETRA": "SILICON_LAT",
-            "SHAPE.CUBE": "CRYSTAL_LATTICE", "SHAPE.DODECA": "ROSETTA_SHAPE",
-            "SHAPE.ICOSA": "BIOGRID2",
-        }
         for eid in list(discovered_ids):
-            if eid in alias_map:
-                discovered_ids.add(alias_map[eid])
+            if eid in SYNERGY_ALIASES:
+                discovered_ids.add(SYNERGY_ALIASES[eid])
 
         triggered = []
         for rule in self._expander_rules:

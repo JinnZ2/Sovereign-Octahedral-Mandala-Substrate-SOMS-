@@ -1,0 +1,6 @@
+{
+  "schema": "regenerative-intelligence/evolution-history@1.0",
+  "status": "stub",
+  "description": "Generational progression logs across simulation runs. Populated at runtime by Regenerative-Intelligence-Core.",
+  "generations": []
+}
