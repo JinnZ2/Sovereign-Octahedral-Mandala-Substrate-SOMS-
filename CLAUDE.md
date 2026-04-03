@@ -30,7 +30,13 @@ tests/                       # pytest suite (82 tests)
 data/GDSII_Coordinates.txt   # 100-cell nanometer fabrication layout
 atlas/remote/                # Fieldlink-mounted data from 6 sibling repos (see .fieldlink.json)
   rosetta/                   # Rosetta-Shape-Core: octahedron.json, bridges.json, seed_catalog.json, math_constants.json
-  mandala/                   # Mandala-Computing: shapes.json, glyphs.json, connect.json, sensors.json
+  mandala/                   # Mandala-Computing: shapes.json, glyphs.json, + 6 compute modules below
+    octahedral_arithmetic.py # OctahedralNumber: native base-8 glyph math, GlyphFraction, primality
+    geometric_state_algebra.py # O_h group (48 elements), group ring Z[O_h], Cayley graph energy
+    mandala_computer.py      # MandalaComputer: 8-state annealer, factorization/SAT/optimization encoders
+    membrane.py              # Membrane: 3-phase computation (coarse→boundary→fine)
+    holographic_mandala.py   # HolographicMandala: boundary encoding + renormalization solving
+    sovereign_integration.py # SovereignAgent: glyph→physical field mapping, pack resonance
   living-intelligence/       # Living-Intelligence-DB: synergies.json, expander_rules.json, resonance_sensor.json
   g2b/                       # Geometric-to-Binary: octahedral_state_encoding.json, sensor_suite.json, geobin_bridges.json
   regen/                     # Regenerative-Intelligence-Core: stub JSONs (seed_library, elder_archive, evolution_history)

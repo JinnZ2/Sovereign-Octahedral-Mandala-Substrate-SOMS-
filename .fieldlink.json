@@ -51,13 +51,25 @@
           "atlas/shapes.json",
           "atlas/glyphs/mandala.json",
           "protocols/connect.json",
-          "sensors/multi_layer.json"
+          "sensors/multi_layer.json",
+          "octahedral_arithmetic.py",
+          "geometric_state_algebra.py",
+          "mandala_computer.py",
+          "membrane.py",
+          "holographic_mandala.py",
+          "sovereign_integration.py"
         ],
         "mounts": [
           { "remote": "atlas/shapes.json", "as": "atlas/remote/mandala/shapes.json" },
           { "remote": "atlas/glyphs/mandala.json", "as": "atlas/remote/mandala/glyphs.json" },
           { "remote": "protocols/connect.json", "as": "atlas/remote/mandala/connect.json" },
-          { "remote": "sensors/multi_layer.json", "as": "atlas/remote/mandala/sensors.json" }
+          { "remote": "sensors/multi_layer.json", "as": "atlas/remote/mandala/sensors.json" },
+          { "remote": "octahedral_arithmetic.py", "as": "atlas/remote/mandala/octahedral_arithmetic.py" },
+          { "remote": "geometric_state_algebra.py", "as": "atlas/remote/mandala/geometric_state_algebra.py" },
+          { "remote": "mandala_computer.py", "as": "atlas/remote/mandala/mandala_computer.py" },
+          { "remote": "membrane.py", "as": "atlas/remote/mandala/membrane.py" },
+          { "remote": "holographic_mandala.py", "as": "atlas/remote/mandala/holographic_mandala.py" },
+          { "remote": "sovereign_integration.py", "as": "atlas/remote/mandala/sovereign_integration.py" }
         ],
         "consent": { "license": "MIT", "share_ok": true }
       },
