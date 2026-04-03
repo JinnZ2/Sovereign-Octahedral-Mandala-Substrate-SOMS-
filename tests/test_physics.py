@@ -16,6 +16,11 @@ class TestSOMSEngine:
         valid = {0, 45, 90, 135, 180, 225, 270, 315}
         assert set(engine.orientations).issubset(valid)
 
+    def test_dual_representation_sync(self):
+        engine = SOMSEngine(num_cells=20)
+        for i in range(20):
+            assert engine.orientations[i] == engine.ANGLES[engine.state_indices[i]]
+
     def test_fret_coupling_shape(self):
         engine = SOMSEngine(num_cells=10)
         d = np.random.rand(10, 10) + 0.1
@@ -29,7 +34,6 @@ class TestSOMSEngine:
         d = np.random.rand(5, 5) + 0.5
         np.fill_diagonal(d, 0)
         j = engine.fret_coupling(d)
-        # Off-diagonal should all be positive
         mask = ~np.eye(5, dtype=bool)
         assert np.all(j[mask] > 0)
 
@@ -42,6 +46,22 @@ class TestSOMSEngine:
         E = engine.energy_landscape(j)
         assert E >= 0
 
+    def test_angular_energy_nonnegative(self):
+        engine = SOMSEngine(num_cells=10)
+        d = np.random.rand(10, 10) + 0.5
+        np.fill_diagonal(d, 0)
+        d = (d + d.T) / 2
+        j = engine.fret_coupling(d)
+        assert engine.angular_energy(j) >= 0
+
+    def test_tensor_energy_nonnegative(self):
+        engine = SOMSEngine(num_cells=10)
+        d = np.random.rand(10, 10) + 0.5
+        np.fill_diagonal(d, 0)
+        d = (d + d.T) / 2
+        j = engine.fret_coupling(d)
+        assert engine.tensor_energy(j) >= 0
+
     def test_relax_step_returns_tuple(self):
         engine = SOMSEngine(num_cells=10)
         d = np.random.rand(10, 10) + 0.5
@@ -53,9 +73,19 @@ class TestSOMSEngine:
         assert isinstance(accepted, int)
         assert accepted >= 0
 
+    def test_relax_keeps_dual_sync(self):
+        """After relaxation, both representations must stay in sync."""
+        engine = SOMSEngine(num_cells=15)
+        d = np.random.rand(15, 15) + 0.5
+        np.fill_diagonal(d, 0)
+        d = (d + d.T) / 2
+        j = engine.fret_coupling(d)
+        engine.relax_step(j, temperature=1.0)
+        for i in range(15):
+            assert engine.orientations[i] == engine.ANGLES[engine.state_indices[i]]
+
     def test_anneal_reduces_energy(self):
         np.random.seed(42)
-        engine = SOMSEngine(num_cells=20)
         m = MandalaMap(u=1, depth=2)
         d = distance_matrix(m.pos, m.pos)
         engine = SOMSEngine(num_cells=len(m.pos))
@@ -75,6 +105,61 @@ class TestSOMSEngine:
         assert len(history) == 10
         step, T, E, acc = history[0]
         assert step == 0
+
+
+class TestDualPathway:
+    """Test that different problem types select different pathway biases."""
+
+    def _make_engine_and_coupling(self, problem_type, n=15):
+        engine = SOMSEngine(num_cells=n, problem_type=problem_type)
+        d = np.random.rand(n, n) + 0.5
+        np.fill_diagonal(d, 0)
+        d = (d + d.T) / 2
+        j = engine.fret_coupling(d)
+        return engine, j
+
+    def test_optimization_favors_angular(self):
+        engine, j = self._make_engine_and_coupling("OPTIMIZATION")
+        assert engine.alpha == 0.8
+        report = engine.pathway_report(j)
+        assert report["problem_type"] == "OPTIMIZATION"
+
+    def test_factorization_favors_tensor(self):
+        engine, j = self._make_engine_and_coupling("FACTORIZATION")
+        assert engine.alpha == 0.2
+
+    def test_protein_folding_balanced(self):
+        engine, j = self._make_engine_and_coupling("PROTEIN_FOLDING")
+        assert engine.alpha == 0.5
+
+    def test_pathway_report_keys(self):
+        engine, j = self._make_engine_and_coupling("SAT")
+        report = engine.pathway_report(j)
+        assert "angular_energy" in report
+        assert "tensor_energy" in report
+        assert "combined_energy" in report
+        assert "dominant_pathway" in report
+        assert "avg_phi_stability" in report
+        assert report["dominant_pathway"] in ("angular", "tensor")
+
+    def test_all_problem_types_run(self):
+        """Every registered problem type should produce valid energy."""
+        for ptype in SOMSEngine.PROBLEM_PROFILES:
+            engine, j = self._make_engine_and_coupling(ptype)
+            E = engine.energy_landscape(j)
+            assert E >= 0, f"{ptype} produced negative energy"
+
+    def test_cell_accessors(self):
+        engine = SOMSEngine(num_cells=8)
+        for i in range(8):
+            gray = engine.cell_gray_code(i)
+            assert len(gray) == 3
+            ev = engine.cell_eigenvalues(i)
+            assert len(ev) == 3
+            char = engine.cell_character(i)
+            assert isinstance(char, str)
+            phi = engine.cell_phi_score(i)
+            assert 0.0 <= phi <= 1.0
 
 
 class TestMandalaMap:

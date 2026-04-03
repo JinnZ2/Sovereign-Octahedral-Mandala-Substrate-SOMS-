@@ -162,21 +162,31 @@ def main():
         if a * b != N:
             print(f"    Note: {N} may not factor as product of two values in 2..9")
 
-    # ── Step 3: Energy landscape ──────────────────────────────────────
-    print(f"\n[3] ENERGY LANDSCAPE (full mandala)")
-    e = SOMSEngine(num_cells=len(m.pos))
+    # ── Step 3: Energy landscape — dual-pathway relaxation ─────────────
+    print(f"\n[3] DUAL-PATHWAY ENERGY LANDSCAPE")
+    print(f"    Like protein folding: backbone angles (continuous) + side-chain")
+    print(f"    contacts (discrete) coexist. The problem selects the funnel.\n")
+
     d = distance_matrix(m.pos, m.pos)
+
+    # Compare pathways across problem types
+    for ptype in ["FACTORIZATION", "PROTEIN_FOLDING", "OPTIMIZATION"]:
+        np.random.seed(42)
+        e = SOMSEngine(num_cells=len(m.pos), problem_type=ptype)
+        j = e.fret_coupling(d)
+        E0 = e.energy_landscape(j)
+        history = e.anneal(j, T_start=10.0, T_final=0.01, n_steps=200)
+        Ef = history[-1][2]
+        reduction = (E0 - Ef) / max(E0, 1e-12) * 100
+        report = e.pathway_report(j)
+        print(f"    {ptype:<18} α={e.alpha:.1f}  E: {E0:.2f} → {Ef:.2f}  "
+              f"(-{reduction:.0f}%)  dominant: {report['dominant_pathway']}")
+
+    # Use factorization pathway for the main engine going forward
+    np.random.seed(42)
+    e = SOMSEngine(num_cells=len(m.pos), problem_type="FACTORIZATION")
     j = e.fret_coupling(d)
-
-    E0 = e.energy_landscape(j)
-    history = e.anneal(j, T_start=10.0, T_final=0.01, n_steps=200)
-    Ef = history[-1][2]
-    reduction = (E0 - Ef) / max(E0, 1e-12) * 100
-
-    print(f"    {len(m.pos)} cells, FRET 1/r^6 coupling")
-    print(f"    Initial energy: {E0:.4f}")
-    print(f"    Final energy:   {Ef:.4f}")
-    print(f"    Reduction:      {reduction:.1f}%")
+    e.anneal(j, T_start=10.0, T_final=0.01, n_steps=200)
 
     # ── Step 4: Sovereignty ───────────────────────────────────────────
     print(f"\n[4] SOVEREIGNTY CHECK (Φ > 3.0)")
