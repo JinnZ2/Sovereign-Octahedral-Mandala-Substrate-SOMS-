@@ -61,7 +61,7 @@
 
   "atlas_sources": {
     "rosetta":              { "repo": "JinnZ2/Rosetta-Shape-Core",     "key_file": "octahedron.json",            "provides": "SHAPE.OCTA definition, sacred geometry constants" },
-    "mandala":              { "repo": "JinnZ2/Mandala-Computing",       "key_file": "shapes.json",                "provides": "Geometric primitives, glyph mappings (⊕⊖⊗⊘⊙⊚⊛⊜)" },
+    "mandala":              { "repo": "JinnZ2/Mandala-Computing",       "key_file": "octahedral_arithmetic.py",   "provides": "Base-8 glyph arithmetic, O_h symmetry algebra, mandala annealer, membrane computation, holographic solving, sovereign integration" },
     "living-intelligence":  { "repo": "JinnZ2/Living-Intelligence-Database", "key_file": "synergies.json",        "provides": "80+ entity synergy graph, 43 expander rules" },
     "g2b":                  { "repo": "JinnZ2/Geometric-to-Binary-Computational-Bridge", "key_file": "octahedral_state_encoding.json", "provides": "8-state 3-bit bridge table, sensor suite, GEIS tokens" },
     "regen":                { "repo": "JinnZ2/Regenerative-intelligence-core", "key_file": null,                  "provides": "Stubs: seed_library, elder_archive, evolution_history" },
