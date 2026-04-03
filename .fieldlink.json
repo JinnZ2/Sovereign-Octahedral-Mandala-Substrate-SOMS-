@@ -1,7 +1,7 @@
 {
   "fieldlink": {
     "version": "3.0",
-    "updated": "2026-04-02T00:00:00Z",
+    "updated": "2026-04-03T00:00:00Z",
     "role": ["substrate", "physics-engine", "mandala-compute"],
 
     "identity": {
@@ -114,9 +114,13 @@
         "paths": [
           "mappings/octahedral_state_encoding.json",
           "bridges/sensor_suite.json",
+          "bridges/geobin-bridges.json",
           "glyph_to_geometric_bridge.json",
+          "Silicon/octahedral_state_encoder.json",
           "GEIS/octahedral_state.py",
+          "GEIS/geometric_encoder.py",
           "GEIS/state_tensor.py",
+          "Mandala/octahedral_lookup.py",
           "Engine/kt_annealer.py",
           "Silicon/seed_expansion.py",
           "Silicon/FRET/substrate_fret_coupling.py"
@@ -124,7 +128,9 @@
         "mounts": [
           { "remote": "mappings/octahedral_state_encoding.json", "as": "atlas/remote/g2b/octahedral_state_encoding.json" },
           { "remote": "bridges/sensor_suite.json", "as": "atlas/remote/g2b/sensor_suite.json" },
-          { "remote": "glyph_to_geometric_bridge.json", "as": "atlas/remote/g2b/glyph_bridge.json" }
+          { "remote": "bridges/geobin-bridges.json", "as": "atlas/remote/g2b/geobin_bridges.json" },
+          { "remote": "glyph_to_geometric_bridge.json", "as": "atlas/remote/g2b/glyph_bridge.json" },
+          { "remote": "Silicon/octahedral_state_encoder.json", "as": "atlas/remote/g2b/octahedral_state_encoder.json" }
         ],
         "consent": { "license": "MIT", "share_ok": true }
       }
