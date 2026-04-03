@@ -2,7 +2,8 @@
 
 Physics simulation: octahedral-geometry computing via thermodynamic relaxation.
 8 octahedral states (3-bit) + FRET 1/r^6 coupling + Fibonacci mandala geometry → ground-state solving.
-Dual-pathway engine: angular (continuous sin²) + tensor (discrete eigenvalue L2), α-mixed by problem type.
+Triple-pathway engine: angular (continuous sin²) + tensor (discrete eigenvalue L2) + Cayley (O_h graph distance), α-mixed by problem type.
+Full O_h symmetry group (48 elements) available via geometric state algebra; holographic renormalization solver for multi-scale problems.
 
 ## Quick Start
 
@@ -16,12 +17,14 @@ python src/demo.py        # full walkthrough
 
 ```
 src/                         # Core library — import via `from src import *`
-  octahedral_physics.py      # SOMSEngine: dual-pathway FRET engine, anneal(), relax_step()
+  octahedral_physics.py      # SOMSEngine: triple-pathway FRET engine (angular+tensor+Cayley), anneal(), relax_step()
   mandala_structure.py       # MandalaMap: Fibonacci φ-scaled 8-petal ring geometry
   phi_calculator.py          # PhiCalculator: integrated information Φ, sovereignty check (Φ>3.0)
   constraint_agent.py        # ConstraintAgent: seed-growth lifecycle (COMPRESSED→EXPANDING→EXPLORING→CONTRACTING)
   octahedral_lookup.py       # GRAY_CODES, OCTAHEDRAL_EIGENVALUES, ALLOWED_TRANSITIONS, phi_stability_score()
   geometric_encoder.py       # GeometricEncoder: GEIS token ↔ binary. Format: [vertex_bits]|[operator][symbol]
+  geometric_state_algebra.py # OhGroup (48-element O_h), GroupRingElement (Z[O_h]), GeometricState, CayleyEnergy
+  holographic_engine.py      # HolographicEngine: boundary encoding + entanglement + renormalization anneal
   resource_budget.py         # ResourceBudget dataclass
   geometric_map.py           # GeometricMap dataclass
   atlas_loader.py            # load_seed_catalog(), load_synergies(), DUAL_PAIRS, BRIDGE_PAIRS, SYNERGY_ALIASES
@@ -47,10 +50,21 @@ atlas/remote/                # Fieldlink-mounted data from 6 sibling repos (see 
 
 ```
 MandalaMap(u,depth) → positions → distance_matrix → SOMSEngine(num_cells, problem_type)
-                                                      ├─ angular_energy() (sin² coupling, weight α)
-                                                      ├─ tensor_energy()  (eigenvalue L2, weight 1-α)
+                                                      ├─ angular_energy()  (sin² coupling, weight α)
+                                                      ├─ tensor_energy()   (eigenvalue L2, weight 1-α)
+                                                      ├─ cayley_energy()   (O_h Cayley graph distance, pathway C)
                                                       ├─ anneal(J, steps, T0) → ground state
-                                                      └─ pathway_report(J) → {angular_E, tensor_E, alpha, dominant}
+                                                      └─ pathway_report(J) → {angular_E, tensor_E, cayley_E, dominant}
+
+HolographicEngine(mandala) → build() → rings + entanglement_links
+                               ├─ holographic_energy()      (cross-ring consistency)
+                               ├─ entanglement_energy()     (Berry-phase cross-depth)
+                               ├─ renormalization_anneal(J)  → multi-scale ground state
+                               └─ profile() / entanglement_stats()
+
+OhGroup.instance() → 48-element O_h with Cayley table + distances
+  GeometricState.from_classical_state(group, 0..7)  ↔  .to_classical()
+  CayleyEnergy(group) → pairwise_energy(), cancellation_residual()
 
 PhiCalculator(orientations) → evaluate_integration() → (phi, is_sovereign)  # sovereign if Φ>3.0
 
@@ -93,3 +107,61 @@ Mount pattern: `atlas/remote/<source-name>/`
 - Spelling: `octahedral` (never `octohedral`)
 - New files go in `src/`, `data/`, `docs/`, or `atlas/`
 - Do not break `.fieldlink.json` schema
+
+## AI Quick-Access Guide
+
+### Instant setup (clone + run)
+
+```bash
+git clone https://github.com/JinnZ2/Sovereign-Octahedral-Mandala-Substrate-SOMS-.git
+cd Sovereign-Octahedral-Mandala-Substrate-SOMS-
+pip install numpy scipy
+python -c "from src import *; print(OhGroup.instance().summary())"
+```
+
+### Key entry points for AI agents
+
+```python
+# 1. Basic engine — create geometry + anneal
+from src import MandalaMap, SOMSEngine
+m = MandalaMap(u=20, depth=5)
+e = SOMSEngine(num_cells=m.num_cells, problem_type="OPTIMIZATION")
+j = e.fret_coupling(np.linalg.norm(m.pos[:, None] - m.pos[None, :], axis=-1) + np.eye(m.num_cells))
+history = e.anneal(j, T_start=5.0, T_final=0.1, n_steps=200)
+
+# 2. O_h symmetry group — 48 elements, Cayley distances
+from src import OhGroup, GeometricState, CayleyEnergy
+g = OhGroup.instance()   # singleton, builds once
+s0 = GeometricState.from_classical_state(g, 0)
+s3 = GeometricState.from_classical_state(g, 3)
+print(s0.cayley_distance_to(s3))   # true geometric distance
+print(s0.compose(s3))              # group composition
+
+# 3. Holographic multi-scale solver
+from src import HolographicEngine, MandalaMap
+m = MandalaMap(u=20, depth=5)
+he = HolographicEngine(m, problem_type="FACTORIZATION").build()
+result = he.renormalization_anneal(j, n_sweeps=3, steps_per_ring=200)
+
+# 4. Cayley pathway on existing engine
+E_cayley = e.cayley_energy(j)  # third pathway alongside angular + tensor
+```
+
+### Ecosystem repos (fieldlink-connected, CC0/MIT)
+
+| Repo | What it adds | Raw URL prefix |
+|------|-------------|----------------|
+| [Rosetta-Shape-Core](https://github.com/JinnZ2/Rosetta-Shape-Core) | Canonical octahedron geometry, bridges, seed catalog | `raw.githubusercontent.com/JinnZ2/Rosetta-Shape-Core/main/` |
+| [Mandala-Computing](https://github.com/JinnZ2/Mandala-Computing) | MandalaComputer, quantum mandala, holographic solver | `raw.githubusercontent.com/JinnZ2/Mandala-Computing/main/` |
+| [Living-Intelligence-DB](https://github.com/JinnZ2/Living-Intelligence-DB) | Synergies, expander rules, resonance sensors | `raw.githubusercontent.com/JinnZ2/Living-Intelligence-DB/main/` |
+| [Geometric-to-Binary](https://github.com/JinnZ2/Geometric-to-Binary-Computational-Bridge) | State encoding JSON, sensor suite, geobin bridges | `raw.githubusercontent.com/JinnZ2/Geometric-to-Binary-Computational-Bridge/main/` |
+| [Regenerative-Intelligence-Core](https://github.com/JinnZ2/Regenerative-Intelligence-Core) | Seed library, elder archive, evolution history | `raw.githubusercontent.com/JinnZ2/Regenerative-Intelligence-Core/main/` |
+| [Resilience](https://github.com/JinnZ2/Resilience) | Seed protocol, field system, coupling matrix, NFS pipeline | `raw.githubusercontent.com/JinnZ2/Resilience/main/` |
+
+All repos are mounted locally at `atlas/remote/<source-name>/` via `.fieldlink.json`.
+
+### What each new module gives AI
+
+- **geometric_state_algebra.py** — States ARE symmetry operations, not flat integers. Cancellation = group composition to identity. The group ring Z[O_h] has 48 dimensions vs GF(2)'s 2. Enables: richer constraint encoding, geometric distance metrics, algebraic factorization.
+- **holographic_engine.py** — Multi-scale solving: encode on boundary, compress inward, solve coarse-to-fine with entanglement-correlated updates. Enables: faster convergence on large problems, hierarchical constraint decomposition, adaptive link strengthening.
+- **SOMSEngine.cayley_energy()** — Third pathway using true group-theoretic distance. Enables: symmetry-aware coupling that respects the octahedron's algebraic structure, not just angular or eigenvalue distance.
