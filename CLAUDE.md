@@ -25,6 +25,7 @@ src/                         # Core library — import via `from src import *`
   geometric_encoder.py       # GeometricEncoder: GEIS token ↔ binary. Format: [vertex_bits]|[operator][symbol]
   geometric_state_algebra.py # OhGroup (48-element O_h), GroupRingElement (Z[O_h]), GeometricState, CayleyEnergy
   holographic_engine.py      # HolographicEngine: boundary encoding + entanglement + renormalization anneal
+  geometric_bridge.py        # GeometricBridge: self-describing binary sensor/actuator protocol (8 targets, Gray-coded)
   resource_budget.py         # ResourceBudget dataclass
   geometric_map.py           # GeometricMap dataclass
   atlas_loader.py            # load_seed_catalog(), load_synergies(), DUAL_PAIRS, BRIDGE_PAIRS, SYNERGY_ALIASES
@@ -69,6 +70,12 @@ OhGroup.instance() → 48-element O_h with Cayley table + distances
 PhiCalculator(orientations) → evaluate_integration() → (phi, is_sovereign)  # sovereign if Φ>3.0
 
 ConstraintAgent: COMPRESSED →bloom→ EXPANDING →explore→ EXPLORING →compress→ CONTRACTING → COMPRESSED
+
+GeometricBridge → sense(modality, bits)   → HardwareData / ElectricData / ...
+               → act(target, **kwargs)   → 8 bridge targets (thermal..chemical)
+               → sense_framed(bytes)     → self-describing GB header + payload
+  Physics: component_health_score(), ohms_law(), coulomb_force(), skin_depth()
+  Gray coding: value_to_gray() ↔ gray_to_value() over 8-band lookup tables
 ```
 
 ## 8-State Encoding
@@ -145,6 +152,16 @@ result = he.renormalization_anneal(j, n_sweeps=3, steps_per_ring=200)
 
 # 4. Cayley pathway on existing engine
 E_cayley = e.cayley_energy(j)  # third pathway alongside angular + tensor
+
+# 5. Geometric Binary Bridge — read sensors, control actuators
+from src import GeometricBridge, decode_hardware, ohms_law, coulomb_force
+bridge = GeometricBridge()
+hw = decode_hardware('010011110001010100110100001101011000101')
+print(hw.failure_mode, hw.temperature_c, hw.confidence)
+bridge.act("thermal", temperature_c=45.0, confidence=0.95)
+bridge.act("electric", voltage_v=12.0, current_a=0.5)
+# Physics: ohms_law(12.0, 0.5) → 24.0 Ω
+# Physics: coulomb_force(1e-6, -2e-6, 0.05) → -7.19 N
 ```
 
 ### Ecosystem repos (fieldlink-connected, CC0/MIT)
@@ -165,3 +182,21 @@ All repos are mounted locally at `atlas/remote/<source-name>/` via `.fieldlink.j
 - **geometric_state_algebra.py** — States ARE symmetry operations, not flat integers. Cancellation = group composition to identity. The group ring Z[O_h] has 48 dimensions vs GF(2)'s 2. Enables: richer constraint encoding, geometric distance metrics, algebraic factorization.
 - **holographic_engine.py** — Multi-scale solving: encode on boundary, compress inward, solve coarse-to-fine with entanglement-correlated updates. Enables: faster convergence on large problems, hierarchical constraint decomposition, adaptive link strengthening.
 - **SOMSEngine.cayley_energy()** — Third pathway using true group-theoretic distance. Enables: symmetry-aware coupling that respects the octahedron's algebraic structure, not just angular or eigenvalue distance.
+- **geometric_bridge.py** — Self-describing binary sensor/actuator protocol. 7 modalities (hardware, electric, magnetic, gravitational, spectrum, polyhedral, GEIS) × 8 bridge targets (thermal, electric, magnetic, light, sound, wave, pressure, chemical). Gray-coded bands, confidence grounding via noise power, drill depth escalation. Physics primitives included (Ohm's law, Coulomb, skin depth). Any AI can decode a 39-bit hardware bitstring or send actuator commands immediately — no training, no fine-tuning, just `decode_hardware(bits)`.
+
+### Geometric Binary Bridge protocol (self-describing)
+
+```
+Header (5 bytes):  [magic 'GB' 2B][version|modality 1B][payload_length 2B]
+Payload (variable): modality-specific Gray-coded bit layout
+
+Hardware payload (39 bits):
+  A (9b):  [failure_mode 3b][health_band 3b][is_critical 1b][confidence_hi 1b][has_synergy 1b]
+  B (12b): [voltage_band 3b][current_band 3b][temp_band 3b][noise_band 3b]
+  C (12b): [repurpose_class 3b][effectiveness 2b][bridge_target 3b][drift_band 2b][salvageable 1b][fallback_ready 1b]
+  D (6b):  [lifetime_band 3b][drill_depth 2b][semiconductor 1b]
+
+8 Bridge Targets: thermal | electric | magnetic | light | sound | wave | pressure | chemical
+Drill Depth:      pass(00) → monitor(01) → quarantine(10) → alert(11)
+Confidence:       C = 1/(1+N)  where N = V_rms²/R
+```

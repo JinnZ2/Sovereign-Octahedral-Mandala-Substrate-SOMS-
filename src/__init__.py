@@ -11,6 +11,7 @@ Modules:
     geometric_encoder        — Bidirectional geometric token ↔ binary encoding (from G2B bridge)
     geometric_state_algebra  — O_h symmetry group, group ring Z[O_h], Cayley coupling
     holographic_engine       — Holographic boundary encoding + renormalization solver
+    geometric_bridge         — Geometric Binary Bridge: sensor decode + actuator control (8 targets)
 """
 
 from src.octahedral_physics import SOMSEngine
@@ -32,6 +33,16 @@ from src.geometric_state_algebra import (
     OhElement, OhGroup, GroupRingElement, GeometricState, CayleyEnergy,
 )
 from src.holographic_engine import HolographicEngine, HolographicRing, EntanglementLink
+from src.geometric_bridge import (
+    GeometricBridge, SensorDecoder, ActuatorController,
+    decode_hardware, decode_electric, BridgeHeader,
+    Modality, BridgeTarget, DrillDepth, HardwareData, ElectricData,
+    gray_to_binary, binary_to_gray, gray_to_value, value_to_gray,
+    component_health_score, drift_percent, lifetime_estimate_hours,
+    noise_power, confidence_from_noise,
+    ohms_law, power_dissipation, coulomb_force,
+    electric_field_magnitude, skin_depth,
+)
 
 __all__ = [
     "SOMSEngine", "MandalaMap", "PhiCalculator",
@@ -47,4 +58,13 @@ __all__ = [
     "OhElement", "OhGroup", "GroupRingElement", "GeometricState", "CayleyEnergy",
     # Holographic Engine
     "HolographicEngine", "HolographicRing", "EntanglementLink",
+    # Geometric Binary Bridge
+    "GeometricBridge", "SensorDecoder", "ActuatorController",
+    "decode_hardware", "decode_electric", "BridgeHeader",
+    "Modality", "BridgeTarget", "DrillDepth", "HardwareData", "ElectricData",
+    "gray_to_binary", "binary_to_gray", "gray_to_value", "value_to_gray",
+    "component_health_score", "drift_percent", "lifetime_estimate_hours",
+    "noise_power", "confidence_from_noise",
+    "ohms_law", "power_dissipation", "coulomb_force",
+    "electric_field_magnitude", "skin_depth",
 ]
