@@ -42,7 +42,44 @@ atlas/remote/                # Fieldlink-mounted data from 6 sibling repos (see 
     holographic_mandala.py   # HolographicMandala: boundary encoding + renormalization solving
     sovereign_integration.py # SovereignAgent: glyph→physical field mapping, pack resonance
   living-intelligence/       # Living-Intelligence-DB: synergies.json, expander_rules.json, resonance_sensor.json
-  g2b/                       # Geometric-to-Binary: octahedral_state_encoding.json, sensor_suite.json, geobin_bridges.json
+  g2b/                       # Geometric-to-Binary: state encoding JSONs + full bridges/ package (36 Python modules)
+    Bridge.py                # Top-level SensorDecoder + ActuatorController
+    bridges/                 # 36 encoder/decoder/adapter modules:
+      abstract_encoder.py    #   BinaryBridgeEncoder ABC (from_geometry → to_binary)
+      common.py              #   gray_code(), gray_bits(), bits_from_int(), hamming_distance()
+      orchestrator.py        #   BridgeOrchestrator: dynamic load + aggregate convergence vector
+      hardware_encoder.py    #   39-bit component health (failure, drift, repurpose, drill depth)
+      electric_encoder.py    #   Charge/current/voltage/conductivity (Ohm, Coulomb, skin depth)
+      magnetic_encoder.py    #   B-field/H-field/flux (Biot-Savart, Larmor, curvature)
+      thermal_encoder.py     #   Temperature/heat-flux encoder
+      gravity_encoder.py     #   Mass/distance/GM/tidal-tensor encoder
+      light_encoder.py       #   Spectrum/polarization/photon-spin encoder
+      sound_encoder.py       #   Phase/frequency/amplitude/resonance encoder
+      wave_encoder.py        #   RF/microwave frequency/phase encoder
+      pressure_encoder.py    #   Force/strain/tactile encoder
+      chemical_encoder.py    #   Concentration/pH/gas encoder
+      consciousness_encoder.py # Drill-depth escalation encoder
+      resilience_encoder.py  #   System resilience/recovery encoder
+      biomachine_encoder.py  #   Bio-machine interface encoder
+      emotion_encoder.py     #   Emotional-field encoder
+      community_encoder.py   #   Community/collective encoder
+      coop_encoder.py        #   Cooperative dynamics encoder
+      cyclic_encoder.py      #   Cyclic/periodic pattern encoder
+      sensor_suite.py        #   22-sensor parallel-field manager
+      physics_guard.py       #   Physical-law constraint validator
+      drill_loop.py          #   Drill-depth escalation loop
+      pad_resonance.py       #   Pad resonance calibration
+      bidirectional_hex.py   #   SovereignCommandInterface (hex↔binary)
+      hex_toggle_bridge.py   #   Hex toggle state bridge
+      mobile_bridge.py       #   Mobile device bridge adapter
+      vortex_bridge.py       #   VortexMemory → 4-bit topological bridge
+      field_adapter.py       #   Field system adapter
+      lid_adapter.py         #   Living Intelligence DB adapter
+      magnetic_comparator.py #   Magnetic field comparator
+      bridge_interface_gen.py #  Interface code generator
+      FELT_bridge_interface_gen.py # FELT sensor interface generator
+      Noise_grounded_handshake.py  # Noise-grounded trust handshake
+      recalibration_handshake.py   # Recalibration protocol
   regen/                     # Regenerative-Intelligence-Core: stub JSONs (seed_library, elder_archive, evolution_history)
   resilience/                # Resilience: seed_protocol.py, field_system.py, coupling_matrix.py, geobin_bridge.py, nfs_pipeline.py
 ```
