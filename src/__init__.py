@@ -14,6 +14,7 @@ Modules:
     geometric_bridge         — Geometric Binary Bridge: sensor decode + actuator control (8 targets)
     geometric_security       — 6-layer self-encoded security (parity, phi, trace, noise, bridge auth, handshake)
     immune_system            — Adaptive geometric security with immune memory and tolerance evolution
+    octahedral_session_cache — Constraint-coherent LRU cache with octahedral invalidation graph
 """
 
 from src.octahedral_physics import SOMSEngine
@@ -44,6 +45,9 @@ from src.geometric_security import (
     BRIDGE_SIGNATURES,
 )
 from src.immune_system import OctahedralImmuneSystem, ImmuneMemory
+from src.octahedral_session_cache import (
+    OctState, CacheEntry, InvalidationGraph, SessionCache,
+)
 from src.geometric_bridge import (
     GeometricBridge, SensorDecoder, ActuatorController,
     decode_hardware, decode_electric, BridgeHeader,
@@ -87,4 +91,6 @@ __all__ = [
     "BRIDGE_SIGNATURES",
     # Immune System (adaptive security)
     "OctahedralImmuneSystem", "ImmuneMemory",
+    # Session Cache (constraint-coherent caching)
+    "OctState", "CacheEntry", "InvalidationGraph", "SessionCache",
 ]
