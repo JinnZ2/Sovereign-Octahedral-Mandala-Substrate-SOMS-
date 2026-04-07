@@ -258,6 +258,37 @@ class SOMSEngine:
         return history
 
     # ------------------------------------------------------------------
+    # Pathway C — Cayley coupling (group-geometric)
+    # ------------------------------------------------------------------
+
+    _cayley_energy_cache = None
+
+    def _get_cayley_energy(self):
+        """Lazy-load the CayleyEnergy model (builds O_h once)."""
+        if SOMSEngine._cayley_energy_cache is None:
+            from src.geometric_state_algebra import OhGroup, CayleyEnergy
+            SOMSEngine._cayley_energy_cache = CayleyEnergy(OhGroup.instance())
+        return SOMSEngine._cayley_energy_cache
+
+    def cayley_energy(self, j_ij):
+        """
+        Pathway C: E = sum J_ij * (φ · d_cayley(g_i, g_j) / diam)².
+
+        Uses the Cayley graph of O_h to measure the true geometric
+        distance between symmetry operations, not just |s_i - s_j|.
+        """
+        ce = self._get_cayley_energy()
+        dm = ce.cayley_distance_matrix(self.state_indices)
+        diam = ce._diameter
+        total_e = 0.0
+        n = len(self.state_indices)
+        for i in range(n):
+            for j in range(i + 1, n):
+                norm = dm[i][j] / max(diam, 1)
+                total_e += j_ij[i, j] * (self.PHI * norm) ** 2
+        return total_e
+
+    # ------------------------------------------------------------------
     # Pathway diagnostics
     # ------------------------------------------------------------------
 
@@ -275,7 +306,7 @@ class SOMSEngine:
         phi_scores = [self.cell_phi_score(i) for i in range(self.num_cells)]
         avg_phi = np.mean(phi_scores)
 
-        return {
+        report = {
             "problem_type": self.problem_type,
             "alpha": self.alpha,
             "angular_energy": E_ang,
@@ -286,3 +317,12 @@ class SOMSEngine:
             "dominant_pathway": "angular" if self.alpha * E_ang > (1 - self.alpha) * E_ten else "tensor",
             "avg_phi_stability": avg_phi,
         }
+
+        # Include Cayley pathway energy when available
+        try:
+            E_cay = self.cayley_energy(j_ij)
+            report["cayley_energy"] = E_cay
+        except Exception:
+            pass
+
+        return report
