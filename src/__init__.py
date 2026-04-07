@@ -12,6 +12,8 @@ Modules:
     geometric_state_algebra  — O_h symmetry group, group ring Z[O_h], Cayley coupling
     holographic_engine       — Holographic boundary encoding + renormalization solver
     geometric_bridge         — Geometric Binary Bridge: sensor decode + actuator control (8 targets)
+    geometric_security       — 6-layer self-encoded security (parity, phi, trace, noise, bridge auth, handshake)
+    immune_system            — Adaptive geometric security with immune memory and tolerance evolution
 """
 
 from src.octahedral_physics import SOMSEngine
@@ -33,6 +35,15 @@ from src.geometric_state_algebra import (
     OhElement, OhGroup, GroupRingElement, GeometricState, CayleyEnergy,
 )
 from src.holographic_engine import HolographicEngine, HolographicRing, EntanglementLink
+from src.geometric_security import (
+    GeometricSecurity,
+    tetrahedral_parity, verify_cluster_parity, verify_all_clusters,
+    verify_phi_spacing, verify_trace_invariant,
+    verify_noise_lock, verify_bridge_target,
+    generate_temporal_handshake, verify_temporal_handshake,
+    BRIDGE_SIGNATURES,
+)
+from src.immune_system import OctahedralImmuneSystem, ImmuneMemory
 from src.geometric_bridge import (
     GeometricBridge, SensorDecoder, ActuatorController,
     decode_hardware, decode_electric, BridgeHeader,
@@ -67,4 +78,13 @@ __all__ = [
     "noise_power", "confidence_from_noise",
     "ohms_law", "power_dissipation", "coulomb_force",
     "electric_field_magnitude", "skin_depth",
+    # Geometric Security (6-layer integrity)
+    "GeometricSecurity",
+    "tetrahedral_parity", "verify_cluster_parity", "verify_all_clusters",
+    "verify_phi_spacing", "verify_trace_invariant",
+    "verify_noise_lock", "verify_bridge_target",
+    "generate_temporal_handshake", "verify_temporal_handshake",
+    "BRIDGE_SIGNATURES",
+    # Immune System (adaptive security)
+    "OctahedralImmuneSystem", "ImmuneMemory",
 ]
