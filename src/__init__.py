@@ -15,6 +15,10 @@ Modules:
     geometric_security       — 6-layer self-encoded security (parity, phi, trace, noise, bridge auth, handshake)
     immune_system            — Adaptive geometric security with immune memory and tolerance evolution
     octahedral_session_cache — Constraint-coherent LRU cache with octahedral invalidation graph
+    octahedral_resilience    — Health monitoring, heartbeat, failover, auto-recovery
+    seed_dispersal           — Shamir-like secret sharing, hardware dispersal, gossip comms
+    service_reconfig         — Service discovery, quorum consensus, staging, priority scheduling, healing tools
+    resilience_core          — HLC, Byzantine verification, circuit breaker, audit trail, key rotation, fencing, Merkle
 """
 
 from src.octahedral_physics import SOMSEngine
@@ -47,6 +51,32 @@ from src.geometric_security import (
 from src.immune_system import OctahedralImmuneSystem, ImmuneMemory
 from src.octahedral_session_cache import (
     OctState, CacheEntry, InvalidationGraph, SessionCache,
+)
+from src.octahedral_resilience import (
+    Health, OctahedralNode, HeartbeatMonitor, OctahedralCluster,
+    Monitor, AutoRecovery, OctahedralResilienceSystem,
+)
+from src.seed_dispersal import (
+    CompressedSeed, SeedSplitter, HardwareComponent,
+    SeedDispersal, MinimalComms, OctahedralWithSeedSystem,
+)
+from src.service_reconfig import (
+    ServiceState, ServiceReconfigurator, QuorumReconfigurator,
+    Stage, Priority, ReconfigRequest,
+    StagingProtocol, PriorityScheduler, PriorityRules,
+    StagedPriorityReconfigurator,
+    ResourceType, ResourceSnapshot,
+    HealingTool, ExternalToolOrchestrator,
+    PrecomputeShareTool, RedistributeSharesTool, VerifySharesTool, PreloadStandbyTool,
+)
+from src.resilience_core import (
+    HybridLogicalClock, ByzantineVerifier, VerifiedShare, ByzantineError,
+    CircuitBreaker, AuditEntry, AuditTrail,
+    EpochSeed, KeyRotationManager,
+    EmergencyOverride, EmergencyRecovery,
+    ResourceReservation, TimingJitter,
+    FencedComponent, FencingManager,
+    MerkleNode, ShareMerkleTree,
 )
 from src.geometric_bridge import (
     GeometricBridge, SensorDecoder, ActuatorController,
@@ -93,4 +123,26 @@ __all__ = [
     "OctahedralImmuneSystem", "ImmuneMemory",
     # Session Cache (constraint-coherent caching)
     "OctState", "CacheEntry", "InvalidationGraph", "SessionCache",
+    # Octahedral Resilience (health + failover + recovery)
+    "Health", "OctahedralNode", "HeartbeatMonitor", "OctahedralCluster",
+    "Monitor", "AutoRecovery", "OctahedralResilienceSystem",
+    # Seed Dispersal (secret sharing + hardware dispersal)
+    "CompressedSeed", "SeedSplitter", "HardwareComponent",
+    "SeedDispersal", "MinimalComms", "OctahedralWithSeedSystem",
+    # Service Reconfiguration (staging + priority + healing)
+    "ServiceState", "ServiceReconfigurator", "QuorumReconfigurator",
+    "Stage", "Priority", "ReconfigRequest",
+    "StagingProtocol", "PriorityScheduler", "PriorityRules",
+    "StagedPriorityReconfigurator",
+    "ResourceType", "ResourceSnapshot",
+    "HealingTool", "ExternalToolOrchestrator",
+    "PrecomputeShareTool", "RedistributeSharesTool", "VerifySharesTool", "PreloadStandbyTool",
+    # Resilience Core (advanced primitives)
+    "HybridLogicalClock", "ByzantineVerifier", "VerifiedShare", "ByzantineError",
+    "CircuitBreaker", "AuditEntry", "AuditTrail",
+    "EpochSeed", "KeyRotationManager",
+    "EmergencyOverride", "EmergencyRecovery",
+    "ResourceReservation", "TimingJitter",
+    "FencedComponent", "FencingManager",
+    "MerkleNode", "ShareMerkleTree",
 ]
