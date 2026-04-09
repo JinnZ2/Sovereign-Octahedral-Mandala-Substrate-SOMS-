@@ -2,7 +2,7 @@
 
 **Topological Substrates for Non-Euclidean Computing and Mandala-Octahedral Logic**
 
-A non-von Neumann architecture utilizing the 109.47° tetrahedral bond symmetry of Silicon to manifest 8-state octahedral tensor logic. FRET coupling within a Fibonacci-scaled Mandala geometry achieves O(1) complexity for NP-hard problems through thermodynamic relaxation.
+A non-von Neumann architecture utilizing the 109.47° tetrahedral bond symmetry of Silicon to manifest 8-state octahedral tensor logic. FRET coupling within a Fibonacci-scaled Mandala geometry provides a heuristic solver for combinatorial problems through thermodynamic relaxation. Like all annealing-based approaches, it does not guarantee optimal solutions or bypass NP-hardness barriers, but exploits octahedral symmetry to reduce the energy landscape that must be searched.
 
 ## Core Logic
 
