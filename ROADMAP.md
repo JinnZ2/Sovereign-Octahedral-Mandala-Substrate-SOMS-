@@ -38,14 +38,16 @@ python -m pytest tests/ -q               # full test suite
 
 ### P0: Physics & Correctness
 
-- [ ] **Calibrate Phi metric** — `src/phi_calculator.py` uses `exp(1/entropy) * 1.618`
-  which is ad-hoc. Either derive a principled formula from IIT literature,
-  or rename the metric to avoid confusion with Tononi's Phi.
+- [x] **Calibrate Phi metric** — replaced `exp(1/entropy) * 1.618` with mutual
+  information between cell partitions: I(A;B) = H(A) + H(B) - H(whole).
+- [x] **Benchmark against known heuristics** — `experiments/benchmark_sat.py`
+  compares SOMS vs vanilla SA on random MAX-SAT. Result: vanilla wins with
+  naive encoding (~87% vs ~99%). Next step: design a SAT-aware encoding.
 - [ ] **FRET distance calibration** — the 1/r^6 coupling uses arbitrary distance
   units. Map to real FRET parameters (R0 ~ 5nm, fluorophore-dependent).
-- [ ] **Benchmark against known heuristics** — compare SOMS anneal() results
-  to simulated annealing on standard benchmark problems (MAX-SAT, TSP
-  instances from TSPLIB). Document where octahedral geometry helps vs. hurts.
+- [ ] **SAT-aware encoding** — the naive state>=4 threshold wastes octahedral
+  structure. Design an encoding that maps clause adjacency onto the
+  octahedral coupling matrix.
 
 ### P1: Missing Experiments
 
@@ -127,7 +129,8 @@ experiments/
 | 8-state octahedral encoding | Correct | Lookup table + O_h group verified |
 | Simulated annealing finds low-energy states | Correct (heuristic) | `validate_annealer.py` tests 1,2,4 |
 | O(1) for NP-hard problems | **Removed** — was wrong | Fixed in README.md |
-| Phi > 3.0 = sovereignty | Design parameter, not physics | `validate_annealer.py` test 5 |
+| Phi metric (mutual information) | Principled formula, threshold is design choice | `validate_annealer.py` test 5 |
+| SOMS outperforms vanilla SA on SAT | **Not yet** — naive encoding loses by ~11% | `benchmark_sat.py` |
 | Stochastic resonance aids synchronization | Real phenomenon | `firefly_swarm.py` |
 | Room-temp quantum coherence via FRET | Hypothesis, untested with real parameters | `fret_quantum_sync.py` (illustrative only) |
 | Noise-assisted transport | Real phenomenon | `thermal_bridge_quantum.py` |
