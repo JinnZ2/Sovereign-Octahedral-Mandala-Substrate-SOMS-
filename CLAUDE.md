@@ -1,7 +1,7 @@
 # SOMS — Sovereign Octahedral Mandala Substrate
 
 Physics simulation: octahedral-geometry computing via thermodynamic relaxation.
-8 octahedral states (3-bit) + 1/r^6 dipole coupling + Fibonacci mandala geometry → heuristic ground-state search.
+8 octahedral states (3-bit) + FRET 1/r^6 coupling + Fibonacci mandala geometry → heuristic ground-state search.
 Triple-pathway engine: angular (continuous sin²) + tensor (discrete eigenvalue L2) + Cayley (O_h graph distance), α-mixed by problem type.
 Full O_h symmetry group (48 elements) available via geometric state algebra; holographic renormalization solver for multi-scale problems.
 

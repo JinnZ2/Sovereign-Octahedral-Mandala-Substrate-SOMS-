@@ -121,7 +121,7 @@ class SOMSEngine:
     # ------------------------------------------------------------------
 
     def fret_coupling(self, dist_matrix):
-        """Compute 1/r^6 dipole-dipole coupling matrix (FRET-inspired, not true FRET)."""
+        """Compute 1/r^6 dipole-dipole (FRET) coupling matrix."""
         with np.errstate(divide='ignore'):
             j_ij = 1.0 / np.power(dist_matrix, 6)
         j_ij[np.isinf(j_ij)] = 0
