@@ -90,7 +90,8 @@ class PulseChip:
     Hardware coupling model: one matrix-vector multiply per clock cycle.
 
     When initialized from a FRET coupling matrix J, this represents
-    the physical chip that implements the SOMSEngine coupling in O(1).
+    the physical chip that implements the SOMSEngine coupling in one
+    matrix-vector multiply per clock cycle (O(n) per cell, O(n²) total).
     When initialized standalone, uses eigenvalue-structured random matrix.
     """
     dim: int = 24
