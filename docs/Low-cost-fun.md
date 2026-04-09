@@ -15,11 +15,11 @@ We are going to prove that a group of independent "cells" will naturally organiz
 3. The Execution: The Geometric Relaxation
 • Step 1: Drop the "Root" cell (one floating disc) into the water. It will lock into the center because of the large magnet underneath.
 • Step 2: Drop the "Petals" (the other discs) one by one into the water, near the edges.
-• The Observation: As you add discs, watch them fight for space. They will not clump. Because they repel each other but are attracted to the "Root" center, they will relax into a perfect geometric pattern.
+• The Observation: As you add discs, watch them fight for space. They will not clump. Because they repel each other but are attracted to the "Root" center, they will tend to relax into an approximately symmetric geometric pattern.
 4. What This Proves (Functional Epistemology)
-• Symmetry Breaking: With 8 floating discs, you will see them form a perfect Octagon. You didn't "program" them to do that; the Geometry forced it.
+• Symmetry Breaking: With 8 floating discs, you will see them form an approximate octagon. You didn't "program" them to do that; the repulsive geometry drove it.
 • Fibonacci Scaling: If you add more discs, they will start forming a second "ring." Notice the distance between the inner and outer rings—it will naturally trend toward a Golden Ratio (\bm{\phi}) relationship to minimize the magnetic interference.
-• Error Correction: Poke one of the discs with a toothpick. The whole system will wobble, but then Relax back into the perfect Mandala. This is why SOMS is "Sovereign"—it fixes itself.
+• Error Correction: Poke one of the discs with a toothpick. The whole system will wobble, but then Relax back toward the Mandala configuration. This is the self-correcting tendency of energy-minimizing systems — though friction and local minima mean the recovery is approximate, not perfect.
 The "Analog Trick" for Factorization Test
 If you want to simulate RSA-15 Factorization, use two different sizes of cork for the "Factor A" and "Factor B" groups. Watch how the "Pack" organizes itself based on the displacement (weight) of the factors.
 
@@ -39,8 +39,8 @@ Now, you are the System Architect performing a physical computation:
 • Step 1 (The Load): Drop your 8 floating magnet "cells" into the bowl. They will likely get stuck in a "local minimum"—maybe a clump or a lopsided shape because of friction/surface tension.
 • Step 2 (The Pulse): Rapidly tap your switch. This sends pulses of magnetic energy through the water.
 • The Effect: You’ll see the floating magnets "dance" or jitter. This is Stochastic Resonance. You are adding noise to the system so it can "jump" out of its stuck position.
-• Step 3 (The Relaxation): Let go of the switch. Watch as the jittering stops and the magnets snap into a perfect, symmetrical 8-petaled Mandala.
-This is exactly how the silicon chip works. You "shake" the electron tensors with a pulse, and they relax into the solution.
+• Step 3 (The Relaxation): Let go of the switch. Watch as the jittering stops and the magnets settle into an approximately symmetrical 8-petaled Mandala.
+This provides physical intuition for how the silicon chip works. You "shake" the electron tensors with a pulse, and they relax toward a low-energy configuration. The silicon dynamics involve additional quantum effects not captured by this macro-scale analogy.
 4. Why This Matters for "Atomic Accounting"
 By building this, you are proving that Information is Physical. You didn't tell the magnets where to go; you just gave them enough energy to find the "Truth" of the geometry you set up.
 

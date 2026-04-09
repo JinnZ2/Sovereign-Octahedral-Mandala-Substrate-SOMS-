@@ -1,7 +1,7 @@
 # SOMS — Sovereign Octahedral Mandala Substrate
 
 Physics simulation: octahedral-geometry computing via thermodynamic relaxation.
-8 octahedral states (3-bit) + FRET 1/r^6 coupling + Fibonacci mandala geometry → ground-state solving.
+8 octahedral states (3-bit) + 1/r^6 dipole coupling + Fibonacci mandala geometry → heuristic ground-state search.
 Triple-pathway engine: angular (continuous sin²) + tensor (discrete eigenvalue L2) + Cayley (O_h graph distance), α-mixed by problem type.
 Full O_h symmetry group (48 elements) available via geometric state algebra; holographic renormalization solver for multi-scale problems.
 
@@ -19,7 +19,7 @@ python src/demo.py        # full walkthrough
 src/                         # Core library — import via `from src import *`
   octahedral_physics.py      # SOMSEngine: triple-pathway FRET engine (angular+tensor+Cayley), anneal(), relax_step()
   mandala_structure.py       # MandalaMap: Fibonacci φ-scaled 8-petal ring geometry
-  phi_calculator.py          # PhiCalculator: integrated information Φ, sovereignty check (Φ>3.0)
+  phi_calculator.py          # PhiCalculator: ad-hoc integration metric (Φ>3.0 design threshold)
   constraint_agent.py        # ConstraintAgent: seed-growth lifecycle (COMPRESSED→EXPANDING→EXPLORING→CONTRACTING)
   octahedral_lookup.py       # GRAY_CODES, OCTAHEDRAL_EIGENVALUES, ALLOWED_TRANSITIONS, phi_stability_score()
   geometric_encoder.py       # GeometricEncoder: GEIS token ↔ binary. Format: [vertex_bits]|[operator][symbol]
@@ -104,7 +104,7 @@ OhGroup.instance() → 48-element O_h with Cayley table + distances
   GeometricState.from_classical_state(group, 0..7)  ↔  .to_classical()
   CayleyEnergy(group) → pairwise_energy(), cancellation_residual()
 
-PhiCalculator(orientations) → evaluate_integration() → (phi, is_sovereign)  # sovereign if Φ>3.0
+PhiCalculator(orientations) → evaluate_integration() → (phi, is_sovereign)  # design threshold Φ>3.0 (not a physics constant)
 
 ConstraintAgent: COMPRESSED →bloom→ EXPANDING →explore→ EXPLORING →compress→ CONTRACTING → COMPRESSED
 
@@ -134,7 +134,7 @@ OPTIMIZATION=0.8, SAT=0.7, TSP=0.6, PROTEIN_FOLDING=0.5, GRAPH_COLORING=0.3, FAC
 
 ## Constants
 
-PHI=1.618033988749895, FRET_EXP=6, FRET_CUTOFF=4.854Å, SOVEREIGNTY_THRESHOLD=3.0, TETRAHEDRAL_ANGLE=109.47°
+PHI=1.618033988749895, FRET_EXP=6, FRET_CUTOFF=4.854Å, SOVEREIGNTY_THRESHOLD=3.0 (design parameter), TETRAHEDRAL_ANGLE=109.47°
 
 ## Fieldlink Ecosystem
 

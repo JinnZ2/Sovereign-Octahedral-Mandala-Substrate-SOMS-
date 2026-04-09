@@ -2,11 +2,18 @@ import numpy as np
 
 
 class PhiCalculator:
-    """Simplified Integrated Information (Phi) metric for the Mandala-Octahedral substrate."""
+    """
+    Ad-hoc integration metric inspired by (but not equivalent to) Tononi's IIT.
+
+    The formula exp(1/entropy) * phi is a custom heuristic that rewards
+    low-entropy (highly ordered) states. It is NOT a rigorous implementation
+    of Integrated Information Theory. The threshold 3.0 is a design parameter
+    chosen for this project, not a physics constant.
+    """
 
     def __init__(self, system_state):
         self.state = system_state
-        self.phi_threshold = 3.0  # The Sovereign Line
+        self.phi_threshold = 3.0  # Design parameter (not a physics constant)
 
     def calculate_partition_entropy(self, partition):
         """Measure entropy across 8 octahedral bins."""

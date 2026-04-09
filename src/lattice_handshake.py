@@ -71,7 +71,7 @@ class OctahedralLattice:
         return on_grid + noise
 
     def decode(self, noisy: np.ndarray) -> np.ndarray:
-        """Solve CVP via least-squares on public basis."""
+        """Approximate CVP via least-squares projection (not exact CVP solver)."""
         result, _, _, _ = np.linalg.lstsq(self._public_basis, noisy, rcond=None)
         return result
 
