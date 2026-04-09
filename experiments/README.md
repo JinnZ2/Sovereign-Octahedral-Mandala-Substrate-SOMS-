@@ -13,6 +13,8 @@ validate specific physical mechanisms that the architecture is built on.
 |--------|-------|--------|
 | `validate_annealer.py` | Core SOMS claims: stochasticity, 1/r^6 coupling, no optimality guarantee, Phi threshold is arbitrary | Ready (numpy/scipy) |
 | `firefly_swarm.py` | Stochastic resonance in coupled oscillators — noise helps synchronization at intermediate levels | Ready (numpy/scipy) |
+| `constraint_drift.py` | Semantic drift detection: tracks constraint loss when a term's meaning silently changes over decades | Ready (numpy) |
+| `thermodynamic_audit.py` | Exergy-weighted impact scoring: detects when "profitable" activities are thermodynamically destructive | Ready (no deps) |
 | `fret_quantum_sync.py` | Dipole-coupled qubits: does coherence survive room-temperature noise? | Requires QuTiP |
 | `thermal_bridge_quantum.py` | Phonon-assisted energy transfer: noise as co-processor | Requires QuTiP |
 
@@ -25,6 +27,12 @@ python validate_annealer.py
 
 # Firefly stochastic resonance (try different sigma values)
 python firefly_swarm.py
+
+# Constraint drift detection
+python constraint_drift.py
+
+# Thermodynamic accountability audit
+python thermodynamic_audit.py
 
 # Quantum simulations (need QuTiP: pip install qutip)
 python fret_quantum_sync.py
@@ -80,3 +88,21 @@ These ideas from Notes.md need future experiments:
 3. Do not claim to "solve" NP-hard problems or "prove" quantum advantage
 4. Use "heuristic," "approximate," or "empirically" instead of "optimal" or "guaranteed"
 5. Cite the Notes.md line range the experiment was extracted from
+
+### constraint_drift.py
+Semantic drift detection framework. Tracks how a term's constraints
+decay over time (e.g., "sustainable farming" 1985 vs 2024). Includes:
+- **VectorTerm** — terms as points in [energy, physical, resonance] space
+- **drift detection** — measures what percentage of constraints were dropped
+- **bridge test** — can a modern term claim continuity with its historical meaning?
+- **risk cascade** — if one constraint fails, what else collapses?
+
+Demo output: "sustainable farming" 2024 has lost 100% of its 1985 constraints.
+
+### thermodynamic_audit.py
+Exergy-weighted impact scoring. Replaces money-as-proxy with physics:
+- **ThermodynamicHierarchy** — weights by irreplaceability (Magnetic Core=1.0, Money=0.01)
+- **DeepAncestryAuditor** — traces impacts down to physical foundation layers
+- **InvariantAuditor** — checks if an action accounts for hidden prerequisites
+
+Demo output: a $100M development scores -24.25 when weighted by physics.
