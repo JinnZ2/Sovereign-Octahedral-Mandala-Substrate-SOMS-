@@ -91,6 +91,7 @@ from src.geometric_bridge import (
 )
 
 from src.bridge_registry import BridgeRegistry
+from src.resonate import ResonateEngine, DomainState, CouplingRule, DomainIntersectionRule
 
 __all__ = [
     "SOMSEngine", "MandalaMap", "PhiCalculator",
@@ -111,6 +112,8 @@ __all__ = [
     "decode_hardware", "decode_electric", "BridgeHeader",
     "Modality", "BridgeTarget", "DrillDepth", "HardwareData", "ElectricData",
     "BridgeRegistry",
+    # RESONATE (cross-domain coupling)
+    "ResonateEngine", "DomainState", "CouplingRule", "DomainIntersectionRule",
     "gray_to_binary", "binary_to_gray", "gray_to_value", "value_to_gray",
     "component_health_score", "drift_percent", "lifetime_estimate_hours",
     "noise_power", "confidence_from_noise",
