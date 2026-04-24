@@ -37,6 +37,19 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Type
 
 
+PARADIGM_MATRIX = {
+    "ternary":      {"electric": True,  "gravity": True,  "magnetic": True,  "sound": True,  "thermal": True},
+    "quantum":      {"electric": True,  "gravity": True,  "magnetic": False, "sound": True,  "thermal": False},
+    "stochastic":   {"electric": True,  "gravity": True,  "magnetic": False, "sound": True,  "thermal": True},
+    "neuromorphic": {"electric": True,  "gravity": False, "magnetic": False, "sound": True,  "thermal": False},
+    "reservoir":    {"electric": True,  "gravity": True,  "magnetic": True,  "sound": True,  "thermal": True},
+    "memristive":   {"electric": True,  "gravity": False, "magnetic": False, "sound": False, "thermal": False},
+    "approximate":  {"electric": True,  "gravity": True,  "magnetic": False, "sound": False, "thermal": True},
+}
+
+ALL_PARADIGMS = list(PARADIGM_MATRIX.keys())
+
+
 @dataclass
 class BridgeInfo:
     """Metadata for one bridge domain."""
@@ -50,6 +63,7 @@ class BridgeInfo:
     encoder_class: Optional[Type] = None
     available: bool = False
     alternative_compute: Optional[str] = None
+    paradigms: List[str] = field(default_factory=list)
 
 
 class BridgeRegistry:
@@ -129,14 +143,36 @@ class BridgeRegistry:
             "notes": info.notes,
             "available": info.available,
             "has_alternative_compute": info.alternative_compute is not None,
+            "paradigms": info.paradigms,
         }
 
     def alternatives(self) -> List[str]:
         """Bridge domains that have alternative computing extensions."""
         return sorted(
             n for n, b in self._bridges.items()
-            if b.alternative_compute is not None
+            if b.alternative_compute is not None or b.paradigms
         )
+
+    def paradigms_for(self, bridge_name: str) -> List[str]:
+        """List alternative paradigms available for a bridge domain."""
+        info = self._bridges.get(bridge_name.lower())
+        return info.paradigms if info else []
+
+    def bridges_for_paradigm(self, paradigm: str) -> List[str]:
+        """List bridge domains that support a given paradigm."""
+        return sorted(
+            n for n, b in self._bridges.items()
+            if paradigm.lower() in b.paradigms
+        )
+
+    def paradigm_matrix(self) -> Dict[str, Dict[str, bool]]:
+        """Return the full paradigm x bridge support matrix."""
+        matrix: Dict[str, Dict[str, bool]] = {}
+        for paradigm in ALL_PARADIGMS:
+            matrix[paradigm] = {}
+            for name, info in self._bridges.items():
+                matrix[paradigm][name] = paradigm in info.paradigms
+        return matrix
 
     def summary(self) -> str:
         """Human-readable summary of the registry."""
@@ -156,6 +192,24 @@ class BridgeRegistry:
         not_avail = sorted(set(self.all_bridges()) - set(avail))
         if not_avail:
             lines.append(f"\n  Not importable: {', '.join(not_avail)}")
+
+        # Paradigm matrix
+        domains_with_paradigms = sorted(
+            n for n in avail if self._bridges[n].paradigms
+        )
+        if domains_with_paradigms:
+            lines.append("")
+            lines.append("  Paradigm matrix:")
+            hdr = f"    {'paradigm':<15}"
+            for d in domains_with_paradigms:
+                hdr += f"{d:<12}"
+            lines.append(hdr)
+            for p in ALL_PARADIGMS:
+                row = f"    {p:<15}"
+                for d in domains_with_paradigms:
+                    row += f"{'yes':<12}" if p in self._bridges[d].paradigms else f"{'.':<12}"
+                lines.append(row)
+
         return "\n".join(lines)
 
     # ----------------------------------------------------------------
@@ -247,6 +301,12 @@ class BridgeRegistry:
             if (bridges_dir / filename).exists():
                 if domain in self._bridges:
                     self._bridges[domain].alternative_compute = filename
+
+        # Populate paradigm support from the matrix
+        for paradigm, domain_map in PARADIGM_MATRIX.items():
+            for domain, supported in domain_map.items():
+                if supported and domain in self._bridges:
+                    self._bridges[domain].paradigms.append(paradigm)
 
     # ----------------------------------------------------------------
     # Singleton convenience
