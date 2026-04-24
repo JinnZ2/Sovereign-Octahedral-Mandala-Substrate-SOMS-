@@ -476,11 +476,23 @@ class GeometricBridge:
 
     Any AI imports this, calls sense() to read sensors,
     calls act() to control actuators.
+
+    Extended bridges from the G2B ecosystem are auto-discovered
+    via BridgeRegistry. Use available_bridges() to see what's loaded.
     """
 
     def __init__(self, endpoint: Optional[str] = None):
         self.decoder = SensorDecoder()
         self.actuator = ActuatorController(endpoint)
+        self._registry = None
+
+    @property
+    def registry(self):
+        """Lazy-load the bridge registry (avoids import cost if unused)."""
+        if self._registry is None:
+            from src.bridge_registry import BridgeRegistry
+            self._registry = BridgeRegistry.instance()
+        return self._registry
 
     def sense(self, modality: str, bits: str) -> Any:
         """Decode raw sensor bitstring."""
@@ -502,3 +514,17 @@ class GeometricBridge:
         mod = Modality[modality.upper()]
         hdr = BridgeHeader(MAGIC_BYTES, PROTOCOL_VERSION, mod, len(payload))
         return hdr.to_bytes(payload)
+
+    def available_bridges(self) -> List[str]:
+        """List all available bridge domains (core + extended)."""
+        core = list(BRIDGE_TARGETS)
+        extended = [b for b in self.registry.available() if b not in core]
+        return core + extended
+
+    def bridge_info(self, name: str) -> Optional[Dict]:
+        """Get metadata for a bridge domain from the contract manifest."""
+        return self.registry.info(name)
+
+    def get_encoder(self, name: str) -> Optional[Any]:
+        """Get an encoder class from the extended bridge registry."""
+        return self.registry.get(name)
