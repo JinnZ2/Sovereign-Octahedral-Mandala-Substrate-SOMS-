@@ -1,8 +1,8 @@
 """
 Gravity Bridge Encoder
 ======================
-Encodes gravitational field geometry into binary using physics equations
-and Gray-coded magnitude bands for all continuous quantities.
+Encodes coupling to gravitational potential structure into binary using
+physics equations and Gray-coded magnitude bands for the continuous quantities.
 
 Equations implemented
 ---------------------
@@ -37,8 +37,8 @@ Summary  (7 bits — appended when any section present):
 """
 
 import math
-from atlas.remote.g2b.bridges.abstract_encoder import BinaryBridgeEncoder
-from atlas.remote.g2b.bridges.common import gray_bits as _gray_bits
+from bridges.abstract_encoder import BinaryBridgeEncoder
+from bridges.common import gray_bits as _gray_bits
 
 # ---------------------------------------------------------------------------
 # Physical constants
@@ -59,7 +59,7 @@ _VEL_BANDS       = [0.0, 10.0, 100.0, 1000.0, 5000.0, 11200.0, 30000.0, 3e5] # m
 # Gray-code helpers
 # ---------------------------------------------------------------------------
 
-# _gray_bits imported from atlas.remote.g2b.bridges.common — canonical highest-edge Gray encoder
+# _gray_bits imported from bridges.common — canonical highest-edge Gray encoder
 
 
 # ---------------------------------------------------------------------------
@@ -107,12 +107,11 @@ def tidal_acceleration(M: float, r: float, d: float) -> float:
 
 class GravityBridgeEncoder(BinaryBridgeEncoder):
     """
-    Encodes gravitational field geometry into a binary bitstring.
+    Encodes gravitational potential, curvature, tidal response, and bound-state structure into a binary bitstring.
 
     Input geometry dict keys
     ------------------------
-    vectors          : list of vector tuples/lists — each represents a gravity
-                       vector; the y-component (index 1) signals inward direction.
+    vectors          : list of vector tuples/lists — each represents a local gravitational field direction; the y-component (index 1) is used as a simple inward/outward sign proxy.
     curvature        : list of floats — spacetime curvature values (m⁻¹).
     orbital_stability: list of floats in [0, 1] — stability metric for orbits.
     potential_energy : list of floats — specific gravitational potential energy
@@ -133,7 +132,7 @@ class GravityBridgeEncoder(BinaryBridgeEncoder):
 
     def to_binary(self) -> str:
         """
-        Convert loaded gravity geometry into a binary bitstring.
+        Convert loaded gravitational coupling geometry into a binary bitstring.
 
         Returns
         -------

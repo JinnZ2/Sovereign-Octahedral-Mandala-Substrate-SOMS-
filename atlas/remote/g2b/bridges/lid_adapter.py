@@ -6,7 +6,7 @@ Geometric-to-Binary bridge encoders.
 
 Integration points
 ------------------
-1. **Concept <-> Encoder mapping**: LID energy entities map 1:1 to bridge encoders.
+1. **Concept ↔ Encoder mapping**: LID energy entities map 1:1 to bridge encoders.
    Load an ontology entity, get back a configured encoder instance.
 
 2. **Interaction matrix cross-validation**: LID's INTERACTION_MATRIX and the
@@ -18,7 +18,7 @@ Integration points
 
 Usage
 -----
-    from atlas.remote.g2b.bridges.lid_adapter import LIDAdapter
+    from bridges.lid_adapter import LIDAdapter
 
     adapter = LIDAdapter("/path/to/Living-Intelligence-Database")
 
@@ -42,37 +42,37 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Any
 
 
-# -- Encoder registry ----------------------------------------------------------
+# ── Encoder registry ──────────────────────────────────────────────────────
 
-# Map LID entity IDs -> bridge encoder module + class  (legacy hard-coded)
+# Map LID entity IDs → bridge encoder module + class  (legacy hard-coded)
 ENTITY_ENCODER_MAP: Dict[str, Tuple[str, str]] = {
-    "MAG_BRIDGE":       ("atlas.remote.g2b.bridges.magnetic_encoder",      "MagneticBridgeEncoder"),
-    "LIGHT_BR":         ("atlas.remote.g2b.bridges.light_encoder",         "LightBridgeEncoder"),
-    "CONSCIOUSNESS_BR": ("atlas.remote.g2b.bridges.consciousness_encoder", "ConsciousnessBridgeEncoder"),
-    "EMOTION_BR":       ("atlas.remote.g2b.bridges.emotion_encoder",       "EmotionBridgeEncoder"),
-    "ELECTRIC_FIELD":   ("atlas.remote.g2b.bridges.electric_encoder",      "ElectricBridgeEncoder"),
-    "GRAVITATIONAL":    ("atlas.remote.g2b.bridges.gravity_encoder",       "GravityBridgeEncoder"),
-    "THERMAL":          ("atlas.remote.g2b.bridges.thermal_encoder",       "ThermalBridgeEncoder"),
-    "FLUX":             ("atlas.remote.g2b.bridges.wave_encoder",          "WaveBridgeEncoder"),
-    "RES_SENSOR":       ("atlas.remote.g2b.bridges.sound_encoder",         "SoundBridgeEncoder"),
+    "MAG_BRIDGE":       ("bridges.magnetic_encoder",      "MagneticBridgeEncoder"),
+    "LIGHT_BR":         ("bridges.light_encoder",         "LightBridgeEncoder"),
+    "CONSCIOUSNESS_BR": ("bridges.cognitive.consciousness_encoder", "ConsciousnessBridgeEncoder"),
+    "EMOTION_BR":       ("bridges.cognitive.emotion_encoder",       "EmotionBridgeEncoder"),
+    "ELECTRIC_FIELD":   ("bridges.electric_encoder",      "ElectricBridgeEncoder"),
+    "GRAVITATIONAL":    ("bridges.gravity_encoder",       "GravityBridgeEncoder"),
+    "THERMAL":          ("bridges.thermal_encoder",       "ThermalBridgeEncoder"),
+    "FLUX":             ("bridges.wave_encoder",          "WaveBridgeEncoder"),
+    "RES_SENSOR":       ("bridges.sound_encoder",         "SoundBridgeEncoder"),
 }
 
-# Map modality name -> (module, class) for all 11 bridge encoders
+# Map modality name → (module, class) for all 11 bridge encoders
 MODALITY_ENCODER_MAP: Dict[str, Tuple[str, str]] = {
-    "magnetic":      ("atlas.remote.g2b.bridges.magnetic_encoder",      "MagneticBridgeEncoder"),
-    "light":         ("atlas.remote.g2b.bridges.light_encoder",         "LightBridgeEncoder"),
-    "sound":         ("atlas.remote.g2b.bridges.sound_encoder",         "SoundBridgeEncoder"),
-    "gravity":       ("atlas.remote.g2b.bridges.gravity_encoder",       "GravityBridgeEncoder"),
-    "electric":      ("atlas.remote.g2b.bridges.electric_encoder",      "ElectricBridgeEncoder"),
-    "wave":          ("atlas.remote.g2b.bridges.wave_encoder",          "WaveBridgeEncoder"),
-    "thermal":       ("atlas.remote.g2b.bridges.thermal_encoder",       "ThermalBridgeEncoder"),
-    "pressure":      ("atlas.remote.g2b.bridges.pressure_encoder",      "PressureBridgeEncoder"),
-    "chemical":      ("atlas.remote.g2b.bridges.chemical_encoder",      "ChemicalBridgeEncoder"),
-    "consciousness": ("atlas.remote.g2b.bridges.consciousness_encoder", "ConsciousnessBridgeEncoder"),
-    "emotion":       ("atlas.remote.g2b.bridges.emotion_encoder",       "EmotionBridgeEncoder"),
+    "magnetic":      ("bridges.magnetic_encoder",      "MagneticBridgeEncoder"),
+    "light":         ("bridges.light_encoder",         "LightBridgeEncoder"),
+    "sound":         ("bridges.sound_encoder",         "SoundBridgeEncoder"),
+    "gravity":       ("bridges.gravity_encoder",       "GravityBridgeEncoder"),
+    "electric":      ("bridges.electric_encoder",      "ElectricBridgeEncoder"),
+    "wave":          ("bridges.wave_encoder",          "WaveBridgeEncoder"),
+    "thermal":       ("bridges.thermal_encoder",       "ThermalBridgeEncoder"),
+    "pressure":      ("bridges.pressure_encoder",      "PressureBridgeEncoder"),
+    "chemical":      ("bridges.chemical_encoder",      "ChemicalBridgeEncoder"),
+    "consciousness": ("bridges.cognitive.consciousness_encoder", "ConsciousnessBridgeEncoder"),
+    "emotion":       ("bridges.cognitive.emotion_encoder",       "EmotionBridgeEncoder"),
 }
 
-# -- Pattern/keyword -> modality inference tables ------------------------------
+# ── Pattern/keyword → modality inference tables ──────────────────────────
 
 # Keywords found in entity descriptions, patterns, and core_attributes that
 # signal affinity with a particular bridge modality.
@@ -131,7 +131,7 @@ _PATTERN_MODALITY_KEYWORDS: Dict[str, List[str]] = {
     ],
 }
 
-# Ontology category -> guaranteed baseline modalities (always assigned)
+# Ontology category → guaranteed baseline modalities (always assigned)
 _ONTOLOGY_BASELINE: Dict[str, List[str]] = {
     "energy":   ["wave"],
     "crystal":  ["magnetic", "light", "pressure"],
@@ -142,7 +142,7 @@ _ONTOLOGY_BASELINE: Dict[str, List[str]] = {
     "plant":    ["chemical", "thermal"],
 }
 
-# Map LID ontology categories -> bridge modality names
+# Map LID ontology categories → bridge modality names
 CATEGORY_BRIDGE_MAP: Dict[str, List[str]] = {
     "energy":   ["magnetic", "electric", "thermal", "wave", "light"],
     "crystal":  ["magnetic", "light"],
@@ -154,7 +154,7 @@ CATEGORY_BRIDGE_MAP: Dict[str, List[str]] = {
 }
 
 
-# -- Adapter -------------------------------------------------------------------
+# ── Adapter ───────────────────────────────────────────────────────────────
 
 class LIDAdapter:
     """
@@ -190,7 +190,7 @@ class LIDAdapter:
                 return candidate
         return None
 
-    # -- Ontology access -------------------------------------------------------
+    # ── Ontology access ───────────────────────────────────────────────
 
     def load_index(self) -> dict:
         """Load the LID ontology index."""
@@ -261,7 +261,7 @@ class LIDAdapter:
                 results.append(entry)
         return results
 
-    # -- Encoder instantiation -------------------------------------------------
+    # ── Encoder instantiation ─────────────────────────────────────────
 
     def encoder_for(self, entity_id: str) -> Any:
         """
@@ -286,11 +286,11 @@ class LIDAdapter:
         """
         Get bridge modality names suitable for a LID ontology category.
 
-        Example: encoders_for_category("plasma") -> ["electric", "wave", "thermal"]
+        Example: encoders_for_category("plasma") → ["electric", "wave", "thermal"]
         """
         return CATEGORY_BRIDGE_MAP.get(category, [])
 
-    # -- Classification --------------------------------------------------------
+    # ── Classification ────────────────────────────────────────────────
 
     def classify_to_bridge(self, text: str) -> Optional[str]:
         """
@@ -326,7 +326,7 @@ class LIDAdapter:
 
         return max(scores, key=scores.get)
 
-    # -- Coupling cross-validation ---------------------------------------------
+    # ── Coupling cross-validation ─────────────────────────────────────
 
     def cross_validate_couplings(self) -> Dict[str, Any]:
         """
@@ -346,7 +346,7 @@ class LIDAdapter:
         }
 
         # Bridge coupling matrix node mapping:
-        #   LID category -> physical_coupling_matrix node
+        #   LID category → physical_coupling_matrix node
         lid_to_pcm = {
             "energy":  "EM",
             "crystal": "C",
@@ -391,7 +391,7 @@ class LIDAdapter:
             "comparisons": comparisons,
         }
 
-    # -- Auto-wiring -----------------------------------------------------------
+    # ── Auto-wiring ─────────────────────────────────────────────────
 
     def _infer_modalities(self, entity: dict) -> List[str]:
         """Infer bridge modalities from an entity's text content."""
@@ -428,7 +428,7 @@ class LIDAdapter:
         Iterates all entity files under ``ontology/`` (not just the
         14-entity index), so all 78 entities get wired.
 
-        Returns dict of entity_id -> sorted list of modality names.
+        Returns dict of entity_id → sorted list of modality names.
         Caches result on ``self._auto_wired``.
         """
         if self._auto_wired is not None:
@@ -503,7 +503,7 @@ class LIDAdapter:
 
         return encoders
 
-    # -- Summary ---------------------------------------------------------------
+    # ── Summary ───────────────────────────────────────────────────────
 
     def summary(self) -> str:
         """Return a text summary of the adapter state."""

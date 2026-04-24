@@ -76,7 +76,7 @@ Magnonic mode — fixed 43-bit output
 """
 
 import math
-from atlas.remote.g2b.bridges.abstract_encoder import BinaryBridgeEncoder
+from bridges.abstract_encoder import BinaryBridgeEncoder
 
 # ── Physical constants ────────────────────────────────────────────────────────
 MU_0        = 4 * math.pi * 1e-7      # Permeability of free space (H/m)

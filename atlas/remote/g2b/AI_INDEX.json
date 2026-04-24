@@ -1,0 +1,122 @@
+{
+  "_comment": "Machine-readable index for AI navigation. Read this first.",
+  "project": "Geometric-to-Binary Computational Bridge",
+  "core_angle": "109.47° (tetrahedral bond angle, silicon sp3 hybridization)",
+  "encoding_unit": "1 octahedron = 8 states = 3 bits",
+
+  "verify_in_60_seconds": {
+    "description": "Run these to confirm the repo works.",
+    "commands": [
+      {"cmd": "cd GEIS && python test_simple.py", "expect": "116/116 passed"},
+      {"cmd": "python tests/test_engine.py", "expect": "58/58 passed"},
+      {"cmd": "PYTHONPATH=. python tests/test_gaussian_splats.py", "expect": "63/63 passed"},
+      {"cmd": "cd experiments/c && make test", "expect": "36/36 passed"}
+    ]
+  },
+
+  "entry_points": {
+    "solver_registry": "solver_registry.py — 25 solvers, any AI can call reg.solve(name, **params)",
+    "geis_demo": "GEIS/demo.py",
+    "bridge_convert": "scripts/bridge_convert.py",
+    "nfs_factorization": "experiments/geometric_nfs.py",
+    "c_acceleration": "experiments/c/gnfs_ctypes.py",
+    "frontend": "Front end/App.jsx"
+  },
+
+  "test_suites": {
+    "geis": {"file": "GEIS/test_simple.py", "tests": 116, "run_from": "GEIS/"},
+    "bridges": {"file": "tests/test_bridges.py", "tests": 231, "run_with": "PYTHONPATH=."},
+    "engine": {"file": "tests/test_engine.py", "tests": 58},
+    "gaussian_splats": {"file": "tests/test_gaussian_splats.py", "tests": 63, "run_with": "PYTHONPATH=."},
+    "silicon": {"file": "tests/test_silicon_modules.py"},
+    "c_nfs": {"file": "experiments/c/test_nfs.c", "tests": 36, "build": "cd experiments/c && make test"}
+  },
+
+  "bridges": {
+    "_pattern": "All inherit from bridges/abstract_encoder.py, implement from_geometry() + to_binary()",
+    "magnetic":      {"file": "bridges/magnetic_encoder.py",      "bits": 43},
+    "light":         {"file": "bridges/light_encoder.py",         "bits": 31},
+    "sound":         {"file": "bridges/sound_encoder.py",         "bits": 31},
+    "gravity":       {"file": "bridges/gravity_encoder.py",       "bits": 39},
+    "electric":      {"file": "bridges/electric_encoder.py",      "bits": 39},
+    "wave":          {"file": "bridges/wave_encoder.py",          "bits": 39},
+    "thermal":       {"file": "bridges/thermal_encoder.py",       "bits": 39},
+    "pressure":      {"file": "bridges/pressure_encoder.py",      "bits": 39},
+    "chemical":      {"file": "bridges/chemical_encoder.py",      "bits": 39},
+    "consciousness": {"file": "bridges/cognitive/consciousness_encoder.py", "bits": 39, "subpackage": "cognitive"},
+    "emotion":       {"file": "bridges/cognitive/emotion_encoder.py",       "bits": 39, "subpackage": "cognitive"}
+  },
+
+  "silicon_modules": {
+    "_note": "STATUS tag in first lines of each file. 'validated' = tested or predictions verified. 'infrastructure' = working code, used by pipeline. 'speculative' = moved to experiments/silicon_speculative/.",
+    "_layout": "Silicon/ was reorganized into core/ (foundations), lattice/ (crystal + multi-bridge simulations), and FRET/ (fluorescence resonance energy transfer).",
+    "validated": [
+      "Silicon/core/core_equations.py",
+      "Silicon/core/magnetic_bridge_protocol.py",
+      "Silicon/core/octahedral_tensor.py",
+      "Silicon/core/tetrahedral_symmetry.py",
+      "Silicon/core/crystalline_storage.py",
+      "Silicon/core/lcea_analysis.py",
+      "Silicon/core/topological_memory.py",
+      "Silicon/core/hardware_bridge.py",
+      "Silicon/lattice/crystalline_nn_sim.py",
+      "Silicon/lattice/prototaxites_sim.py"
+    ],
+    "infrastructure": [
+      "Silicon/core/pipeline.py",
+      "Silicon/core/gies_encoder.py",
+      "Silicon/core/octahedral_sim.py",
+      "Silicon/core/energy_framework.py",
+      "Silicon/core/thermal_coupling.py",
+      "Silicon/core/field_propulsion.py",
+      "Silicon/core/fret_coulomb_analysis.py",
+      "Silicon/lattice/er_dft_framework.py",
+      "Silicon/lattice/codoping_framework.py",
+      "Silicon/lattice/master_optimizer.py",
+      "Silicon/lattice/kt_annealing.py",
+      "Silicon/lattice/expansion_8d.py",
+      "Silicon/lattice/orbital_octa.py",
+      "Silicon/lattice/reverse_engineering.py",
+      "Silicon/lattice/seed_expansion.py",
+      "Silicon/lattice/uniqueness_test.py",
+      "Silicon/FRET/fret_ecosystem.py"
+    ],
+    "speculative_moved_to": "experiments/silicon_speculative/"
+  },
+
+  "design_docs": {
+    "gaussian_splats": {
+      "_note": "Design series on Gaussian-splat field representation. Implementations live in Engine/gaussian_splats/, tested by tests/test_gaussian_splats.py (63 tests).",
+      "files": [
+        "docs/gaussian_splats/01_4d_splats.md",
+        "docs/gaussian_splats/02_octahedral_encoder.md",
+        "docs/gaussian_splats/03_8field_zeeman_manifold.md",
+        "docs/gaussian_splats/04_rhombic_triaconta_32state.md"
+      ],
+      "implementation": {
+        "package": "Engine/gaussian_splats/",
+        "modules": {
+          "gaussian_4d.py": "Gaussian4DSource, SIMDOptimizer4D, GeometricEMSolver4D, bhattacharyya_distance",
+          "octahedral.py": "OctahedralStateEncoder, Gaussian8FieldSource, ZeemanDynamics, ManifoldConstraint",
+          "rhombic.py": "RhombicTriacontaEncoder, Gaussian32FieldSource, ZeemanDynamics32, SphericalManifoldConstraint"
+        }
+      }
+    }
+  },
+
+  "ecosystem": {
+    "_note": "35 sibling repos connected via .fieldlink.json. See DEPENDENCIES.md for the directed graph.",
+    "hub_repos": ["Geometric-to-Binary-Computational-Bridge", "Rosetta-Shape-Core"],
+    "fieldlink_file": ".fieldlink.json",
+    "sync_script": "fieldlink-sync.sh",
+    "atlas_mounts": "atlas/remote/"
+  },
+
+  "key_files": {
+    "CLAUDE.md": "Full project documentation and conventions",
+    "AI_INDEX.json": "This file — machine-readable navigation",
+    ".fieldlink.json": "Cross-repo sync manifest (35 repos)",
+    "DEPENDENCIES.md": "Ecosystem dependency graph",
+    "fieldlink-sync.sh": "Pulls atlas mounts from upstream repos"
+  }
+}

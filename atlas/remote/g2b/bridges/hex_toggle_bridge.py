@@ -7,7 +7,7 @@ class HexBridgeFormatter:
         # Convert 39 bits to an integer then to a clean Hex signature
         val = int(binary_str, 2)
         hex_sig = f"0x{val:010X}"
-
+        
         # Split into functional blocks for rapid scanning
         # [Health/Fail][Measurements][Repurpose][System]
         return f"{hex_sig[:4]} {hex_sig[4:7]} {hex_sig[7:]}"

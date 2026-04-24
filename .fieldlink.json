@@ -127,14 +127,20 @@
           "mappings/octahedral_state_encoding.json",
           "bridges/sensor_suite.json",
           "bridges/geobin-bridges.json",
+          "bridges/cognitive/consciousness_encoder.py",
+          "bridges/cognitive/emotion_encoder.py",
           "glyph_to_geometric_bridge.json",
+          "bridge_contract_manifest.json",
           "Silicon/octahedral_state_encoder.json",
+          "Silicon/core/octahedral_fiber_bundle.py",
+          "Silicon/core/bridges/geometric_fiber_encoder.py",
+          "Silicon/core/bridges/adapters.py",
+          "Silicon/core/bridges/domain_bridge_catalog.py",
           "GEIS/octahedral_state.py",
           "GEIS/geometric_encoder.py",
           "GEIS/state_tensor.py",
           "Mandala/octahedral_lookup.py",
           "Engine/kt_annealer.py",
-          "Silicon/seed_expansion.py",
           "Silicon/FRET/substrate_fret_coupling.py"
         ],
         "mounts": [
@@ -142,6 +148,7 @@
           { "remote": "bridges/sensor_suite.json", "as": "atlas/remote/g2b/sensor_suite.json" },
           { "remote": "bridges/geobin-bridges.json", "as": "atlas/remote/g2b/geobin_bridges.json" },
           { "remote": "glyph_to_geometric_bridge.json", "as": "atlas/remote/g2b/glyph_bridge.json" },
+          { "remote": "bridge_contract_manifest.json", "as": "atlas/remote/g2b/bridge_contract_manifest.json" },
           { "remote": "Silicon/octahedral_state_encoder.json", "as": "atlas/remote/g2b/octahedral_state_encoder.json" }
         ],
         "consent": { "license": "MIT", "share_ok": true }

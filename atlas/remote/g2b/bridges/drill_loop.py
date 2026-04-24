@@ -17,7 +17,7 @@ This module receives that signal and completes the loop:
                  action='no_target'  → drill target unknown or unregistered
 
 This closes the loop opened at:
-  bridges/emotion_encoder.py line 320 — target_name = drill_target(bridge_grads)
+  bridges/cognitive/emotion_encoder.py line 320 — target_name = drill_target(bridge_grads)
 
 Architecture position
 ---------------------
@@ -30,9 +30,9 @@ Architecture position
 
 Usage
 -----
-    from atlas.remote.g2b.bridges.drill_loop import DrillLoop
-    from atlas.remote.g2b.bridges.thermal_encoder import ThermalBridgeEncoder
-    from atlas.remote.g2b.bridges.consciousness_encoder import ConsciousnessBridgeEncoder
+    from bridges.drill_loop import DrillLoop
+    from bridges.thermal_encoder import ThermalBridgeEncoder
+    from bridges.cognitive.consciousness_encoder import ConsciousnessBridgeEncoder
 
     loop = DrillLoop(
         encoder_registry={
@@ -55,7 +55,7 @@ Usage
         binary = result["binary"]   # pass to consciousness bridge
 """
 
-from atlas.remote.g2b.bridges.physics_guard import PhysicsGuard
+from bridges.physics_guard import PhysicsGuard
 
 
 class DrillLoop:
@@ -149,8 +149,8 @@ if __name__ == "__main__":
     # Minimal self-contained demo using the emotion encoder to fire the drill
     # and the drill loop to close the circuit.
 
-    from atlas.remote.g2b.bridges.emotion_encoder import EmotionBridgeEncoder, drill_target
-    from atlas.remote.g2b.bridges.physics_guard import PhysicsGuard
+    from bridges.cognitive.emotion_encoder import EmotionBridgeEncoder, drill_target
+    from bridges.physics_guard import PhysicsGuard
 
     print("=" * 60)
     print("Drill Loop — Causality Feedback Closure Demo")
