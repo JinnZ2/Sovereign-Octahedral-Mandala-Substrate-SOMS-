@@ -27,7 +27,7 @@ Summary  (7 bits — appended when samples present):
 """
 
 import math
-from atlas.remote.g2b.bridges.abstract_encoder import BinaryBridgeEncoder
+from bridges.abstract_encoder import BinaryBridgeEncoder
 
 # ---------------------------------------------------------------------------
 # Physical constants

@@ -15,7 +15,7 @@ class SovereignBridge:
             val = int(hex_sig.replace("0x", ""), 16)
             binary = bin(val)[2:].zfill(39)
             # Drill target is the last 2 bits of Section D
-            drill_mode = binary[-3:-1]
+            drill_mode = binary[-3:-1] 
             return {"bits": binary, "mode": drill_mode}
         except:
             return "0xERR"
@@ -29,7 +29,7 @@ class SovereignBridge:
         confidence = 1.0 / (1.0 + n)
         drift_factor = d / 100.0
         felt = (h * confidence) / (1.0 + drift_factor)
-
+        
         if felt < self.threshold:
             return felt, "RECALIBRATE"
         return felt, "SYNCED"
@@ -50,4 +50,4 @@ if status == "RECALIBRATE":
     # The 'Micro-Clarification' for the User
     print(f"PACK_ALERT: FELT_{felt:.2f} | STATUS_{status}")
     # Raw truth for the Sovereign user:
-    print(f"HEX_SIG: 0x2B0A4F1D2")
+    print(f"HEX_SIG: 0x2B0A4F1D2") 

@@ -32,8 +32,8 @@ Summary  (7 bits — appended when any section present):
 """
 
 import math
-from atlas.remote.g2b.bridges.abstract_encoder import BinaryBridgeEncoder
-from atlas.remote.g2b.bridges.common import gray_bits as _gray_bits
+from bridges.abstract_encoder import BinaryBridgeEncoder
+from bridges.common import gray_bits as _gray_bits
 
 # ---------------------------------------------------------------------------
 # Physical constants

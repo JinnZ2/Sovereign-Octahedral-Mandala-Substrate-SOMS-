@@ -58,7 +58,7 @@ This flag is reported but does not alter the consistency score.
 
 Usage
 -----
-  from atlas.remote.g2b.bridges.magnetic_comparator import MagneticBridgeComparator
+  from bridges.magnetic_comparator import MagneticBridgeComparator
 
   cmp = MagneticBridgeComparator()
   result = cmp.compare(
@@ -72,7 +72,7 @@ Usage
 """
 
 import math
-from atlas.remote.g2b.bridges.magnetic_encoder import (
+from bridges.magnetic_encoder import (
     MagneticBridgeEncoder,
     _gray_bits, _B_BANDS, _PRESSURE_BANDS, _GAMMA,
     magnetic_pressure,

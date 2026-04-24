@@ -17,8 +17,8 @@ Plug into SensorSuite via memory_to_suite().
 
 Usage
 -----
-    from Silicon.topological_memory import VortexMemory
-    from atlas.remote.g2b.bridges.vortex_bridge import VortexBridgeEncoder, memory_to_suite
+    from Silicon.core.topological_memory import VortexMemory
+    from bridges.vortex_bridge import VortexBridgeEncoder, memory_to_suite
 
     mem = VortexMemory(grid_size=64)
     mem.write(0, 1); mem.write(1, 0)
@@ -39,8 +39,8 @@ import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from atlas.remote.g2b.bridges.abstract_encoder import BinaryBridgeEncoder
-from atlas.remote.g2b.bridges.common import gray_bits, bits_from_int
+from bridges.abstract_encoder import BinaryBridgeEncoder
+from bridges.common import gray_bits, bits_from_int
 
 # Winding magnitude bands: 8 linear bands covering [0, 1]
 _W_BANDS = [i / 8 for i in range(8)]   # [0.0, 0.125, 0.25, ..., 0.875]
