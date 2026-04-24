@@ -11,7 +11,8 @@ Modules:
     geometric_encoder        — Bidirectional geometric token ↔ binary encoding (from G2B bridge)
     geometric_state_algebra  — O_h symmetry group, group ring Z[O_h], Cayley coupling
     holographic_engine       — Holographic boundary encoding + renormalization solver
-    geometric_bridge         — Geometric Binary Bridge: sensor decode + actuator control (8 targets)
+    geometric_bridge         — Geometric Binary Bridge: sensor decode + actuator control (8+ targets)
+    bridge_registry          — Dynamic discovery of all G2B bridge encoders (18 canonical + alternatives)
     geometric_security       — 6-layer self-encoded security (parity, phi, trace, noise, bridge auth, handshake)
     immune_system            — Adaptive geometric security with immune memory and tolerance evolution
     octahedral_session_cache — Constraint-coherent LRU cache with octahedral invalidation graph
@@ -89,6 +90,8 @@ from src.geometric_bridge import (
     electric_field_magnitude, skin_depth,
 )
 
+from src.bridge_registry import BridgeRegistry
+
 __all__ = [
     "SOMSEngine", "MandalaMap", "PhiCalculator",
     "ConstraintAgent", "AgentState", "ResourceBudget", "GeometricMap",
@@ -107,6 +110,7 @@ __all__ = [
     "GeometricBridge", "SensorDecoder", "ActuatorController",
     "decode_hardware", "decode_electric", "BridgeHeader",
     "Modality", "BridgeTarget", "DrillDepth", "HardwareData", "ElectricData",
+    "BridgeRegistry",
     "gray_to_binary", "binary_to_gray", "gray_to_value", "value_to_gray",
     "component_health_score", "drift_percent", "lifetime_estimate_hours",
     "noise_power", "confidence_from_noise",
