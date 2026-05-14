@@ -58,3 +58,17 @@ python agaasdenton/kernel_check.py --brace-state
 If files exist in the folder that aren't declared in brace_state.json, or if brace_state.json declares files that don't exist, the brace is in an inconsistent state and the check fails. Update brace_state.json when adding or removing pieces.
 
 The probability vectors in brace_state.json are human-assigned priors. They are not precise. They reflect the brace's current estimate of its own state and are expected to update as the brace grows.
+
+## Discipline for adding or removing pieces
+
+When you add or remove a file in agaasdenton/, do three things in the same commit:
+
+1. Add, modify, or remove the file
+2. Update brace_state.json so the pieces list matches reality
+3. Append a line to CHANGELOG.jsonl recording the change
+
+The check (python agaasdenton/kernel_check.py --brace-state) verifies the brace's self-representation matches reality. CHANGELOG.jsonl is the append-only audit log — day-resolution, JSON Lines, machine-parseable. Sub-day precision lives in git.
+
+The check failing means the brace is reporting a real inconsistency. Fix it. Do not silence the check.
+
+To learn the kernel by example, read and run playground.py. It constructs one passing manifest and one failing manifest for each of the four refusals, then prints what kernel_check reports for each.
