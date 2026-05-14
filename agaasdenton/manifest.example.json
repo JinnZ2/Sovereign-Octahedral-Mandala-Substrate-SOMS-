@@ -1,0 +1,29 @@
+{
+  "name": "example_extension",
+  "shape": "process",
+  "has_action": true,
+  "is_static": false,
+  "metrology": {
+    "probability_vector": {"valid_in_intended_regime": 0.85, "edge_cases_uncertain": 0.15},
+    "temporal_scope": "stable while underlying seed-physics regime holds",
+    "regime": "agaasdenton brace, post-kernel-check v1",
+    "provenance": "example manifest demonstrating the four required fields"
+  },
+  "envelope": {
+    "fits": [
+      "demonstrating manifest structure",
+      "providing template for new extensions"
+    ],
+    "refuses": [
+      "being used as a real extension",
+      "implying any actual behavior",
+      "substituting for thoughtful manifest authorship"
+    ]
+  },
+  "seed_physics": {
+    "conservation": {"applies": false, "reason": "example only, no physical system modeled"},
+    "thermodynamic_directionality": {"applies": false, "reason": "example only"},
+    "scale_regime": {"applies": true, "regime": "example documentation scale"},
+    "coupling_cascade": {"applies": false, "reason": "standalone example"}
+  }
+}
