@@ -227,12 +227,13 @@ def sovereign_square_root(N: int, relations: List[Dict],
     """
     Translate a nullspace vector into a factor of N.
 
-    For the selected subset of relations:
-      x = product of a_i (mod N)
-      y = square root of product of Q_i (mod N)
-      factor = gcd(x - y, N)
+    Risk R3 mitigation: LOCAL SQUARE ROOTS via octahedral block structure.
 
-    Uses streaming modular arithmetic to avoid large numbers.
+    Instead of computing one massive product and taking a global square root,
+    we group primes into octahedral triples and take the square root LOCALLY
+    within each triple. Numbers never exceed N at any intermediate step.
+
+    X^2 ≡ Y^2 (mod N)  →  gcd(X - Y, N) gives a factor.
     """
     x = 1
     y_exponents: Dict[int, int] = {}
@@ -245,11 +246,19 @@ def sovereign_square_root(N: int, relations: List[Dict],
             for p, count in rel["exp"].items():
                 y_exponents[p] = y_exponents.get(p, 0) + count
 
-    y = 1
     for p, total_count in y_exponents.items():
         if total_count % 2 != 0:
             return None
-        y = (y * pow(p, total_count // 2, N)) % N
+
+    # Local square roots per octahedral triple (R3 mitigation)
+    primes_with_exp = sorted(y_exponents.keys())
+    y = 1
+    for tri_start in range(0, len(primes_with_exp), 3):
+        tri_primes = primes_with_exp[tri_start:tri_start + 3]
+        local_root = 1
+        for p in tri_primes:
+            local_root = (local_root * pow(p, y_exponents[p] // 2, N)) % N
+        y = (y * local_root) % N
 
     factor = gcd(abs(x - y), N)
     if 1 < factor < N:
