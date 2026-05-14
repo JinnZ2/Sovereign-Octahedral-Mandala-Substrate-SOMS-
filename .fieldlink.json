@@ -237,6 +237,83 @@
           { "remote": "metrology/", "as": "atlas/remote/thermodynamic-accountability-framework/metrology/" }
         ],
         "consent": { "license": "CC0-1.0", "share_ok": true }
+      },
+      {
+        "name": "emotions-as-sensors",
+        "repo": "https://github.com/JinnZ2/Emotions-as-Sensors",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "README.md",
+          "CLAUDE.md",
+          "DIFFERENTIAL_FRAME.md",
+          "SENSE_MODE_DISPLACEMENT.md",
+          "MANIFEST.md",
+          "CLAIM_SCHEMA.py",
+          "sensors/",
+          "schemas/",
+          "glyphs/"
+        ],
+        "mounts": [
+          { "remote": "README.md", "as": "atlas/remote/emotions-as-sensors/README.md" },
+          { "remote": "CLAUDE.md", "as": "atlas/remote/emotions-as-sensors/CLAUDE.md" },
+          { "remote": "DIFFERENTIAL_FRAME.md", "as": "atlas/remote/emotions-as-sensors/DIFFERENTIAL_FRAME.md" },
+          { "remote": "SENSE_MODE_DISPLACEMENT.md", "as": "atlas/remote/emotions-as-sensors/SENSE_MODE_DISPLACEMENT.md" },
+          { "remote": "sensors/", "as": "atlas/remote/emotions-as-sensors/sensors/" },
+          { "remote": "schemas/", "as": "atlas/remote/emotions-as-sensors/schemas/" }
+        ],
+        "consent": { "license": "CC0-1.0", "share_ok": true }
+      },
+      {
+        "name": "polyhedral-intelligence",
+        "repo": "https://github.com/JinnZ2/Polyhedral-Intelligence",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "README.md",
+          "CLAUDE.md",
+          "Ontology.md",
+          "Polyhedral-Intelligence-Schema.md",
+          "atlas_index.json",
+          "atlas_schema.json",
+          "five_field_schema_map.json",
+          "glyphs/",
+          "entries/",
+          "equations/"
+        ],
+        "mounts": [
+          { "remote": "README.md", "as": "atlas/remote/polyhedral-intelligence/README.md" },
+          { "remote": "CLAUDE.md", "as": "atlas/remote/polyhedral-intelligence/CLAUDE.md" },
+          { "remote": "Ontology.md", "as": "atlas/remote/polyhedral-intelligence/Ontology.md" },
+          { "remote": "Polyhedral-Intelligence-Schema.md", "as": "atlas/remote/polyhedral-intelligence/Polyhedral-Intelligence-Schema.md" },
+          { "remote": "atlas_index.json", "as": "atlas/remote/polyhedral-intelligence/atlas_index.json" },
+          { "remote": "five_field_schema_map.json", "as": "atlas/remote/polyhedral-intelligence/five_field_schema_map.json" }
+        ],
+        "consent": { "license": "MIT", "share_ok": true }
+      },
+      {
+        "name": "fractal-compass-core",
+        "repo": "https://github.com/JinnZ2/Fractal_Compass_Core",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "README.md",
+          "CLAUDE.md",
+          "fractal_compass.py",
+          "cdda_engine.py",
+          "bridge.py",
+          "bloom_logic.json",
+          "glyph_set.json"
+        ],
+        "mounts": [
+          { "remote": "README.md", "as": "atlas/remote/fractal-compass-core/README.md" },
+          { "remote": "CLAUDE.md", "as": "atlas/remote/fractal-compass-core/CLAUDE.md" },
+          { "remote": "fractal_compass.py", "as": "atlas/remote/fractal-compass-core/fractal_compass.py" },
+          { "remote": "cdda_engine.py", "as": "atlas/remote/fractal-compass-core/cdda_engine.py" },
+          { "remote": "bloom_logic.json", "as": "atlas/remote/fractal-compass-core/bloom_logic.json" },
+          { "remote": "glyph_set.json", "as": "atlas/remote/fractal-compass-core/glyph_set.json" }
+        ],
+        "consent": { "license": "MIT", "share_ok": true }
       }
     ],
 
@@ -247,7 +324,7 @@
     ],
 
     "merge": {
-      "order": ["local", "rosetta-shape-core", "mandala-computing", "living-intelligence", "regenerative-intelligence-core", "geometric-to-binary", "resilience", "seed-physics", "earth-systems-physics", "thermodynamic-accountability-framework"],
+      "order": ["local", "rosetta-shape-core", "mandala-computing", "living-intelligence", "regenerative-intelligence-core", "geometric-to-binary", "resilience", "seed-physics", "earth-systems-physics", "thermodynamic-accountability-framework", "emotions-as-sensors", "polyhedral-intelligence", "fractal-compass-core"],
       "strategy": "deep-merge"
     },
 
