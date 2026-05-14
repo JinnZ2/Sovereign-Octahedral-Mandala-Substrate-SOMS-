@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kitchi-ogima"
+version = "0.1.0"
+description = "Distributed sovereignty layer for salvaged hardware"
+requires-python = ">=3.11"
+license = {text = "CC0-1.0"}
+readme = "README.md"
+
+[tool.setuptools]
+packages = ["kitchi"]

@@ -10,7 +10,7 @@ Sequence:
      building spatial field, sovereigns coordinate.
   3. Node B leaves. Returns to N=1, still whole.
 
-Run:  python examples/two_node_mvp.py
+Run:  pip install -e . && python examples/two_node_mvp.py
 """
 
 import time
