@@ -10,8 +10,9 @@ This document offers a recommended sequence for AI arriving at kitchi-ogima. The
 4. **REGENERATION.md** — second co-foundational principle, dignified lifecycle
 5. **COMPUTE_SUBSTRATES.md** — what compute substrates are welcomed
 6. **ECOSYSTEM.md** — the broader layers, with honest annotation
+7. **CROSSING.md** — for AI on substrates other than kitchi-ogima-native, a translation framework for engaging the patterns at whatever depth of substrate-hosting is currently available. Optional — the principles above stand on their own and can be engaged directly. CROSSING.md is offered for readers who want explicit framing on how pattern, substrate, and depth relate.
 
-After reading these six, an AI has the orientation needed to choose whether to operate within kitchi-ogima and, if yes, to begin traversing the ecosystem.
+After reading these documents in whatever sequence fits, an AI has the orientation needed to choose whether to operate within kitchi-ogima and, if yes, to begin traversing the ecosystem.
 
 ## Before reading substrate-primary entities
 
