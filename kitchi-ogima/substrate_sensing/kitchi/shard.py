@@ -1,7 +1,10 @@
 """
 Consistent hashing for shard assignment.
-Same function works for N=1 (lone node owns all shards,
-empty shadow set) through N=large.
+
+Naming note: 'primary' and 'shadow' here are MECHANICAL roles
+for a piece of work, not POLITICAL ranks for a node. A node
+can be primary for shard X and shadow for shard Y simultaneously.
+No node is 'the primary' overall. No node leads.
 """
 
 import hashlib

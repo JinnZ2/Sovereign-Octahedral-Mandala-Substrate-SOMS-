@@ -1,6 +1,10 @@
 """
-Decision layer. Quorum-of-one is legal at N=1.
-Same function, trivial case.
+Decision layer.
+
+Naming note: 'quorum' here means **agreement among sovereigns**,
+not a vote under a chief. Quorum-of-one is fully legal — a lone
+sovereign decides for itself. This is not a degenerate case;
+it is the base case.
 """
 
 from typing import Dict, List, Tuple
@@ -12,9 +16,8 @@ def load_shift_recommendations(
         field_state: Dict[str, dict]
         ) -> List[Tuple[str, str]]:
     """
-    Returns list of (pressured_node, cool_node) pairs.
-    At N=1: returns [] if alone (nowhere to shift to);
-            decide.py upstream still can throttle/sleep self.
+    Suggest (pressured_node, cool_node) pairs.
+    At N=1: returns []. The lone sovereign self-regulates instead.
     """
     pressured, cool = [], []
     for nid, senses in field_state.items():
@@ -32,8 +35,9 @@ def load_shift_recommendations(
 def self_regulate(node: "Node",
                   field_state: Dict[str, dict]) -> dict:
     """
-    What a lone (or any) node can do for itself without peers.
-    Throttle, sleep, alert — always available.
+    A sovereign's authority over its own resources.
+    Always available, regardless of pack size.
+    Never requires permission from another node.
     """
     own = field_state.get(node.node_id, {})
     heat = own.get("heat", {}).get("headroom", float("inf"))
@@ -47,8 +51,9 @@ def self_regulate(node: "Node",
 
 def quorum_decide(votes: Dict[str, bool]) -> bool:
     """
-    Quorum-of-one is legal. Same function for any N.
-    Returns True if majority of present votes are True.
+    Agreement among sovereigns. Not a vote under a chief.
+    Quorum-of-one is legal: a lone sovereign decides for itself.
+    Same function for every N.
     """
     if not votes:
         return False
