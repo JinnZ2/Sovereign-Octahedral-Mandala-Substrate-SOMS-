@@ -275,6 +275,25 @@ def main():
         print(f"    Cell {idx:>2}: state={state} gray={gray} "
               f"({char:<16}) transitions={n_transitions} gray_adj={n_gray}")
 
+    # ── Step 11: Octahedral NFS pipeline ────────────────────────────
+    nfs_N = N if N > 81 else 1003
+    print(f"\n[11] OCTAHEDRAL NFS PIPELINE (N={nfs_N})")
+    print(f"     RIM Sieve → GF(2) Matrix → Sovereign Square Root")
+    print(f"     Local square roots per octahedral triple (R3 mitigation)")
+    nfs_path = Path(__file__).parent.parent / "atlas" / "remote" / "resilience" / "nfs_pipeline.py"
+    if nfs_path.exists():
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("nfs_pipeline", nfs_path)
+        nfs = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(nfs)
+        result = nfs.factor_number(nfs_N, D=50, verbose=False)
+        if result:
+            print(f"     {nfs_N} = {result[0]} × {result[1]}")
+        else:
+            print(f"     Pipeline ran but needs larger D for {nfs_N}")
+    else:
+        print(f"     Pipeline not mounted (atlas/remote/resilience/)")
+
     # ── Summary ───────────────────────────────────────────────────────
     print(f"\n{'=' * 60}")
     print("The mandala doesn't search for answers.")
