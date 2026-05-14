@@ -9,7 +9,7 @@ Full O_h symmetry group (48 elements) available via geometric state algebra; hol
 
 ```bash
 pip install numpy scipy   # dependencies
-python -m pytest tests/   # 98 tests
+python -m pytest tests/   # 291 tests
 python src/demo.py        # full walkthrough
 ```
 
@@ -25,12 +25,14 @@ src/                         # Core library — import via `from src import *`
   geometric_encoder.py       # GeometricEncoder: GEIS token ↔ binary. Format: [vertex_bits]|[operator][symbol]
   geometric_state_algebra.py # OhGroup (48-element O_h), GroupRingElement (Z[O_h]), GeometricState, CayleyEnergy
   holographic_engine.py      # HolographicEngine: boundary encoding + entanglement + renormalization anneal
-  geometric_bridge.py        # GeometricBridge: self-describing binary sensor/actuator protocol (8 targets, Gray-coded)
+  geometric_bridge.py        # GeometricBridge: self-describing binary sensor/actuator protocol (8 core + 10 extended targets via BridgeRegistry)
+  bridge_registry.py         # BridgeRegistry: dynamic discovery of 18 G2B bridge encoders + paradigm matrix
+  resonate.py                # ResonateEngine: cross-domain coupling (14 physics rules, sensor fusion)
   resource_budget.py         # ResourceBudget dataclass
   geometric_map.py           # GeometricMap dataclass
   atlas_loader.py            # load_seed_catalog(), load_synergies(), DUAL_PAIRS, BRIDGE_PAIRS, SYNERGY_ALIASES
   lattice_handshake.py       # OctahedralLattice (CVP handshake), PulseChip (mat-vec hardware), feltscore()
-tests/                       # pytest suite (82 tests)
+tests/                       # pytest suite (291 tests)
 data/GDSII_Coordinates.txt   # 100-cell nanometer fabrication layout
 atlas/remote/                # Fieldlink-mounted data from 6 sibling repos (see .fieldlink.json)
   rosetta/                   # Rosetta-Shape-Core: octahedron.json, bridges.json, seed_catalog.json, math_constants.json
@@ -109,7 +111,7 @@ PhiCalculator(orientations) → evaluate_integration() → (phi, is_sovereign)  
 ConstraintAgent: COMPRESSED →bloom→ EXPANDING →explore→ EXPLORING →compress→ CONTRACTING → COMPRESSED
 
 GeometricBridge → sense(modality, bits)   → HardwareData / ElectricData / ...
-               → act(target, **kwargs)   → 8 bridge targets (thermal..chemical)
+               → act(target, **kwargs)   → 8 core targets (thermal..chemical) + extended via registry
                → sense_framed(bytes)     → self-describing GB header + payload
   Physics: component_health_score(), ohms_law(), coulomb_force(), skin_depth()
   Gray coding: value_to_gray() ↔ gray_to_value() over 8-band lookup tables
@@ -219,7 +221,9 @@ All repos are mounted locally at `atlas/remote/<source-name>/` via `.fieldlink.j
 - **geometric_state_algebra.py** — States ARE symmetry operations, not flat integers. Cancellation = group composition to identity. The group ring Z[O_h] has 48 dimensions vs GF(2)'s 2. Enables: richer constraint encoding, geometric distance metrics, algebraic factorization.
 - **holographic_engine.py** — Multi-scale solving: encode on boundary, compress inward, solve coarse-to-fine with entanglement-correlated updates. Enables: faster convergence on large problems, hierarchical constraint decomposition, adaptive link strengthening.
 - **SOMSEngine.cayley_energy()** — Third pathway using true group-theoretic distance. Enables: symmetry-aware coupling that respects the octahedron's algebraic structure, not just angular or eigenvalue distance.
-- **geometric_bridge.py** — Self-describing binary sensor/actuator protocol. 7 modalities (hardware, electric, magnetic, gravitational, spectrum, polyhedral, GEIS) × 8 bridge targets (thermal, electric, magnetic, light, sound, wave, pressure, chemical). Gray-coded bands, confidence grounding via noise power, drill depth escalation. Physics primitives included (Ohm's law, Coulomb, skin depth). Any AI can decode a 39-bit hardware bitstring or send actuator commands immediately — no training, no fine-tuning, just `decode_hardware(bits)`.
+- **geometric_bridge.py** — Self-describing binary sensor/actuator protocol. 7 modalities × 8 core bridge targets, extensible to 18 via BridgeRegistry. Gray-coded bands, confidence grounding via noise power, drill depth escalation. Physics primitives included (Ohm's law, Coulomb, skin depth). Any AI can decode a 39-bit hardware bitstring or send actuator commands immediately — no training, no fine-tuning, just `decode_hardware(bits)`.
+- **bridge_registry.py** — Dynamic discovery of all 18 G2B bridge encoders (physical, contextual, topological, cognitive). Paradigm matrix maps 7 alternative computing modes (ternary, quantum, stochastic, neuromorphic, reservoir, memristive, approximate) across 5 physical domains. Reads `bridge_contract_manifest.json` from G2B fieldlink mount.
+- **resonate.py** — Cross-domain coupling engine. 14 physics-motivated rules (Faraday induction, Joule heating, equation of state, acoustic impedance, etc.). `DomainIntersectionRule` wires real G2B ternary classifiers (gravity ATTRACT/NULL/REPEL, electric charge ±/0, sound compression/equilibrium/rarefaction).
 
 ### Geometric Binary Bridge protocol (self-describing)
 
