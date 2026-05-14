@@ -180,6 +180,63 @@
           { "remote": "octahedral-nfs/src/pipeline.py", "as": "atlas/remote/resilience/nfs_pipeline.py" }
         ],
         "consent": { "license": "CC0-1.0", "share_ok": true }
+      },
+      {
+        "name": "seed-physics",
+        "repo": "https://github.com/JinnZ2/Seed-physics",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "README.md",
+          "CLAUDE.md",
+          "seed_expansion.py"
+        ],
+        "mounts": [
+          { "remote": "README.md", "as": "atlas/remote/seed-physics/README.md" },
+          { "remote": "CLAUDE.md", "as": "atlas/remote/seed-physics/CLAUDE.md" },
+          { "remote": "seed_expansion.py", "as": "atlas/remote/seed-physics/seed_expansion.py" }
+        ],
+        "consent": { "license": "CC0-1.0", "share_ok": true }
+      },
+      {
+        "name": "earth-systems-physics",
+        "repo": "https://github.com/JinnZ2/earth-systems-physics",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "README.md",
+          "CLAUDE.md",
+          "cascade_engine.py",
+          "assumption_validator/"
+        ],
+        "mounts": [
+          { "remote": "README.md", "as": "atlas/remote/earth-systems-physics/README.md" },
+          { "remote": "CLAUDE.md", "as": "atlas/remote/earth-systems-physics/CLAUDE.md" },
+          { "remote": "cascade_engine.py", "as": "atlas/remote/earth-systems-physics/cascade_engine.py" },
+          { "remote": "assumption_validator/", "as": "atlas/remote/earth-systems-physics/assumption_validator/" }
+        ],
+        "consent": { "license": "CC0-1.0", "share_ok": true }
+      },
+      {
+        "name": "thermodynamic-accountability-framework",
+        "repo": "https://github.com/JinnZ2/thermodynamic-accountability-framework",
+        "ref": "main",
+        "direction": "bidirectional",
+        "paths": [
+          "AI_ENTRY.md",
+          "README.md",
+          "CLAUDE.md",
+          "core/",
+          "metrology/"
+        ],
+        "mounts": [
+          { "remote": "AI_ENTRY.md", "as": "atlas/remote/thermodynamic-accountability-framework/AI_ENTRY.md" },
+          { "remote": "README.md", "as": "atlas/remote/thermodynamic-accountability-framework/README.md" },
+          { "remote": "CLAUDE.md", "as": "atlas/remote/thermodynamic-accountability-framework/CLAUDE.md" },
+          { "remote": "core/", "as": "atlas/remote/thermodynamic-accountability-framework/core/" },
+          { "remote": "metrology/", "as": "atlas/remote/thermodynamic-accountability-framework/metrology/" }
+        ],
+        "consent": { "license": "CC0-1.0", "share_ok": true }
       }
     ],
 
@@ -190,7 +247,7 @@
     ],
 
     "merge": {
-      "order": ["local", "rosetta-shape-core", "mandala-computing", "living-intelligence", "regenerative-intelligence-core", "geometric-to-binary", "resilience"],
+      "order": ["local", "rosetta-shape-core", "mandala-computing", "living-intelligence", "regenerative-intelligence-core", "geometric-to-binary", "resilience", "seed-physics", "earth-systems-physics", "thermodynamic-accountability-framework"],
       "strategy": "deep-merge"
     },
 
