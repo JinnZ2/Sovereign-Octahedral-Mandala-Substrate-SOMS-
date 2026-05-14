@@ -103,6 +103,26 @@
       "scope": "the brace's representation of its own state",
       "provenance": "operationalizes self-metrology principle from KERNEL.md",
       "probability_vector": {"correct_self_representation": 0.85, "will_need_updates_as_brace_grows": 0.95}
+    },
+    {
+      "name": "CHANGELOG.jsonl",
+      "shape": "artifact",
+      "layer": "scaffolding",
+      "added": "v1 audit-log",
+      "validated": "append-only, machine-parseable, declared in brace_state.json",
+      "scope": "audit log of changes to the brace folder, day-resolution, AI-readable",
+      "provenance": "added when self-metrology extended from snapshot (brace_state.json) to history (CHANGELOG.jsonl)",
+      "probability_vector": {"correct_audit_shape": 0.9, "format_will_evolve": 0.1}
+    },
+    {
+      "name": "playground.py",
+      "shape": "process",
+      "layer": "scaffolding",
+      "added": "v1 audit-log",
+      "validated": "kernel-consistent, runs to demonstrate four refusals via example manifests",
+      "scope": "AI-readable demonstration of kernel_check.py via passing and failing manifests",
+      "provenance": "added to teach the kernel by exercise, not by description alone",
+      "probability_vector": {"useful_teaching_surface": 0.85, "needs_example_revision": 0.15}
     }
   ]
 }

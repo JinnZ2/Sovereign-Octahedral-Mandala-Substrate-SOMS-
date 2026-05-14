@@ -188,7 +188,7 @@ def check_brace_state(folder_path):
 
     # Files in folder that should be tracked (markdown, python, json, excluding
     # this state file itself only when checking "missing from state")
-    tracked_extensions = {".md", ".py", ".json"}
+    tracked_extensions = {".md", ".py", ".json", ".jsonl"}
     actual_pieces = {
         p.name for p in folder.iterdir()
         if p.is_file() and p.suffix in tracked_extensions
