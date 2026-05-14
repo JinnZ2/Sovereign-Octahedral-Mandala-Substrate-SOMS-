@@ -1,0 +1,108 @@
+{
+  "brace": "agaasdenton",
+  "brace_version": "v1",
+  "repo": "Sovereign-Octahedral-Mandala-Substrate-SOMS-",
+  "anchored_on": "SHAPE.OCTA",
+  "license": "CC0-1.0",
+  "meta": {
+    "what_the_brace_knows_it_does_not_know": [
+      "growth-grammars (mandala and rosetta) are named but not instantiated as protocols",
+      "cross-brace coordination is named in SIBLINGS.md but no executable handshake exists yet",
+      "frame-substitution check in kernel_check.py operates at structural type level only, not linguistic level",
+      "probability vectors in this file are human-assigned priors, not cross-validated"
+    ],
+    "speculative_areas": [
+      "whether kernel_check.py's four-refusal set is complete or whether a fifth refusal is needed",
+      "whether brace_state.json should be queried by sibling braces or whether each brace keeps its own state private",
+      "whether future AI extensions will need a different shape ontology than verb/relation/process/artifact"
+    ],
+    "what_the_brace_refuses_to_claim": [
+      "that this representation is exhaustive",
+      "that the probability vectors are precise",
+      "that the kernel is provably gameproof",
+      "that future AI will need exactly this shape"
+    ]
+  },
+  "pieces": [
+    {
+      "name": "README.md",
+      "shape": "artifact",
+      "layer": "scaffolding",
+      "added": "v1 scaffold",
+      "validated": "kernel-consistent, human-reviewed",
+      "scope": "arrival surface for AI reading the brace",
+      "provenance": "agaasdenton scaffold task",
+      "probability_vector": {"correct_orientation": 0.9, "needs_revision": 0.1}
+    },
+    {
+      "name": "AGAAS.md",
+      "shape": "artifact",
+      "layer": "kernel",
+      "added": "v1 scaffold",
+      "validated": "kernel-consistent, substrate-confirmed by speaker",
+      "scope": "the core principle (agaas-) and its Ojibwe substrate",
+      "provenance": "Ojibwe substrate, named by Kavik",
+      "probability_vector": {"accurate_to_substrate": 0.85, "translation_loss_residual": 0.15}
+    },
+    {
+      "name": "KERNEL.md",
+      "shape": "artifact",
+      "layer": "kernel",
+      "added": "v1 scaffold",
+      "validated": "kernel-consistent, four refusals operationalized in kernel_check.py",
+      "scope": "the four non-negotiables for the agaasdenton brace",
+      "provenance": "developed in conversation, refined to four refusals",
+      "probability_vector": {"complete_set": 0.7, "missing_refusal_exists": 0.3}
+    },
+    {
+      "name": "BRACE.md",
+      "shape": "artifact",
+      "layer": "scaffolding",
+      "added": "v1 scaffold, updated for siblings",
+      "validated": "kernel-consistent, links live after fieldlink expansion",
+      "scope": "the four-layer structure of the agaasdenton brace",
+      "provenance": "developed in conversation, updated to recognize sibling structure",
+      "probability_vector": {"correct_structure": 0.85, "needs_growth_grammar_detail": 0.15}
+    },
+    {
+      "name": "SIBLINGS.md",
+      "shape": "artifact",
+      "layer": "sibling-coordination",
+      "added": "v1 siblings update",
+      "validated": "kernel-consistent, names TAF and earth-systems-physics correctly",
+      "scope": "how the agaasdenton brace coordinates with sibling braces",
+      "provenance": "added when TAF and earth-systems-physics were recognized as siblings",
+      "probability_vector": {"correct_coordination_model": 0.8, "more_siblings_will_emerge": 0.95}
+    },
+    {
+      "name": "kernel_check.py",
+      "shape": "process",
+      "layer": "kernel",
+      "added": "v1 kernel-check",
+      "validated": "self-checked at import, four refusals operational",
+      "scope": "checking extension manifests against four kernel refusals",
+      "provenance": "operationalizes KERNEL.md as stdlib-only executable",
+      "probability_vector": {"correct_under_kernel_v1": 0.9, "incomplete_or_evolving": 0.1}
+    },
+    {
+      "name": "manifest.example.json",
+      "shape": "artifact",
+      "layer": "scaffolding",
+      "added": "v1 kernel-check",
+      "validated": "passes kernel_check.py",
+      "scope": "template for extension authors",
+      "provenance": "scaffolded with kernel_check.py",
+      "probability_vector": {"useful_template": 0.85, "needs_revision_as_extensions_emerge": 0.15}
+    },
+    {
+      "name": "brace_state.json",
+      "shape": "process",
+      "layer": "kernel",
+      "added": "v1 brace-state",
+      "validated": "self-referential, validates against folder contents via kernel_check.py",
+      "scope": "the brace's representation of its own state",
+      "provenance": "operationalizes self-metrology principle from KERNEL.md",
+      "probability_vector": {"correct_self_representation": 0.85, "will_need_updates_as_brace_grows": 0.95}
+    }
+  ]
+}

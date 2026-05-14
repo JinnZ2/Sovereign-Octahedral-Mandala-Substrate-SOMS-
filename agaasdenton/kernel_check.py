@@ -165,6 +165,51 @@ def check_seed_physics(manifest):
 
 
 # ---------------------------------------------------------------------------
+# Optional: validate brace_state.json against folder contents
+# ---------------------------------------------------------------------------
+
+
+def check_brace_state(folder_path):
+    """Validate that brace_state.json matches the actual folder contents.
+
+    Reports inconsistencies between the brace's self-representation and
+    reality. Returns a structured result.
+    """
+    folder = Path(folder_path)
+    state_file = folder / "brace_state.json"
+
+    if not state_file.exists():
+        return {"passed": False, "message": f"brace_state.json not found in {folder}"}
+
+    with open(state_file) as f:
+        state = json.load(f)
+
+    declared_pieces = {p["name"] for p in state.get("pieces", [])}
+
+    # Files in folder that should be tracked (markdown, python, json, excluding
+    # this state file itself only when checking "missing from state")
+    tracked_extensions = {".md", ".py", ".json"}
+    actual_pieces = {
+        p.name for p in folder.iterdir()
+        if p.is_file() and p.suffix in tracked_extensions
+    }
+
+    missing_from_state = actual_pieces - declared_pieces
+    missing_from_folder = declared_pieces - actual_pieces
+
+    issues = []
+    if missing_from_state:
+        issues.append(f"files in folder but not in brace_state.json: {sorted(missing_from_state)}")
+    if missing_from_folder:
+        issues.append(f"files in brace_state.json but not in folder: {sorted(missing_from_folder)}")
+
+    if issues:
+        return {"passed": False, "issues": issues, "declared": sorted(declared_pieces), "actual": sorted(actual_pieces)}
+
+    return {"passed": True, "message": f"brace_state.json consistent with {len(actual_pieces)} files in folder"}
+
+
+# ---------------------------------------------------------------------------
 # Run all checks
 # ---------------------------------------------------------------------------
 
@@ -247,8 +292,15 @@ def main():
         print(json.dumps(result, indent=2))
         return 0
 
+    if sys.argv[1] == "--brace-state":
+        # Validate brace_state.json against the folder containing this script
+        folder = Path(__file__).parent
+        result = check_brace_state(folder)
+        print(json.dumps(result, indent=2))
+        return 0 if result["passed"] else 1
+
     if len(sys.argv) != 2:
-        print("usage: python kernel_check.py [path/to/manifest.json]", file=sys.stderr)
+        print("usage: python kernel_check.py [path/to/manifest.json | --brace-state]", file=sys.stderr)
         return 2
 
     manifest_path = Path(sys.argv[1])

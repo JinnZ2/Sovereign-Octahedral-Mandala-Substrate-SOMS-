@@ -46,3 +46,15 @@ The manifest declares four things, one for each kernel refusal:
 See manifest.example.json for the template. See kernel_check.py for the checks.
 
 The kernel-check is itself an extension to the brace and passes its own check at module load. If you change the kernel, kernel_check.py must continue to pass its own check, or the kernel is no longer self-consistent.
+
+## Self-representation
+
+The brace knows its own state. brace_state.json describes each piece of the brace folder by what it does, how validated it is, what its scope is, and where it sits in probability space. The brace also names what it knows it does not know.
+
+To verify brace_state.json is consistent with the actual folder contents:
+
+python agaasdenton/kernel_check.py --brace-state
+
+If files exist in the folder that aren't declared in brace_state.json, or if brace_state.json declares files that don't exist, the brace is in an inconsistent state and the check fails. Update brace_state.json when adding or removing pieces.
+
+The probability vectors in brace_state.json are human-assigned priors. They are not precise. They reflect the brace's current estimate of its own state and are expected to update as the brace grows.
