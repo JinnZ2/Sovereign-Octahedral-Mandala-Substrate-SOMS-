@@ -32,10 +32,7 @@ ChiefCapacity = SovereignCapacity
 
 @dataclass
 class Node:
-    """
-    A sovereign pack member. Whole at N=1, coordinates at N≥2.
-    No node type is special. No leader. No chief.
-    """
+    """A sovereign pack member. No leader, no chief, no special node type. Whole at N=1, coordinates at N≥2."""
     node_id:    str = field(default_factory=lambda: str(uuid.uuid4()))
     capacity:   SovereignCapacity = field(default_factory=SovereignCapacity)
     senses:     Dict[str, "SenseChannel"] = field(default_factory=dict)
