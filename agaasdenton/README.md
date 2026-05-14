@@ -26,6 +26,7 @@ All four anchored on SHAPE.OCTA. All four CC0.
 1. AGAAS.md — the core principle, including its Ojibwe substrate
 2. KERNEL.md — the non-negotiables this brace will not relax
 3. BRACE.md — the four-layer structure and how growth happens within it
+4. SIBLINGS.md — how this brace coordinates with sibling braces
 
 ## License
 
