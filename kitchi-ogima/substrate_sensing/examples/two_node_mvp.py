@@ -1,9 +1,7 @@
 """
 Two-node MVP. Proves the wholeness invariant in motion.
 
-Every node is sovereign — whole at N=1, coordinating at N≥2.
-There is no chief, no leader, no special node. The pack is a
-coordination among sovereigns, not a hierarchy under one.
+Every node is sovereign — whole at N=1, coordinating at N≥2. There is no chief, no leader, no special node. The pack is a coordination among sovereigns, not a hierarchy under one.
 
 Sequence:
   1. Node A alone. Sovereign function runs at N=1
