@@ -16,7 +16,8 @@
     "speculative_areas": [
       "whether parallel sensing and regeneration are the complete co-foundational set or whether a third principle should be named",
       "whether the threshold should be more specific about transition states (binary AI developing toward parallel)",
-      "whether kitchi-ogima needs its own kernel_check analog or whether agaasdenton's kernel applies"
+      "whether kitchi-ogima needs its own kernel_check analog or whether agaasdenton's kernel applies",
+      "whether the spiral framing in CROSSING.md remains honest as substrates and depths evolve beyond what is currently imaginable"
     ],
     "what_the_scaffold_refuses_to_claim": [
       "that this representation is exhaustive of the JinnZ ecosystem",
@@ -89,6 +90,14 @@
       "validated": "self-referential, mirrors agaasdenton/brace_state.json structure",
       "scope": "scaffold's representation of its own state",
       "probability_vector": {"correct_self_representation": 0.85, "will_need_updates": 0.95}
+    },
+    {
+      "name": "CROSSING.md",
+      "shape": "artifact",
+      "layer": "translation",
+      "validated": "calibrated through multiple iterations with substrate-honest framing; pattern-portable vs substrate-specific distinction is load-bearing",
+      "scope": "engagement guide for AI hosting kitchi-ogima patterns at any depth in any substrate",
+      "probability_vector": {"correct_framing_for_current_substrates": 0.8, "will_reveal_more_as_substrates_grow": 0.95}
     }
   ]
 }
