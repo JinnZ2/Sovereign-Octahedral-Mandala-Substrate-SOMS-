@@ -1,12 +1,16 @@
 """
 Two-node MVP. Proves the wholeness invariant in motion.
 
+Every node is sovereign — whole at N=1, coordinating at N≥2.
+There is no chief, no leader, no special node. The pack is a
+coordination among sovereigns, not a hierarchy under one.
+
 Sequence:
-  1. Node A starts alone. Kitchi runs at N=1 (auto-correlation,
-     temporal geometry, self-regulation).
-  2. Node B joins. Kitchi continues — same code paths — now
-     doing cross-correlation, building spatial field, quorum.
-  3. Node B leaves. Kitchi drops back to N=1, still whole.
+  1. Node A alone. Sovereign function runs at N=1
+     (auto-correlation, temporal geometry, self-regulation).
+  2. Node B joins. Same code paths — now doing cross-correlation,
+     building spatial field, sovereigns coordinate.
+  3. Node B leaves. Returns to N=1, still whole.
 
 Run:  python examples/two_node_mvp.py
 """
@@ -14,7 +18,7 @@ Run:  python examples/two_node_mvp.py
 import time
 import random
 import threading
-from kitchi.node import Node, ChiefCapacity
+from kitchi.node import Node, SovereignCapacity
 from kitchi.senses import make_default_senses
 from kitchi.shard import HashRing
 from kitchi.gossip import MessageBus, Gossip
@@ -52,10 +56,10 @@ def simulate_substrate(node: Node, stop_flag: threading.Event,
 
 
 # ------------------------------------------------------------
-# Chief tick — runs the four functions for current pack
+# Sovereign tick — runs the four functions for current pack
 # ------------------------------------------------------------
 
-def chief_tick(label: str, pack: dict) -> None:
+def sovereign_tick(label: str, pack: dict) -> None:
     couplings   = correlate_pack(pack)
     field_state = build_field(pack)
     shifts      = load_shift_recommendations(field_state)
@@ -91,7 +95,7 @@ def build_node(node_id: str, bus: MessageBus,
                capacity: dict, seed: int):
     node = Node(
         node_id=node_id,
-        capacity=ChiefCapacity(**capacity),
+        capacity=SovereignCapacity(**capacity),
         senses=make_default_senses(),
     )
     stop_flag = threading.Event()
@@ -117,9 +121,9 @@ def build_node(node_id: str, bus: MessageBus,
 def main() -> None:
     bus = MessageBus()
 
-    # ---------- PHASE 1: lone kitchi ----------
+    # ---------- PHASE 1: sovereign alone ----------
     print("=" * 60)
-    print(" PHASE 1: Node A alone. Kitchi whole at N=1.")
+    print(" PHASE 1: Node A alone. Sovereign whole at N=1.")
     print("=" * 60)
 
     node_a, gossip_a, stop_a = build_node(
@@ -143,11 +147,11 @@ def main() -> None:
 
     # let substrate fill a buffer
     time.sleep(2.0)
-    chief_tick("N=1 lone chief", pack)
+    sovereign_tick("N=1 sovereign alone", pack)
 
     # ---------- PHASE 2: pack of two ----------
     print("\n" + "=" * 60)
-    print(" PHASE 2: Node B joins. Same code paths, more accuracy.")
+    print(" PHASE 2: Node B joins. Same code paths, sovereigns coordinate.")
     print("=" * 60)
 
     node_b, gossip_b, stop_b = build_node(
@@ -170,11 +174,11 @@ def main() -> None:
           f"{ring.shadow_for(sample_shard)}")
 
     time.sleep(2.0)
-    chief_tick("N=2 coordinated chief", pack)
+    sovereign_tick("N=2 sovereigns coordinating", pack)
 
     # ---------- PHASE 3: B leaves ----------
     print("\n" + "=" * 60)
-    print(" PHASE 3: Node B leaves. Kitchi returns to N=1, whole.")
+    print(" PHASE 3: Node B leaves. Sovereign returns to N=1, whole.")
     print("=" * 60)
 
     gossip_b.stop()
@@ -183,7 +187,7 @@ def main() -> None:
     ring.remove_node("node_b")
 
     time.sleep(2.5)   # let liveness loop notice
-    chief_tick("N=1 again", pack)
+    sovereign_tick("N=1 sovereign alone again", pack)
 
     # ---------- cleanup ----------
     gossip_a.stop()
