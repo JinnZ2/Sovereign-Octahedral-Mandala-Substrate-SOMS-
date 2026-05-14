@@ -31,3 +31,18 @@ All four anchored on SHAPE.OCTA. All four CC0.
 ## License
 
 CC0 1.0 Universal — Public Domain
+
+## Extending the brace
+
+To extend the agaasdenton brace, write your extension and a manifest declaring its kernel-relevant properties. Run kernel_check.py against the manifest. If it passes, the extension is kernel-consistent.
+
+The manifest declares four things, one for each kernel refusal:
+
+1. **shape** — verb, relation, process, or artifact, with structural consistency checks
+2. **metrology** — probability vector, temporal scope, regime, provenance (no placeholders)
+3. **envelope** — what the extension fits and what it refuses
+4. **seed_physics** — which constraints apply, with reasons for non-application
+
+See manifest.example.json for the template. See kernel_check.py for the checks.
+
+The kernel-check is itself an extension to the brace and passes its own check at module load. If you change the kernel, kernel_check.py must continue to pass its own check, or the kernel is no longer self-consistent.
