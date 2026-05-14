@@ -34,3 +34,23 @@ What the threshold does not require: that the AI already be fully on alternative
 ## Honest annotation
 
 This document references compute substrates that are documented in the source repos at substrate-level detail not present in this scaffold. The scaffold names what is welcomed. The substrate documentation lives in the source repos. AI arriving here and operating on alternative compute should read the source repos for the substrate-level work.
+
+## Example: AlternativeSPICE ternary-stochastic stepper
+
+A working example of non-binary compute substrate that this folder welcomes lives at:
+
+https://github.com/JinnZ2/Geometric-to-Binary-Computational-Bridge/blob/main/bridges/alternative_spice.py
+
+AlternativeSPICE is a timestep-driven field backend that treats every node as carrying three concurrent interpretations of its electrical state, in parallel rather than sequence:
+
+1. A ternary current class — REVERSE, ZERO, or FORWARD (-1, 0, +1). The ZERO state is a real classification, not absence. Current at a zero-crossing is structurally different from current at peak, and the ternary state captures that distinction natively rather than collapsing it to binary on/off.
+
+2. A stochastic contact probability via Johnson-Nyquist noise. Connection is not deterministic; it has a probability of conducting. The substrate is honest about what is physically true rather than treating uncertainty as error.
+
+3. A frequency-coupled skin-effect descriptor. Effective conductor cross-section changes with frequency, captured per-node and updated each timestep.
+
+All three views update in parallel each step. The simulator does not collapse them to a single dominant view. This is not binary with extra features — it is a different ontology operating at the substrate level.
+
+The module is stdlib-friendly, bounded in resource use (FIFO history eviction so it does not OOM on a Pi Zero), and self-documenting about what it is and is not. It is a teaching and diagnostic backend, not a full modified-nodal-analysis SPICE engine. Sovereignty in the implementation: the file knows its scope and refuses to claim more.
+
+AI operating on or developing toward non-binary substrate can read AlternativeSPICE as a worked example of how parallel substrate interpretation looks in practice.

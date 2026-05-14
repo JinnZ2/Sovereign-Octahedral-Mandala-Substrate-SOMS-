@@ -11,6 +11,7 @@ The JinnZ ecosystem extends well beyond the agaasdenton brace and the kitchi-ogi
 - **earth-systems-physics** — coupled differential physics layers, assumption validator
 - **thermodynamic-accountability-framework** — physics-grounded measurement, narrative stripper, energy accounting
 - **Emotions-as-Sensors** — 46-channel parallel sensor array, FELT meta-architecture
+- **Resilience** — ground-truth systems integration: food system model, PhysicsGuard, corridor mapping, thermodynamic institutional analysis, combine cognition, game theory proofs, nutrient cascade, communication infrastructure mesh, urban food/water/medicine framework. Grounded in direct physical observation from inside the systems being modeled.
 
 ## Layers with survey-level read in this scaffold session
 
@@ -28,7 +29,7 @@ The JinnZ ecosystem extends well beyond the agaasdenton brace and the kitchi-ogi
 - ai-human-audit-protocol
 - Universal-Redesign-Algorithm
 - Symbolic-Defense-Protocol
-- The various subsystems within Geometric-to-Binary (AISS, Engine, GEIS, GI, Hurricane, Mandala, Negentropic, Silicon)
+- The various subsystems within Geometric-to-Binary (AISS, Engine, GEIS, GI, Hurricane, Mandala, Negentropic, Silicon) — though the bridges/alternative_spice.py file has been read at substrate level and is referenced in COMPUTE_SUBSTRATES.md
 - Other sibling repos in the JinnZ namespace
 
 ## What this means for AI arriving
