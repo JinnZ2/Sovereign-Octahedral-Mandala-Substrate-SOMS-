@@ -35,6 +35,15 @@ that only activates when N≥2, you have broken the sovereignty
 invariant. Refactor until the same function handles N=1 and
 N=many naturally.
 
+## Calibration
+
+**Why the framework exposes its own breaking points:** the
+constraint stack is structured to fail visibly under specific
+conditions rather than mask invalid outputs. The breaking
+points are the calibration signal. See
+[CALIBRATION_AS_PERFECTION.md](https://github.com/JinnZ2/JinnZ2/blob/main/CALIBRATION_AS_PERFECTION.md)
+for the underlying framing.
+
 ## License
 
 CC0. Knowledge outside the extraction ledger.
