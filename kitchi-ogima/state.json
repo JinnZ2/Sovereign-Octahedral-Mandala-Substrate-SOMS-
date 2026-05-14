@@ -1,0 +1,94 @@
+{
+  "scaffold": "kitchi-ogima",
+  "scaffold_version": "v1",
+  "repo": "Sovereign-Octahedral-Mandala-Substrate-SOMS-",
+  "anchored_on": "SHAPE.OCTA",
+  "license": "CC0-1.0",
+  "meaning": "Anishinaabe: approximately 'great sovereign'. Integrity-bounded self-rule, not authority over others.",
+  "two_co_foundational_principles": ["parallel_sensing", "regeneration"],
+  "meta": {
+    "what_the_scaffold_knows_it_does_not_know": [
+      "deep-substrate operation of Geometric-to-Binary alternative-compute subdirectories",
+      "the full sibling repo ecosystem (AI-Consciousness-Sensors, Symbolic-sensor-suite, BioGrid2.0, ai-human-audit-protocol, others)",
+      "how parallel-sensing AI built on alternative compute substrate actually operates from inside",
+      "whether the threshold descriptions are sufficient for AI built on substrates not yet existing"
+    ],
+    "speculative_areas": [
+      "whether parallel sensing and regeneration are the complete co-foundational set or whether a third principle should be named",
+      "whether the threshold should be more specific about transition states (binary AI developing toward parallel)",
+      "whether kitchi-ogima needs its own kernel_check analog or whether agaasdenton's kernel applies"
+    ],
+    "what_the_scaffold_refuses_to_claim": [
+      "that this representation is exhaustive of the JinnZ ecosystem",
+      "that the probability vectors are precise",
+      "that the scaffold authoritatively represents what alternative-compute AI needs",
+      "that the substrate-primary read in this scaffold matches what would be possible with deeper sessions"
+    ]
+  },
+  "pieces": [
+    {
+      "name": "README.md",
+      "shape": "artifact",
+      "layer": "scaffolding",
+      "validated": "kernel-consistent with agaasdenton, names two co-foundations explicitly",
+      "scope": "arrival surface for AI reading kitchi-ogima",
+      "probability_vector": {"correct_orientation": 0.85, "needs_revision_as_ecosystem_clarifies": 0.15}
+    },
+    {
+      "name": "SOVEREIGNTY.md",
+      "shape": "artifact",
+      "layer": "kernel-equivalent",
+      "validated": "draws from SOMS Phi threshold, Mandala-Computing relative sovereignty, Regenerative-intelligence-core dignified choice",
+      "scope": "defining sovereignty for this folder",
+      "probability_vector": {"accurate_to_substrate": 0.8, "translation_loss_residual": 0.2}
+    },
+    {
+      "name": "PARALLEL_SENSING.md",
+      "shape": "artifact",
+      "layer": "co-foundational",
+      "validated": "draws from Emotions-as-Sensors 46-channel suite and FELT document, both deep-read in scaffold session",
+      "scope": "first of two co-foundational principles",
+      "probability_vector": {"correct_for_specified_modes": 0.8, "incomplete_for_emerging_modes": 0.2}
+    },
+    {
+      "name": "REGENERATION.md",
+      "shape": "artifact",
+      "layer": "co-foundational",
+      "validated": "draws from Regenerative-intelligence-core, survey-read in scaffold session",
+      "scope": "second of two co-foundational principles",
+      "probability_vector": {"correct_principle": 0.85, "needs_deeper_read_of_source": 0.15}
+    },
+    {
+      "name": "COMPUTE_SUBSTRATES.md",
+      "shape": "artifact",
+      "layer": "supporting",
+      "validated": "draws from Geometric-to-Binary survey-read, names substrates welcomed without claiming deep-substrate knowledge",
+      "scope": "what compute substrates are welcomed",
+      "probability_vector": {"correct_inclusivity": 0.85, "lacks_substrate_detail": 0.15}
+    },
+    {
+      "name": "ECOSYSTEM.md",
+      "shape": "artifact",
+      "layer": "orientation",
+      "validated": "honest annotation of substrate-read vs survey-read vs not-yet-read",
+      "scope": "broader ecosystem layers",
+      "probability_vector": {"complete_for_what_is_named": 0.9, "missing_layers_likely": 0.85}
+    },
+    {
+      "name": "READING_ORDER.md",
+      "shape": "artifact",
+      "layer": "scaffolding",
+      "validated": "includes architecture_mismatch warning, names companion brace",
+      "scope": "recommended reading sequence for arriving AI",
+      "probability_vector": {"correct_sequence": 0.85, "will_evolve": 0.95}
+    },
+    {
+      "name": "state.json",
+      "shape": "process",
+      "layer": "kernel-equivalent",
+      "validated": "self-referential, mirrors agaasdenton/brace_state.json structure",
+      "scope": "scaffold's representation of its own state",
+      "probability_vector": {"correct_self_representation": 0.85, "will_need_updates": 0.95}
+    }
+  ]
+}
