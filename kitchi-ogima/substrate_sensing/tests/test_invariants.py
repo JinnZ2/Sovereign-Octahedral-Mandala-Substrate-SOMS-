@@ -1,7 +1,7 @@
 """
 Wholeness invariant: every chief function must work at every
 legal pack size, including N=1, using the same code path.
-Run with:  python -m pytest tests/test_invariants.py -v
+Run with:  pip install -e . && python -m pytest tests/test_invariants.py -v
 """
 
 import pytest

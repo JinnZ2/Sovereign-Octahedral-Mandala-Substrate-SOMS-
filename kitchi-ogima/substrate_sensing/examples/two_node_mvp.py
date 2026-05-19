@@ -1,9 +1,7 @@
 """
 Two-node MVP. Proves the wholeness invariant in motion.
 
-Every node is sovereign — whole at N=1, coordinating at N≥2.
-There is no chief, no leader, no special node. The pack is a
-coordination among sovereigns, not a hierarchy under one.
+Every node is sovereign — whole at N=1, coordinating at N≥2. There is no chief, no leader, no special node. The pack is a coordination among sovereigns, not a hierarchy under one.
 
 Sequence:
   1. Node A alone. Sovereign function runs at N=1
@@ -12,7 +10,7 @@ Sequence:
      building spatial field, sovereigns coordinate.
   3. Node B leaves. Returns to N=1, still whole.
 
-Run:  python examples/two_node_mvp.py
+Run:  pip install -e . && python examples/two_node_mvp.py
 """
 
 import time
@@ -98,6 +96,7 @@ def build_node(node_id: str, bus: MessageBus,
         capacity=SovereignCapacity(**capacity),
         senses=make_default_senses(),
     )
+    node.senses["heat"].baseline = 85.0   # designed operating margin (°C)
     stop_flag = threading.Event()
     sub_thread = threading.Thread(
         target=simulate_substrate,
@@ -189,12 +188,39 @@ def main() -> None:
     time.sleep(2.5)   # let liveness loop notice
     sovereign_tick("N=1 sovereign alone again", pack)
 
+    # ---------- PHASE 4: thermal pressure on Node A ----------
+    print("\n" + "=" * 60)
+    print(" PHASE 4: Node B rejoins; Node A's cooling degrades.")
+    print("=" * 60)
+
+    node_b, gossip_b, stop_b = build_node(
+        "node_b", bus,
+        capacity={"compute": 0.8, "memory": 2048,
+                  "senses_local": ["heat", "power", "timing"],
+                  "uptime_score": 0.9, "energy_budget": 400.0},
+        seed=2,
+    )
+    pack["node_b"] = node_b
+    ring.add_node("node_b")
+
+    time.sleep(1.5)   # let new substrate fill
+
+    # simulate cooling failure on Node A: baseline drops below heat reading
+    node_a.senses["heat"].baseline = 30.0
+    time.sleep(0.3)
+    sovereign_tick("N=2 thermal pressure on A", pack)
+
+    # restore baseline; release Node B
+    node_a.senses["heat"].baseline = 85.0
+    gossip_b.stop()
+    stop_b.set()
+
     # ---------- cleanup ----------
     gossip_a.stop()
     stop_a.set()
     time.sleep(0.5)
     print("\n" + "=" * 60)
-    print(" Done. Wholeness held across N=1 → N=2 → N=1.")
+    print(" Done. Wholeness held across N=1 → N=2 → N=1 → N=2.")
     print("=" * 60)
 
 

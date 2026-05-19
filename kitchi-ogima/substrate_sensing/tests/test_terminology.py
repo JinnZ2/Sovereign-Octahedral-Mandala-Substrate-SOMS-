@@ -4,7 +4,7 @@ These are not deep correctness tests — they exist to prevent
 the 'chief/leader/master' framing from sneaking back in during
 future edits.
 
-Run:  python -m pytest tests/test_terminology.py -v
+Run:  pip install -e . && python -m pytest tests/test_terminology.py -v
 """
 
 import os

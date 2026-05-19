@@ -1,6 +1,6 @@
 """
 Gossip-layer tests. Prove join/leave wholeness.
-Run:  python -m pytest tests/test_join_leave.py -v
+Run:  pip install -e . && python -m pytest tests/test_join_leave.py -v
 """
 
 import time
