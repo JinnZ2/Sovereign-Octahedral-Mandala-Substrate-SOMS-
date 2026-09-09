@@ -418,8 +418,9 @@ def main():
             CANONICAL_8,
             CYCLIC_SHIFTED_8,
             provenance={
-                "source_experiments": ["E02", "E03", "E04"],
+                "source_experiments": ["E01", "E02", "E03", "E04"],
                 "control_ids": [
+                    "global state transformation control",
                     "global cyclic transformation",
                     "E02 cyclic classification",
                     "T1 cyclic progression endpoint",
