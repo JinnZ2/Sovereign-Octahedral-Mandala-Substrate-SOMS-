@@ -26,35 +26,83 @@ class TestRelationalPersistenceObserver:
         assert result.relation_similarity == 1.0
         assert result.changed_components == 0
 
-    def test_single_component_changes_but_equality_relations_persist(self):
-        observer = RelationalPersistenceObserver(
-            relation=equality_relation
-        )
-
-        previous = np.array([0, 1, 2, 3])
-        current = np.array([0, 1, 2, 4])
-
-        result = observer.observe(previous, current)
-
-        assert result.changed_components == 1
-        assert result.total_components == 4
-        assert result.component_change_fraction == 0.25
-        assert result.state_distance > 0.0
-        assert result.relation_distance == 0.0
-
-    def test_component_replacement_can_be_measured(self):
+    def test_global_cyclic_transformation_preserves_relations(self):
         observer = RelationalPersistenceObserver(
             relation=octahedral_relation
         )
 
-        previous = np.array([0, 1, 2, 3])
-        current = np.array([4, 5, 6, 7])
+        previous = np.arange(8)
+        current = (previous + 1) % 8
+
+        result = observer.observe(previous, current)
+
+        assert result.changed_components == 8
+        assert result.component_change_fraction == 1.0
+        assert result.state_distance > 0.0
+        assert result.relation_distance == 0.0
+        assert result.relation_similarity == 1.0
+
+    def test_local_perturbation_changes_relations(self):
+        observer = RelationalPersistenceObserver(
+            relation=octahedral_relation
+        )
+
+        previous = np.arange(8)
+        current = previous.copy()
+        current[0] = 1
+
+        result = observer.observe(previous, current)
+
+        assert result.changed_components == 1
+        assert result.total_components == 8
+        assert result.component_change_fraction == 0.125
+        assert result.state_distance > 0.0
+        assert result.relation_distance > 0.0
+        assert 0.0 <= result.relation_similarity < 1.0
+
+    def test_multiple_nonuniform_perturbations_change_relations(self):
+        observer = RelationalPersistenceObserver(
+            relation=octahedral_relation
+        )
+
+        previous = np.arange(8)
+        current = np.array([0, 2, 2, 4, 4, 6, 6, 0])
 
         result = observer.observe(previous, current)
 
         assert result.changed_components == 4
+        assert result.component_change_fraction == 0.5
         assert result.state_distance > 0.0
-        assert result.relation_distance >= 0.0
+        assert result.relation_distance > 0.0
+        assert 0.0 <= result.relation_similarity < 1.0
+
+    def test_progressive_perturbation_trajectory_is_not_monotonic(self):
+        observer = RelationalPersistenceObserver(
+            relation=octahedral_relation
+        )
+
+        initial = np.arange(8)
+        trajectory = []
+
+        for changed_components in range(9):
+            current = initial.copy()
+            current[:changed_components] = (
+                current[:changed_components] + 1
+            ) % 8
+            trajectory.append(observer.observe(initial, current))
+
+        similarities = [
+            observation.relation_similarity
+            for observation in trajectory
+        ]
+
+        assert [
+            observation.changed_components
+            for observation in trajectory
+        ] == list(range(9))
+        assert similarities[0] == 1.0
+        assert min(similarities[1:-1]) < 1.0
+        assert similarities[-1] == 1.0
 
     def test_relation_matrix_shape(self):
         observer = RelationalPersistenceObserver(
