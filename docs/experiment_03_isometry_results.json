@@ -1,0 +1,5984 @@
+{
+  "experiment": "SOMS Experiment 03 \u2014 Isometry and Representation Controls",
+  "branch": "experiment/03-isometry-representation-controls",
+  "baseline_commits": {
+    "experiment_01": "eb57c6d430f176bf762a8a760c9fa3321e6e71fd",
+    "experiment_02": "4feb9e80bb8db8f07b5836c1898af1d46b1e3577"
+  },
+  "state_count": 8,
+  "permutations_per_enumeration": 40320,
+  "supported_geometries": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G6"
+  ],
+  "unavailable_geometries": {
+    "G5": "MandalaMap assigns repeated state labels to cells on multiple rings. The repository does not define a unique state-to-position selection for an arbitrary state vector; choosing a ring or scale would add an unsupported assumption."
+  },
+  "tolerances": {
+    "G1": 0.0,
+    "G2": 0.0,
+    "G3": 1e-12,
+    "G4": 0.0,
+    "G6": 0.0
+  },
+  "test_vectors": {
+    "V0_canonical": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "V1_global_cyclic_shift": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0
+    ],
+    "V2_single_perturbation": [
+      1,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "V3_multiple_perturbation": [
+      0,
+      2,
+      2,
+      4,
+      4,
+      6,
+      6,
+      0
+    ],
+    "V4_nonuniform_permutation": [
+      2,
+      5,
+      1,
+      7,
+      0,
+      6,
+      4,
+      3
+    ],
+    "V5_repeated_states": [
+      0,
+      0,
+      0,
+      0,
+      4,
+      4,
+      4,
+      4
+    ]
+  },
+  "evaluation_totals": {
+    "state_label_permutations": 201600,
+    "component_index_permutations": 1209600
+  },
+  "state_label_symmetries": {
+    "G1": {
+      "geometry_id": "G1",
+      "geometry_name": "Numeric state geometry",
+      "tolerance": 0.0,
+      "permutations_tested": 40320,
+      "automorphism_count": 2,
+      "percentage_of_s8": 0.00496031746031746,
+      "identity_present": true,
+      "global_cyclic_shift_present": false,
+      "cyclic_shift_membership": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "cyclic_shift_count": 1,
+      "reversal_present": true,
+      "maximum_frobenius_displacement": 21.908902300206645,
+      "maximum_elementwise_displacement": 6.0,
+      "cycle_type_counts": {
+        "1-1-1-1-1-1-1-1": 1,
+        "2-2-2-2": 1
+      },
+      "permutation_order_counts": {
+        "1": 1,
+        "2": 1
+      },
+      "automorphisms": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          7,
+          6,
+          5,
+          4,
+          3,
+          2,
+          1,
+          0
+        ]
+      ],
+      "named_transformations": {
+        "identity": {
+          "exact_equal": true,
+          "frobenius_displacement": 0.0,
+          "maximum_elementwise_displacement": 0.0
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 1,
+            "exact_equal": false,
+            "frobenius_displacement": 14.966629547095765,
+            "maximum_elementwise_displacement": 6.0
+          },
+          {
+            "offset": 2,
+            "exact_equal": false,
+            "frobenius_displacement": 17.435595774162696,
+            "maximum_elementwise_displacement": 6.0
+          },
+          {
+            "offset": 3,
+            "exact_equal": false,
+            "frobenius_displacement": 17.88854381999832,
+            "maximum_elementwise_displacement": 6.0
+          },
+          {
+            "offset": 4,
+            "exact_equal": false,
+            "frobenius_displacement": 17.88854381999832,
+            "maximum_elementwise_displacement": 6.0
+          },
+          {
+            "offset": 5,
+            "exact_equal": false,
+            "frobenius_displacement": 17.88854381999832,
+            "maximum_elementwise_displacement": 6.0
+          },
+          {
+            "offset": 6,
+            "exact_equal": false,
+            "frobenius_displacement": 17.435595774162696,
+            "maximum_elementwise_displacement": 6.0
+          },
+          {
+            "offset": 7,
+            "exact_equal": false,
+            "frobenius_displacement": 14.966629547095765,
+            "maximum_elementwise_displacement": 6.0
+          }
+        ],
+        "reversal": {
+          "exact_equal": true,
+          "frobenius_displacement": 0.0,
+          "maximum_elementwise_displacement": 0.0
+        }
+      }
+    },
+    "G2": {
+      "geometry_id": "G2",
+      "geometry_name": "Cyclic octahedral geometry",
+      "tolerance": 0.0,
+      "permutations_tested": 40320,
+      "automorphism_count": 16,
+      "percentage_of_s8": 0.03968253968253968,
+      "identity_present": true,
+      "global_cyclic_shift_present": true,
+      "cyclic_shift_membership": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "cyclic_shift_count": 8,
+      "reversal_present": true,
+      "maximum_frobenius_displacement": 13.2664991614216,
+      "maximum_elementwise_displacement": 3.0,
+      "cycle_type_counts": {
+        "1-1-1-1-1-1-1-1": 1,
+        "2-2-2-1-1": 4,
+        "2-2-2-2": 5,
+        "4-4": 2,
+        "8": 4
+      },
+      "permutation_order_counts": {
+        "1": 1,
+        "2": 9,
+        "4": 2,
+        "8": 4
+      },
+      "automorphisms": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          0,
+          7,
+          6,
+          5,
+          4,
+          3,
+          2,
+          1
+        ],
+        [
+          1,
+          0,
+          7,
+          6,
+          5,
+          4,
+          3,
+          2
+        ],
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          0
+        ],
+        [
+          2,
+          1,
+          0,
+          7,
+          6,
+          5,
+          4,
+          3
+        ],
+        [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          0,
+          1
+        ],
+        [
+          3,
+          2,
+          1,
+          0,
+          7,
+          6,
+          5,
+          4
+        ],
+        [
+          3,
+          4,
+          5,
+          6,
+          7,
+          0,
+          1,
+          2
+        ],
+        [
+          4,
+          3,
+          2,
+          1,
+          0,
+          7,
+          6,
+          5
+        ],
+        [
+          4,
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          5,
+          4,
+          3,
+          2,
+          1,
+          0,
+          7,
+          6
+        ],
+        [
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          6,
+          5,
+          4,
+          3,
+          2,
+          1,
+          0,
+          7
+        ],
+        [
+          6,
+          7,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          7,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        [
+          7,
+          6,
+          5,
+          4,
+          3,
+          2,
+          1,
+          0
+        ]
+      ],
+      "named_transformations": {
+        "identity": {
+          "exact_equal": true,
+          "frobenius_displacement": 0.0,
+          "maximum_elementwise_displacement": 0.0
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 1,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 2,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 3,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 4,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 5,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 6,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 7,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        ],
+        "reversal": {
+          "exact_equal": true,
+          "frobenius_displacement": 0.0,
+          "maximum_elementwise_displacement": 0.0
+        }
+      }
+    },
+    "G3": {
+      "geometry_id": "G3",
+      "geometry_name": "Angular geometry",
+      "tolerance": 1e-12,
+      "permutations_tested": 40320,
+      "automorphism_count": 16,
+      "percentage_of_s8": 0.03968253968253968,
+      "identity_present": true,
+      "global_cyclic_shift_present": true,
+      "cyclic_shift_membership": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "cyclic_shift_count": 8,
+      "reversal_present": true,
+      "maximum_frobenius_displacement": 596.992462263972,
+      "maximum_elementwise_displacement": 135.0,
+      "cycle_type_counts": {
+        "1-1-1-1-1-1-1-1": 1,
+        "2-2-2-1-1": 4,
+        "2-2-2-2": 5,
+        "4-4": 2,
+        "8": 4
+      },
+      "permutation_order_counts": {
+        "1": 1,
+        "2": 9,
+        "4": 2,
+        "8": 4
+      },
+      "automorphisms": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          0,
+          7,
+          6,
+          5,
+          4,
+          3,
+          2,
+          1
+        ],
+        [
+          1,
+          0,
+          7,
+          6,
+          5,
+          4,
+          3,
+          2
+        ],
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          0
+        ],
+        [
+          2,
+          1,
+          0,
+          7,
+          6,
+          5,
+          4,
+          3
+        ],
+        [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          0,
+          1
+        ],
+        [
+          3,
+          2,
+          1,
+          0,
+          7,
+          6,
+          5,
+          4
+        ],
+        [
+          3,
+          4,
+          5,
+          6,
+          7,
+          0,
+          1,
+          2
+        ],
+        [
+          4,
+          3,
+          2,
+          1,
+          0,
+          7,
+          6,
+          5
+        ],
+        [
+          4,
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          5,
+          4,
+          3,
+          2,
+          1,
+          0,
+          7,
+          6
+        ],
+        [
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          6,
+          5,
+          4,
+          3,
+          2,
+          1,
+          0,
+          7
+        ],
+        [
+          6,
+          7,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          7,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        [
+          7,
+          6,
+          5,
+          4,
+          3,
+          2,
+          1,
+          0
+        ]
+      ],
+      "named_transformations": {
+        "identity": {
+          "exact_equal": true,
+          "frobenius_displacement": 0.0,
+          "maximum_elementwise_displacement": 0.0
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 1,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 2,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 3,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 4,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 5,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 6,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 7,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        ],
+        "reversal": {
+          "exact_equal": true,
+          "frobenius_displacement": 0.0,
+          "maximum_elementwise_displacement": 0.0
+        }
+      }
+    },
+    "G4": {
+      "geometry_id": "G4",
+      "geometry_name": "Gray-code geometry",
+      "tolerance": 0.0,
+      "permutations_tested": 40320,
+      "automorphism_count": 48,
+      "percentage_of_s8": 0.11904761904761905,
+      "identity_present": true,
+      "global_cyclic_shift_present": false,
+      "cyclic_shift_membership": [
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false
+      ],
+      "cyclic_shift_count": 4,
+      "reversal_present": true,
+      "maximum_frobenius_displacement": 9.797958971132712,
+      "maximum_elementwise_displacement": 2.0,
+      "cycle_type_counts": {
+        "1-1-1-1-1-1-1-1": 1,
+        "2-2-1-1-1-1": 6,
+        "2-2-2-2": 13,
+        "3-3-1-1": 8,
+        "4-4": 12,
+        "6-2": 8
+      },
+      "permutation_order_counts": {
+        "1": 1,
+        "2": 19,
+        "3": 8,
+        "4": 12,
+        "6": 8
+      },
+      "automorphisms": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          0,
+          1,
+          6,
+          7,
+          4,
+          5,
+          2,
+          3
+        ],
+        [
+          0,
+          3,
+          2,
+          1,
+          6,
+          5,
+          4,
+          7
+        ],
+        [
+          0,
+          3,
+          4,
+          7,
+          6,
+          5,
+          2,
+          1
+        ],
+        [
+          0,
+          7,
+          4,
+          3,
+          2,
+          5,
+          6,
+          1
+        ],
+        [
+          0,
+          7,
+          6,
+          1,
+          2,
+          5,
+          4,
+          3
+        ],
+        [
+          1,
+          0,
+          3,
+          2,
+          5,
+          4,
+          7,
+          6
+        ],
+        [
+          1,
+          0,
+          7,
+          6,
+          5,
+          4,
+          3,
+          2
+        ],
+        [
+          1,
+          2,
+          3,
+          0,
+          7,
+          4,
+          5,
+          6
+        ],
+        [
+          1,
+          2,
+          5,
+          6,
+          7,
+          4,
+          3,
+          0
+        ],
+        [
+          1,
+          6,
+          5,
+          2,
+          3,
+          4,
+          7,
+          0
+        ],
+        [
+          1,
+          6,
+          7,
+          0,
+          3,
+          4,
+          5,
+          2
+        ],
+        [
+          2,
+          1,
+          0,
+          3,
+          4,
+          7,
+          6,
+          5
+        ],
+        [
+          2,
+          1,
+          6,
+          5,
+          4,
+          7,
+          0,
+          3
+        ],
+        [
+          2,
+          3,
+          0,
+          1,
+          6,
+          7,
+          4,
+          5
+        ],
+        [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          0,
+          1
+        ],
+        [
+          2,
+          5,
+          4,
+          3,
+          0,
+          7,
+          6,
+          1
+        ],
+        [
+          2,
+          5,
+          6,
+          1,
+          0,
+          7,
+          4,
+          3
+        ],
+        [
+          3,
+          0,
+          1,
+          2,
+          5,
+          6,
+          7,
+          4
+        ],
+        [
+          3,
+          0,
+          7,
+          4,
+          5,
+          6,
+          1,
+          2
+        ],
+        [
+          3,
+          2,
+          1,
+          0,
+          7,
+          6,
+          5,
+          4
+        ],
+        [
+          3,
+          2,
+          5,
+          4,
+          7,
+          6,
+          1,
+          0
+        ],
+        [
+          3,
+          4,
+          5,
+          2,
+          1,
+          6,
+          7,
+          0
+        ],
+        [
+          3,
+          4,
+          7,
+          0,
+          1,
+          6,
+          5,
+          2
+        ],
+        [
+          4,
+          3,
+          0,
+          7,
+          6,
+          1,
+          2,
+          5
+        ],
+        [
+          4,
+          3,
+          2,
+          5,
+          6,
+          1,
+          0,
+          7
+        ],
+        [
+          4,
+          5,
+          2,
+          3,
+          0,
+          1,
+          6,
+          7
+        ],
+        [
+          4,
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          4,
+          7,
+          0,
+          3,
+          2,
+          1,
+          6,
+          5
+        ],
+        [
+          4,
+          7,
+          6,
+          5,
+          2,
+          1,
+          0,
+          3
+        ],
+        [
+          5,
+          2,
+          1,
+          6,
+          7,
+          0,
+          3,
+          4
+        ],
+        [
+          5,
+          2,
+          3,
+          4,
+          7,
+          0,
+          1,
+          6
+        ],
+        [
+          5,
+          4,
+          3,
+          2,
+          1,
+          0,
+          7,
+          6
+        ],
+        [
+          5,
+          4,
+          7,
+          6,
+          1,
+          0,
+          3,
+          2
+        ],
+        [
+          5,
+          6,
+          1,
+          2,
+          3,
+          0,
+          7,
+          4
+        ],
+        [
+          5,
+          6,
+          7,
+          4,
+          3,
+          0,
+          1,
+          2
+        ],
+        [
+          6,
+          1,
+          0,
+          7,
+          4,
+          3,
+          2,
+          5
+        ],
+        [
+          6,
+          1,
+          2,
+          5,
+          4,
+          3,
+          0,
+          7
+        ],
+        [
+          6,
+          5,
+          2,
+          1,
+          0,
+          3,
+          4,
+          7
+        ],
+        [
+          6,
+          5,
+          4,
+          7,
+          0,
+          3,
+          2,
+          1
+        ],
+        [
+          6,
+          7,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          6,
+          7,
+          4,
+          5,
+          2,
+          3,
+          0,
+          1
+        ],
+        [
+          7,
+          0,
+          1,
+          6,
+          5,
+          2,
+          3,
+          4
+        ],
+        [
+          7,
+          0,
+          3,
+          4,
+          5,
+          2,
+          1,
+          6
+        ],
+        [
+          7,
+          4,
+          3,
+          0,
+          1,
+          2,
+          5,
+          6
+        ],
+        [
+          7,
+          4,
+          5,
+          6,
+          1,
+          2,
+          3,
+          0
+        ],
+        [
+          7,
+          6,
+          1,
+          0,
+          3,
+          2,
+          5,
+          4
+        ],
+        [
+          7,
+          6,
+          5,
+          4,
+          3,
+          2,
+          1,
+          0
+        ]
+      ],
+      "named_transformations": {
+        "identity": {
+          "exact_equal": true,
+          "frobenius_displacement": 0.0,
+          "maximum_elementwise_displacement": 0.0
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 1,
+            "exact_equal": false,
+            "frobenius_displacement": 8.0,
+            "maximum_elementwise_displacement": 2.0
+          },
+          {
+            "offset": 2,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 3,
+            "exact_equal": false,
+            "frobenius_displacement": 8.0,
+            "maximum_elementwise_displacement": 2.0
+          },
+          {
+            "offset": 4,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 5,
+            "exact_equal": false,
+            "frobenius_displacement": 8.0,
+            "maximum_elementwise_displacement": 2.0
+          },
+          {
+            "offset": 6,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 7,
+            "exact_equal": false,
+            "frobenius_displacement": 8.0,
+            "maximum_elementwise_displacement": 2.0
+          }
+        ],
+        "reversal": {
+          "exact_equal": true,
+          "frobenius_displacement": 0.0,
+          "maximum_elementwise_displacement": 0.0
+        }
+      }
+    },
+    "G6": {
+      "geometry_id": "G6",
+      "geometry_name": "Cayley/group geometry",
+      "tolerance": 0.0,
+      "permutations_tested": 40320,
+      "automorphism_count": 2,
+      "percentage_of_s8": 0.00496031746031746,
+      "identity_present": true,
+      "global_cyclic_shift_present": false,
+      "cyclic_shift_membership": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "cyclic_shift_count": 1,
+      "reversal_present": false,
+      "maximum_frobenius_displacement": 14.142135623730951,
+      "maximum_elementwise_displacement": 4.0,
+      "cycle_type_counts": {
+        "1-1-1-1-1-1-1-1": 1,
+        "2-1-1-1-1-1-1": 1
+      },
+      "permutation_order_counts": {
+        "1": 1,
+        "2": 1
+      },
+      "automorphisms": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          5,
+          4,
+          6,
+          7
+        ]
+      ],
+      "named_transformations": {
+        "identity": {
+          "exact_equal": true,
+          "frobenius_displacement": 0.0,
+          "maximum_elementwise_displacement": 0.0
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          {
+            "offset": 1,
+            "exact_equal": false,
+            "frobenius_displacement": 10.583005244258363,
+            "maximum_elementwise_displacement": 3.0
+          },
+          {
+            "offset": 2,
+            "exact_equal": false,
+            "frobenius_displacement": 12.328828005937952,
+            "maximum_elementwise_displacement": 3.0
+          },
+          {
+            "offset": 3,
+            "exact_equal": false,
+            "frobenius_displacement": 10.954451150103322,
+            "maximum_elementwise_displacement": 3.0
+          },
+          {
+            "offset": 4,
+            "exact_equal": false,
+            "frobenius_displacement": 11.313708498984761,
+            "maximum_elementwise_displacement": 3.0
+          },
+          {
+            "offset": 5,
+            "exact_equal": false,
+            "frobenius_displacement": 10.954451150103322,
+            "maximum_elementwise_displacement": 3.0
+          },
+          {
+            "offset": 6,
+            "exact_equal": false,
+            "frobenius_displacement": 12.328828005937952,
+            "maximum_elementwise_displacement": 3.0
+          },
+          {
+            "offset": 7,
+            "exact_equal": false,
+            "frobenius_displacement": 10.583005244258363,
+            "maximum_elementwise_displacement": 3.0
+          }
+        ],
+        "reversal": {
+          "exact_equal": false,
+          "frobenius_displacement": 12.0,
+          "maximum_elementwise_displacement": 2.0
+        }
+      }
+    }
+  },
+  "symmetry_set_comparisons": {
+    "G1:G2": {
+      "intersection": 2,
+      "only_first": 0,
+      "only_second": 14,
+      "equal_sets": false
+    },
+    "G1:G3": {
+      "intersection": 2,
+      "only_first": 0,
+      "only_second": 14,
+      "equal_sets": false
+    },
+    "G1:G4": {
+      "intersection": 2,
+      "only_first": 0,
+      "only_second": 46,
+      "equal_sets": false
+    },
+    "G1:G6": {
+      "intersection": 1,
+      "only_first": 1,
+      "only_second": 1,
+      "equal_sets": false
+    },
+    "G2:G3": {
+      "intersection": 16,
+      "only_first": 0,
+      "only_second": 0,
+      "equal_sets": true
+    },
+    "G2:G4": {
+      "intersection": 8,
+      "only_first": 8,
+      "only_second": 40,
+      "equal_sets": false
+    },
+    "G2:G6": {
+      "intersection": 1,
+      "only_first": 15,
+      "only_second": 1,
+      "equal_sets": false
+    },
+    "G3:G4": {
+      "intersection": 8,
+      "only_first": 8,
+      "only_second": 40,
+      "equal_sets": false
+    },
+    "G3:G6": {
+      "intersection": 1,
+      "only_first": 15,
+      "only_second": 1,
+      "equal_sets": false
+    },
+    "G4:G6": {
+      "intersection": 1,
+      "only_first": 47,
+      "only_second": 1,
+      "equal_sets": false
+    }
+  },
+  "all_geometry_symmetry_intersection": {
+    "count": 1,
+    "permutations": [
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    ]
+  },
+  "component_permutation_results": {
+    "V0_canonical": {
+      "G1": {
+        "geometry_id": "G1",
+        "vector_name": "V0_canonical",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 2,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 21.908902300206645,
+        "fixed_frobenius_mean": 18.225663361635046,
+        "fixed_maximum_elementwise_displacement": 6.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G2": {
+        "geometry_id": "G2",
+        "vector_name": "V0_canonical",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 16,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 13.2664991614216,
+        "fixed_frobenius_mean": 10.823881266103974,
+        "fixed_maximum_elementwise_displacement": 3.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G3": {
+        "geometry_id": "G3",
+        "vector_name": "V0_canonical",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 16,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 596.992462263972,
+        "fixed_frobenius_mean": 487.0746569746788,
+        "fixed_maximum_elementwise_displacement": 135.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G4": {
+        "geometry_id": "G4",
+        "vector_name": "V0_canonical",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 48,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 9.797958971132712,
+        "fixed_frobenius_mean": 7.354206152408807,
+        "fixed_maximum_elementwise_displacement": 2.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G6": {
+        "geometry_id": "G6",
+        "vector_name": "V0_canonical",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 2,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 14.142135623730951,
+        "fixed_frobenius_mean": 11.024337209066655,
+        "fixed_maximum_elementwise_displacement": 4.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      }
+    },
+    "V1_global_cyclic_shift": {
+      "G1": {
+        "geometry_id": "G1",
+        "vector_name": "V1_global_cyclic_shift",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 2,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 21.908902300206645,
+        "fixed_frobenius_mean": 18.22566336163504,
+        "fixed_maximum_elementwise_displacement": 6.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G2": {
+        "geometry_id": "G2",
+        "vector_name": "V1_global_cyclic_shift",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 16,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 13.2664991614216,
+        "fixed_frobenius_mean": 10.823881266103974,
+        "fixed_maximum_elementwise_displacement": 3.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G3": {
+        "geometry_id": "G3",
+        "vector_name": "V1_global_cyclic_shift",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 16,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 596.992462263972,
+        "fixed_frobenius_mean": 487.0746569746788,
+        "fixed_maximum_elementwise_displacement": 135.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G4": {
+        "geometry_id": "G4",
+        "vector_name": "V1_global_cyclic_shift",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 48,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 9.797958971132712,
+        "fixed_frobenius_mean": 7.354206152408808,
+        "fixed_maximum_elementwise_displacement": 2.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G6": {
+        "geometry_id": "G6",
+        "vector_name": "V1_global_cyclic_shift",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 2,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 14.142135623730951,
+        "fixed_frobenius_mean": 11.024337209066655,
+        "fixed_maximum_elementwise_displacement": 4.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      }
+    },
+    "V2_single_perturbation": {
+      "G1": {
+        "geometry_id": "G1",
+        "vector_name": "V2_single_perturbation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 2,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 20.199009876724155,
+        "fixed_frobenius_mean": 17.250282403190457,
+        "fixed_maximum_elementwise_displacement": 6.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G2": {
+        "geometry_id": "G2",
+        "vector_name": "V2_single_perturbation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 2,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 13.856406460551018,
+        "fixed_frobenius_mean": 11.45641135735806,
+        "fixed_maximum_elementwise_displacement": 4.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G3": {
+        "geometry_id": "G3",
+        "vector_name": "V2_single_perturbation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 2,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 623.5382907247958,
+        "fixed_frobenius_mean": 515.5385110811128,
+        "fixed_maximum_elementwise_displacement": 180.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G4": {
+        "geometry_id": "G4",
+        "vector_name": "V2_single_perturbation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 4,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 9.797958971132712,
+        "fixed_frobenius_mean": 7.979569529749339,
+        "fixed_maximum_elementwise_displacement": 3.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G6": {
+        "geometry_id": "G6",
+        "vector_name": "V2_single_perturbation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 4,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 14.422205101855956,
+        "fixed_frobenius_mean": 11.609992504243378,
+        "fixed_maximum_elementwise_displacement": 5.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      }
+    },
+    "V3_multiple_perturbation": {
+      "G1": {
+        "geometry_id": "G1",
+        "vector_name": "V3_multiple_perturbation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 32,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 22.627416997969522,
+        "fixed_frobenius_mean": 19.01122028180274,
+        "fixed_maximum_elementwise_displacement": 6.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G2": {
+        "geometry_id": "G2",
+        "vector_name": "V3_multiple_perturbation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 128,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 16.0,
+        "fixed_frobenius_mean": 13.415914800312676,
+        "fixed_maximum_elementwise_displacement": 4.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G3": {
+        "geometry_id": "G3",
+        "vector_name": "V3_multiple_perturbation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 128,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 720.0,
+        "fixed_frobenius_mean": 603.7161660140703,
+        "fixed_maximum_elementwise_displacement": 180.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G4": {
+        "geometry_id": "G4",
+        "vector_name": "V3_multiple_perturbation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 384,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 8.0,
+        "fixed_frobenius_mean": 7.329378612978333,
+        "fixed_maximum_elementwise_displacement": 2.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G6": {
+        "geometry_id": "G6",
+        "vector_name": "V3_multiple_perturbation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 16,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 16.97056274847714,
+        "fixed_frobenius_mean": 14.72265293765227,
+        "fixed_maximum_elementwise_displacement": 4.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      }
+    },
+    "V4_nonuniform_permutation": {
+      "G1": {
+        "geometry_id": "G1",
+        "vector_name": "V4_nonuniform_permutation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 2,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 21.908902300206645,
+        "fixed_frobenius_mean": 18.225663361635043,
+        "fixed_maximum_elementwise_displacement": 6.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G2": {
+        "geometry_id": "G2",
+        "vector_name": "V4_nonuniform_permutation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 16,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 13.2664991614216,
+        "fixed_frobenius_mean": 10.823881266103974,
+        "fixed_maximum_elementwise_displacement": 3.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G3": {
+        "geometry_id": "G3",
+        "vector_name": "V4_nonuniform_permutation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 16,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 596.992462263972,
+        "fixed_frobenius_mean": 487.07465697467893,
+        "fixed_maximum_elementwise_displacement": 135.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G4": {
+        "geometry_id": "G4",
+        "vector_name": "V4_nonuniform_permutation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 48,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 9.797958971132712,
+        "fixed_frobenius_mean": 7.354206152408807,
+        "fixed_maximum_elementwise_displacement": 2.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G6": {
+        "geometry_id": "G6",
+        "vector_name": "V4_nonuniform_permutation",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 2,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 14.142135623730951,
+        "fixed_frobenius_mean": 11.024337209066655,
+        "fixed_maximum_elementwise_displacement": 4.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      }
+    },
+    "V5_repeated_states": {
+      "G1": {
+        "geometry_id": "G1",
+        "vector_name": "V5_repeated_states",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 1152,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 22.627416997969522,
+        "fixed_frobenius_mean": 20.595091229705663,
+        "fixed_maximum_elementwise_displacement": 4.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G2": {
+        "geometry_id": "G2",
+        "vector_name": "V5_repeated_states",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 1152,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 22.627416997969522,
+        "fixed_frobenius_mean": 20.595091229705663,
+        "fixed_maximum_elementwise_displacement": 4.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G3": {
+        "geometry_id": "G3",
+        "vector_name": "V5_repeated_states",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 1152,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 1018.2337649086285,
+        "fixed_frobenius_mean": 926.7791053367552,
+        "fixed_maximum_elementwise_displacement": 180.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G4": {
+        "geometry_id": "G4",
+        "vector_name": "V5_repeated_states",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 1152,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 11.313708498984761,
+        "fixed_frobenius_mean": 10.297545614852831,
+        "fixed_maximum_elementwise_displacement": 2.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      },
+      "G6": {
+        "geometry_id": "G6",
+        "vector_name": "V5_repeated_states",
+        "permutations_tested": 40320,
+        "fixed_index_equal_count": 1152,
+        "permutation_aware_equal_count": 40320,
+        "fixed_frobenius_minimum": 0.0,
+        "fixed_frobenius_maximum": 16.97056274847714,
+        "fixed_frobenius_mean": 15.446318422279246,
+        "fixed_maximum_elementwise_displacement": 3.0,
+        "permutation_aware_frobenius_maximum": 0.0,
+        "permutation_aware_maximum_elementwise_displacement": 0.0
+      }
+    }
+  },
+  "component_named_controls": {
+    "V0_canonical": {
+      "G1": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 14.966629547095765,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 17.435595774162696,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 17.88854381999832,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 17.88854381999832,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 17.88854381999832,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 17.435595774162696,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 14.966629547095765,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G2": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G3": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G4": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G6": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 10.583005244258363,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.328828005937952,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 10.954451150103322,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 11.313708498984761,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 10.954451150103322,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.328828005937952,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 10.583005244258363,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 12.0,
+            "maximum_elementwise_displacement": 2.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      }
+    },
+    "V1_global_cyclic_shift": {
+      "G1": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 14.966629547095765,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 17.435595774162696,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 17.88854381999832,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 17.88854381999832,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 17.88854381999832,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 17.435595774162696,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 14.966629547095765,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 17.435595774162696,
+            "maximum_elementwise_displacement": 6.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G2": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G3": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G4": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G6": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 10.583005244258363,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.328828005937952,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 10.954451150103322,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 11.313708498984761,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 10.954451150103322,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.328828005937952,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 10.583005244258363,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 11.313708498984761,
+            "maximum_elementwise_displacement": 3.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      }
+    },
+    "V2_single_perturbation": {
+      "G1": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 14.966629547095765,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 16.24807680927192,
+              "maximum_elementwise_displacement": 5.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 16.0,
+              "maximum_elementwise_displacement": 5.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 15.748015748023622,
+              "maximum_elementwise_displacement": 5.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 16.0,
+              "maximum_elementwise_displacement": 5.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 16.24807680927192,
+              "maximum_elementwise_displacement": 5.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 14.966629547095765,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 4.898979485566356,
+            "maximum_elementwise_displacement": 1.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G2": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 5.656854249492381,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 5.656854249492381,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 5.656854249492381,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 4.898979485566356,
+              "maximum_elementwise_displacement": 1.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 5.656854249492381,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 5.656854249492381,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 5.656854249492381,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 4.898979485566356,
+            "maximum_elementwise_displacement": 1.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G3": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 254.55844122715712,
+              "maximum_elementwise_displacement": 90.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 254.55844122715712,
+              "maximum_elementwise_displacement": 90.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 254.55844122715712,
+              "maximum_elementwise_displacement": 90.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 220.45407685048602,
+              "maximum_elementwise_displacement": 45.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 254.55844122715712,
+              "maximum_elementwise_displacement": 90.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 254.55844122715712,
+              "maximum_elementwise_displacement": 90.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 254.55844122715712,
+              "maximum_elementwise_displacement": 90.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 220.45407685048602,
+            "maximum_elementwise_displacement": 45.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G4": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 4.898979485566356,
+              "maximum_elementwise_displacement": 1.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 4.898979485566356,
+              "maximum_elementwise_displacement": 1.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 4.898979485566356,
+              "maximum_elementwise_displacement": 1.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 4.898979485566356,
+            "maximum_elementwise_displacement": 1.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G6": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 11.313708498984761,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.328828005937952,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.0,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.328828005937952,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.0,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.328828005937952,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 11.313708498984761,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 11.661903789690601,
+            "maximum_elementwise_displacement": 3.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      }
+    },
+    "V3_multiple_perturbation": {
+      "G1": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 17.88854381999832,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 16.0,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 19.595917942265423,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 16.0,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 19.595917942265423,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 16.0,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 17.88854381999832,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 16.0,
+            "maximum_elementwise_displacement": 4.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G2": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 11.313708498984761,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 11.313708498984761,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 11.313708498984761,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 11.313708498984761,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G3": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 509.11688245431424,
+              "maximum_elementwise_displacement": 90.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 509.11688245431424,
+              "maximum_elementwise_displacement": 90.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 509.11688245431424,
+              "maximum_elementwise_displacement": 90.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 509.11688245431424,
+              "maximum_elementwise_displacement": 90.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G4": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G6": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 13.564659966250536,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 9.797958971132712,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 14.966629547095765,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.649110640673518,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 14.966629547095765,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 9.797958971132712,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 13.564659966250536,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 11.313708498984761,
+            "maximum_elementwise_displacement": 2.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      }
+    },
+    "V4_nonuniform_permutation": {
+      "G1": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.328828005937952,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 18.110770276274835,
+              "maximum_elementwise_displacement": 5.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 20.0,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 20.784609690826528,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 20.0,
+              "maximum_elementwise_displacement": 6.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 18.110770276274835,
+              "maximum_elementwise_displacement": 5.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.328828005937952,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 12.0,
+            "maximum_elementwise_displacement": 2.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G2": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 9.797958971132712,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.649110640673518,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 10.954451150103322,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 9.797958971132712,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 10.954451150103322,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.649110640673518,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 9.797958971132712,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 10.583005244258363,
+            "maximum_elementwise_displacement": 2.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G3": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 440.90815370097204,
+              "maximum_elementwise_displacement": 135.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 569.2099788303083,
+              "maximum_elementwise_displacement": 135.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 492.9503017546495,
+              "maximum_elementwise_displacement": 135.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 440.90815370097204,
+              "maximum_elementwise_displacement": 135.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 492.9503017546495,
+              "maximum_elementwise_displacement": 135.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 569.2099788303083,
+              "maximum_elementwise_displacement": 135.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 440.90815370097204,
+              "maximum_elementwise_displacement": 135.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 476.2352359916263,
+            "maximum_elementwise_displacement": 90.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G4": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 6.928203230275509,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.48528137423857,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 6.928203230275509,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.48528137423857,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.0,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 6.928203230275509,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 8.0,
+            "maximum_elementwise_displacement": 2.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G6": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.649110640673518,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 10.954451150103322,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.328828005937952,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 8.94427190999916,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.328828005937952,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 10.954451150103322,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 12.649110640673518,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": false,
+            "frobenius_displacement": 12.649110640673518,
+            "maximum_elementwise_displacement": 4.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      }
+    },
+    "V5_repeated_states": {
+      "G1": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 19.595917942265423,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 22.627416997969522,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 19.595917942265423,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 19.595917942265423,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 22.627416997969522,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 19.595917942265423,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G2": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 19.595917942265423,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 22.627416997969522,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 19.595917942265423,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 19.595917942265423,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 22.627416997969522,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 19.595917942265423,
+              "maximum_elementwise_displacement": 4.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G3": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 881.8163074019441,
+              "maximum_elementwise_displacement": 180.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 1018.2337649086285,
+              "maximum_elementwise_displacement": 180.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 881.8163074019441,
+              "maximum_elementwise_displacement": 180.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 881.8163074019441,
+              "maximum_elementwise_displacement": 180.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 1018.2337649086285,
+              "maximum_elementwise_displacement": 180.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 881.8163074019441,
+              "maximum_elementwise_displacement": 180.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G4": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 9.797958971132712,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 11.313708498984761,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 9.797958971132712,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 9.797958971132712,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 11.313708498984761,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 9.797958971132712,
+              "maximum_elementwise_displacement": 2.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      },
+      "G6": {
+        "identity": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        },
+        "cyclic_shifts": [
+          {
+            "offset": 0,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 1,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 14.696938456699069,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 2,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 16.97056274847714,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 3,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 14.696938456699069,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 4,
+            "fixed_index": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 5,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 14.696938456699069,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 6,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 16.97056274847714,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          },
+          {
+            "offset": 7,
+            "fixed_index": {
+              "exact_equal": false,
+              "frobenius_displacement": 14.696938456699069,
+              "maximum_elementwise_displacement": 3.0
+            },
+            "permutation_aware": {
+              "exact_equal": true,
+              "frobenius_displacement": 0.0,
+              "maximum_elementwise_displacement": 0.0
+            }
+          }
+        ],
+        "reversal": {
+          "fixed_index": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          },
+          "permutation_aware": {
+            "exact_equal": true,
+            "frobenius_displacement": 0.0,
+            "maximum_elementwise_displacement": 0.0
+          }
+        }
+      }
+    }
+  },
+  "e02_global_cyclic_control": {
+    "G1": {
+      "geometry_id": "G1",
+      "state_label": {
+        "exact_equal": false,
+        "frobenius_displacement": 14.966629547095765,
+        "maximum_elementwise_displacement": 6.0
+      },
+      "component_fixed_index": {
+        "exact_equal": false,
+        "frobenius_displacement": 14.966629547095765,
+        "maximum_elementwise_displacement": 6.0
+      },
+      "component_permutation_aware": {
+        "exact_equal": true,
+        "frobenius_displacement": 0.0,
+        "maximum_elementwise_displacement": 0.0
+      },
+      "classification": "state-space non-isometry and component-index representation effect"
+    },
+    "G2": {
+      "geometry_id": "G2",
+      "state_label": {
+        "exact_equal": true,
+        "frobenius_displacement": 0.0,
+        "maximum_elementwise_displacement": 0.0
+      },
+      "component_fixed_index": {
+        "exact_equal": true,
+        "frobenius_displacement": 0.0,
+        "maximum_elementwise_displacement": 0.0
+      },
+      "component_permutation_aware": {
+        "exact_equal": true,
+        "frobenius_displacement": 0.0,
+        "maximum_elementwise_displacement": 0.0
+      },
+      "classification": "state-space isometry"
+    },
+    "G3": {
+      "geometry_id": "G3",
+      "state_label": {
+        "exact_equal": true,
+        "frobenius_displacement": 0.0,
+        "maximum_elementwise_displacement": 0.0
+      },
+      "component_fixed_index": {
+        "exact_equal": true,
+        "frobenius_displacement": 0.0,
+        "maximum_elementwise_displacement": 0.0
+      },
+      "component_permutation_aware": {
+        "exact_equal": true,
+        "frobenius_displacement": 0.0,
+        "maximum_elementwise_displacement": 0.0
+      },
+      "classification": "state-space isometry"
+    },
+    "G4": {
+      "geometry_id": "G4",
+      "state_label": {
+        "exact_equal": false,
+        "frobenius_displacement": 8.0,
+        "maximum_elementwise_displacement": 2.0
+      },
+      "component_fixed_index": {
+        "exact_equal": false,
+        "frobenius_displacement": 8.0,
+        "maximum_elementwise_displacement": 2.0
+      },
+      "component_permutation_aware": {
+        "exact_equal": true,
+        "frobenius_displacement": 0.0,
+        "maximum_elementwise_displacement": 0.0
+      },
+      "classification": "state-space non-isometry and component-index representation effect"
+    },
+    "G6": {
+      "geometry_id": "G6",
+      "state_label": {
+        "exact_equal": false,
+        "frobenius_displacement": 10.583005244258363,
+        "maximum_elementwise_displacement": 3.0
+      },
+      "component_fixed_index": {
+        "exact_equal": false,
+        "frobenius_displacement": 10.583005244258363,
+        "maximum_elementwise_displacement": 3.0
+      },
+      "component_permutation_aware": {
+        "exact_equal": true,
+        "frobenius_displacement": 0.0,
+        "maximum_elementwise_displacement": 0.0
+      },
+      "classification": "state-space non-isometry and component-index representation effect"
+    }
+  }
+}
