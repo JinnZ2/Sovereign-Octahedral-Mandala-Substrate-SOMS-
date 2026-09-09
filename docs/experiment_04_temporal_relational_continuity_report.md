@@ -189,10 +189,12 @@ The data are suitable for considering a later process-level relational experimen
 | Scope | Result |
 |---|---:|
 | Experiment 04 isolated tests | 15 passed |
-| Experiment 01 | Pending final integrated validation |
-| Experiment 02 | Pending final integrated validation |
-| Experiment 03 | Pending final integrated validation |
-| Complete repository suite | Pending final integrated validation |
+| Experiment 01 | 11 passed; frozen files unchanged |
+| Experiment 02 | 19 passed; frozen implementation unchanged |
+| Experiment 03 | 23 passed; frozen files unchanged |
+| Complete repository suite | 359 passed; 3 existing warnings |
+
+The warnings are unchanged SciPy deprecation warnings from `tests/test_physics.py`. Experiment 04 introduced no new warning or regression.
 
 | Change category | Files |
 |---|---|
