@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from collections import defaultdict
+from pathlib import Path
 
 import numpy as np
 
@@ -22,7 +24,7 @@ from src.relational_identifiability import (
 )
 
 
-IMPLEMENTATION_COMMIT = "pending"
+IMPLEMENTATION_COMMIT = os.environ.get("SOMS_E06_IMPLEMENTATION_COMMIT")
 STATE_VALUES = tuple(range(8))
 VECTOR_LENGTH = 4
 
@@ -205,7 +207,13 @@ def serialize_minimal_collision(result):
     return payload
 
 
-def serialize_selected_length8_pair(name, first, second):
+def serialize_selected_length8_pair(
+    name,
+    first,
+    second,
+    *,
+    provenance,
+):
     geometries = {}
     for geometry_id in SUPPORTED_GEOMETRIES:
         first_matrix = np.asarray(
@@ -243,6 +251,7 @@ def serialize_selected_length8_pair(name, first, second):
         }
     return {
         "name": name,
+        "provenance": provenance,
         "first": list(first),
         "second": list(second),
         "geometries": geometries,
@@ -314,6 +323,15 @@ def serialize_temporal_profile(profile):
                     if instant.supplied_correspondence is not None
                     else None
                 ),
+                "correspondence_validated": (
+                    instant.correspondence_validated
+                ),
+                "correspondence_aware_displacement": (
+                    instant.correspondence_aware_displacement
+                ),
+                "correspondence_aware_equivalent": (
+                    instant.correspondence_aware_equivalent
+                ),
             }
             for instant in profile.instants
         ],
@@ -330,6 +348,11 @@ def serialize_temporal_profile(profile):
 
 
 def main():
+    if IMPLEMENTATION_COMMIT is None or len(IMPLEMENTATION_COMMIT) != 40:
+        raise RuntimeError(
+            "Set SOMS_E06_IMPLEMENTATION_COMMIT to the 40-character source "
+            "commit used for generation."
+        )
     summaries = {
         representation_id: enumerate_equivalence_classes(
             representation_id,
@@ -373,21 +396,44 @@ def main():
             "E05_V6_collision",
             E05_V6_A,
             E05_V6_B,
+            provenance={
+                "source_experiments": ["E05"],
+                "control_ids": ["V6_collision_case"],
+            },
         ),
         serialize_selected_length8_pair(
             "canonical_component_permutation",
             CANONICAL_8,
             CANONICAL_8_REINDEXED,
+            provenance={
+                "source_experiments": ["E03", "E05"],
+                "control_ids": [
+                    "component-index representation control",
+                    "V1_pure_component_permutation",
+                ],
+            },
         ),
         serialize_selected_length8_pair(
             "canonical_global_cyclic_shift",
             CANONICAL_8,
             CYCLIC_SHIFTED_8,
+            provenance={
+                "source_experiments": ["E02", "E03", "E04"],
+                "control_ids": [
+                    "global cyclic transformation",
+                    "E02 cyclic classification",
+                    "T1 cyclic progression endpoint",
+                ],
+            },
         ),
         serialize_selected_length8_pair(
             "deliberate_half_cycle_collision_candidate",
             DELIBERATE_COLLISION_A,
             DELIBERATE_COLLISION_B,
+            provenance={
+                "source_experiments": ["E06"],
+                "control_ids": ["deliberately generated collision candidate"],
+            },
         ),
     ]
 
@@ -413,7 +459,15 @@ def main():
         "branch": "experiment/06-relational-identifiability",
         "base_commit": "ec224ddb5837efea6aaf258afa0c0c5d10c28984",
         "implementation_commit": IMPLEMENTATION_COMMIT,
+        "implementation_commit_scope": (
+            "Committed E06 source, tests, and runner used to generate this "
+            "artifact; the result and report are committed afterward."
+        ),
+        "generator_source_sha256": hashlib.sha256(
+            Path(__file__).read_bytes()
+        ).hexdigest(),
         "reproducibility_command": (
+            f"SOMS_E06_IMPLEMENTATION_COMMIT={IMPLEMENTATION_COMMIT} "
             "PYTHONPATH=. python3 experiments/run_relational_identifiability.py "
             "> docs/experiment_06_relational_identifiability_results.json"
         ),

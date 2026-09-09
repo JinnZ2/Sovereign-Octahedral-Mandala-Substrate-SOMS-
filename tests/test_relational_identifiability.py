@@ -62,6 +62,49 @@ class TestBoundedEnumeration:
                 == expected_pairs
             )
 
+    @pytest.mark.parametrize(
+        (
+            "representation_id",
+            "class_count",
+            "singletons",
+            "nontrivial",
+            "maximum_size",
+            "symmetry_classes",
+            "genuine_classes",
+        ),
+        [
+            ("G1", 848, 0, 848, 14, 328, 520),
+            ("G2", 260, 0, 260, 16, 260, 0),
+            ("G3", 260, 0, 260, 16, 260, 0),
+            ("G4", 120, 0, 120, 48, 120, 0),
+            ("G6", 592, 24, 568, 48, 93, 475),
+            ("joint", 3706, 3456, 250, 8, 72, 178),
+        ],
+    )
+    def test_length_four_measured_class_statistics(
+        self,
+        representation_id,
+        class_count,
+        singletons,
+        nontrivial,
+        maximum_size,
+        symmetry_classes,
+        genuine_classes,
+    ):
+        summary = enumerate_equivalence_classes(representation_id, 4)
+
+        assert summary.total_state_vectors == 4096
+        assert summary.equivalence_class_count == class_count
+        assert summary.singleton_class_count == singletons
+        assert summary.nontrivial_class_count == nontrivial
+        assert summary.maximum_class_size == maximum_size
+        assert summary.symmetry_explainable_class_count == symmetry_classes
+        assert summary.genuine_collision_class_count == genuine_classes
+        assert (
+            sum(item.size for item in summary.classes)
+            == summary.total_state_vectors
+        )
+
 
 class TestCollisionClassification:
 
@@ -162,6 +205,31 @@ class TestCrossGeometryAndTemporalControls:
         assert all(instant.relation_matrix_a.shape == (4, 4) for instant in numeric.instants)
         assert len(numeric.transitions) == 1
         assert numeric.transitions[0].displacement_b > 0.0
+
+    def test_temporal_permutation_correspondence_is_validated_and_applied(self):
+        profiles = analyze_temporal_pair(
+            "permutation",
+            "permutation -> collision",
+            [(0, 1, 2, 3)],
+            [(3, 2, 1, 0)],
+            correspondences=[(3, 2, 1, 0)],
+        )
+
+        for profile in profiles.values():
+            instant = profile.instants[0]
+            assert instant.correspondence_validated
+            assert instant.correspondence_aware_displacement == 0.0
+            assert instant.correspondence_aware_equivalent
+
+    def test_temporal_invalid_correspondence_fails(self):
+        with pytest.raises(ValueError, match="component permutation"):
+            analyze_temporal_pair(
+                "invalid",
+                "invalid",
+                [(0, 1, 2, 3)],
+                [(0, 1, 2, 3)],
+                correspondences=[(0, 0, 2, 3)],
+            )
 
     def test_temporal_control_validates_paired_lengths(self):
         with pytest.raises(ValueError, match="equal nonzero length"):

@@ -22,6 +22,7 @@ from src.isometry_controls import (
     SUPPORTED_GEOMETRIES,
     enumerate_state_label_symmetries,
     geometry_relation_matrix,
+    permutation_matrix,
 )
 
 
@@ -127,6 +128,9 @@ class TemporalInstant:
     intertrajectory_displacement: float
     relationship: str | None
     supplied_correspondence: Permutation | None
+    correspondence_validated: bool | None
+    correspondence_aware_displacement: float | None
+    correspondence_aware_equivalent: bool | None
 
 
 @dataclass(frozen=True)
@@ -494,7 +498,7 @@ def analyze_temporal_pair(
     *,
     correspondences: Sequence[Sequence[int] | None] | None = None,
 ) -> Mapping[str, TemporalIdentifiabilityProfile]:
-    """Compare paired trajectories at each instant and between instants."""
+    """Compare paired trajectories, validating optional A-to-B correspondences."""
 
     first_trajectory = tuple(tuple(int(value) for value in state) for state in states_a)
     second_trajectory = tuple(tuple(int(value) for value in state) for state in states_b)
@@ -505,6 +509,17 @@ def analyze_temporal_pair(
     supplied = tuple(correspondences or [None] * len(first_trajectory))
     if len(supplied) != len(first_trajectory):
         raise ValueError("One optional correspondence is required per instant.")
+    validated_correspondences: list[Permutation | None] = []
+    for state, correspondence in zip(first_trajectory, supplied):
+        if correspondence is None:
+            validated_correspondences.append(None)
+            continue
+        mapping = tuple(int(value) for value in correspondence)
+        if len(mapping) != len(state) or sorted(mapping) != list(range(len(state))):
+            raise ValueError(
+                "Each supplied correspondence must be a component permutation."
+            )
+        validated_correspondences.append(mapping)
 
     profiles: dict[str, TemporalIdentifiabilityProfile] = {}
     for geometry_id in SUPPORTED_GEOMETRIES:
@@ -524,11 +539,23 @@ def analyze_temporal_pair(
                 second_trajectory,
                 matrices_a,
                 matrices_b,
-                supplied,
+                validated_correspondences,
             )
         ):
             displacement = float(np.linalg.norm(matrix_b - matrix_a))
             equivalent = displacement <= GEOMETRY_TOLERANCES[geometry_id]
+            correspondence_displacement = None
+            correspondence_equivalent = None
+            if correspondence is not None:
+                transform = permutation_matrix(correspondence)
+                expected_b = transform @ matrix_a @ transform.T
+                correspondence_displacement = float(
+                    np.linalg.norm(matrix_b - expected_b)
+                )
+                correspondence_equivalent = bool(
+                    correspondence_displacement
+                    <= GEOMETRY_TOLERANCES[geometry_id]
+                )
             relationship = None
             if state_a != state_b and equivalent:
                 relationship = classify_equal_relation_pair(
@@ -549,9 +576,16 @@ def analyze_temporal_pair(
                     intertrajectory_displacement=displacement,
                     relationship=relationship,
                     supplied_correspondence=(
-                        tuple(int(value) for value in correspondence)
-                        if correspondence is not None
-                        else None
+                        correspondence
+                    ),
+                    correspondence_validated=(
+                        True if correspondence is not None else None
+                    ),
+                    correspondence_aware_displacement=(
+                        correspondence_displacement
+                    ),
+                    correspondence_aware_equivalent=(
+                        correspondence_equivalent
                     ),
                 )
             )
