@@ -172,8 +172,12 @@ python -c "from src import *; print(OhGroup.instance().summary())"
 from src import MandalaMap, SOMSEngine
 m = MandalaMap(u=20, depth=5)
 e = SOMSEngine(num_cells=m.num_cells, problem_type="OPTIMIZATION")
-j = e.fret_coupling(np.linalg.norm(m.pos[:, None] - m.pos[None, :], axis=-1) + np.eye(m.num_cells))
+d = np.linalg.norm(m.pos[:, None] - m.pos[None, :], axis=-1)
+d = d / d[~np.eye(m.num_cells, dtype=bool)].min()   # normalize: J_nn = 1, so T ~ dE
+j = e.fret_coupling(d + np.eye(m.num_cells))
 history = e.anneal(j, T_start=5.0, T_final=0.1, n_steps=200)
+# Without the normalization, u=20 gives J <= 1.6e-8 and T=5 accepts every
+# move: the anneal is a random walk. See experiments/README.md "Results".
 
 # 2. O_h symmetry group — 48 elements, Cayley distances
 from src import OhGroup, GeometricState, CayleyEnergy
