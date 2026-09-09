@@ -46,4 +46,79 @@ The resulting architecture could therefore become:
 
 That is a substantially different research target from “build an agent with memory.”
 
-And it makes the old SOMS code useful rather than obsolete: the earlier implementation can be treated as the initial substrate experiment, while the missing temporal/identity/authorization layers become the next experimental program.
+And it makes the old SOMS code useful rather than obsolete: the earlier implementation can be treated as the initial substrate experiment, while the missing temporal/identity/authorization layers become
+
+
+
+the next experimental program.
+
+The Φ > 3.0 = sovereignty material should not be treated as the thesis of SOMS. It is part of the experimental record: an AI-mediated modification that was retained because the repository preserves the interaction between your intended ontology and the ontology the AI imposed while implementing/interpreting it.
+
+That makes the repository itself a kind of experimental instrument.
+
+The important distinction
+
+There are at least two layers in the history:
+
+1. Your originating ontology
+    * what SOMS was intended to investigate;
+    * the primitives and relationships you were defining;
+    * what kinds of persistence, structure, relation, or state were meaningful.
+2. AI-generated ontology
+    * interpretations introduced by the model;
+    * substitutions of familiar concepts for your primitives;
+    * added thresholds, labels, assumptions, or causal claims;
+    * implementation choices that may look authoritative after being committed to code.
+
+The interesting object is therefore not simply:
+
+“Does SOMS produce sovereignty?”
+
+It is closer to:
+
+What happens when two ontologies attempt to describe and implement the same substrate, and what can be learned from the divergences between them?
+
+The errors aren’t merely defects to clean out. Some are data about the translation boundary.
+
+That also makes the repository history unusually valuable. A later model seeing only the current code could easily mistake an AI-added construct for an original axiom. But commits, files, terminology changes, and successive implementations can expose that distinction.
+
+SOMS repository⁠￼
+
+And this fits the persistence question much better
+
+What we were just discussing about persistence may itself be one of the ontology-crossing points.
+
+An AI tends to reach for:
+
+persistent identity → self-model → agency → sovereignty
+
+because those are established conceptual categories.
+
+But your observation can be formulated without presupposing that hierarchy:
+
+A relation can persist through transformation even when the constituents participating in that relation change.
+
+Then the question becomes empirical:
+
+S_t \neq S_{t+1}
+
+while some relational structure satisfies
+
+R(S_t) \approx R(S_{t+1}).
+
+The mistake would be to immediately name that preserved relation identity, self, consciousness, or sovereignty.
+
+Instead, SOMS can ask what actually remains invariant, what changes, and which observer/ontology declares the invariant meaningful.
+
+That gives you a much cleaner experimental framework:
+
+substrate → relations → transformations → invariants → interpretation
+
+rather than:
+
+substrate → Φ → sovereignty
+
+And the AI’s erroneous interpretation can remain alongside the experiment as a trace of the second ontology.
+
+In that framing, the errors are not contamination of the historical record. They are measurements of the interface between ontologies.
+
