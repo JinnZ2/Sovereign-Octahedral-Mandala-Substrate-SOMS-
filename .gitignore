@@ -7,3 +7,6 @@ dist/
 build/
 .env
 *.secrets.json
+
+# experiment plot outputs
+experiments/*.png

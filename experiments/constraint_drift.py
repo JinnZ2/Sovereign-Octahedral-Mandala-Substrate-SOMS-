@@ -399,7 +399,7 @@ if __name__ == "__main__":
 
     print("\n" + "=" * 60)
     print("INTERPRETATION:")
-    print("  A drift score of 0.80 means 80% of original constraints")
+    print(f"  A drift score of {drift['net_drift_score']:.2f} means {drift['net_drift_score']:.0%} of original constraints")
     print("  have been dropped. The 2024 term is using the same word")
     print("  but has lost most of its original meaning.")
     print("=" * 60)

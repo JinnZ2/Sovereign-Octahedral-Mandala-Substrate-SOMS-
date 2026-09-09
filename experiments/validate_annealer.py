@@ -8,6 +8,9 @@ Tests the core claims of the SOMS engine against ground truth:
 3. FRET coupling follows 1/r^6 scaling
 4. The annealer does NOT guarantee optimal solutions
 5. Phi sovereignty threshold (3.0) is an arbitrary design choice
+6. Temperature must match the coupling scale — otherwise the "anneal"
+   is a random walk (every proposal accepted) and tests 1, 2 and 4 pass
+   trivially without any optimization happening
 
 This script produces empirical evidence for what SOMS can and cannot do.
 
@@ -149,6 +152,55 @@ def test_phi_threshold_arbitrary():
     return True
 
 
+def test_temperature_scale():
+    """
+    Detect the random-walk failure mode.
+
+    MandalaMap(u=20) places cells 20..440 units apart, so J = 1/r^6 is
+    at most ~1.6e-8. With T_start=5.0 every Metropolis test is
+    exp(-dE/T) ~ exp(-1e-8) ~ 1: everything is accepted, nothing is
+    optimized. Normalizing distances by the nearest-neighbour spacing
+    (so J_nn = 1) puts dE on the same scale as T and the annealer works.
+
+    Detector: acceptance ratio in the final 10% of steps, plus final
+    energy relative to the mean energy of random states.
+    """
+    print("=" * 60)
+    print("TEST 6: Temperature/coupling scale — is it annealing or random-walking?")
+    print("=" * 60)
+    m = MandalaMap(u=20, depth=5)
+    n = m.num_cells
+    d = np.linalg.norm(m.pos[:, None] - m.pos[None, :], axis=-1)
+    d_nn = d[~np.eye(n, dtype=bool)].min()
+
+    def probe(dist, label):
+        np.random.seed(0)
+        e = SOMSEngine(num_cells=n, problem_type="SAT")
+        j = e.fret_coupling(dist + np.eye(n))
+        E_random = np.mean([SOMSEngine(num_cells=n, problem_type="SAT").energy_landscape(j)
+                            for _ in range(20)])
+        history = e.anneal(j, T_start=5.0, T_final=0.01, n_steps=300)
+        tail = history[-30:]
+        accept_tail = np.mean([h[3] for h in tail]) / n
+        ratio = history[-1][2] / E_random
+        random_walk = accept_tail > 0.95 or ratio > 0.9
+        print(f"  {label:26s} J_max={j[~np.eye(n, dtype=bool)].max():.2e}  "
+              f"accept(last 10%)={accept_tail:.2f}  E_final/E_random={ratio:.2f}  "
+              f"-> {'RANDOM WALK' if random_walk else 'annealing'}")
+        return random_walk
+
+    raw_is_walk = probe(d, "raw MandalaMap units")
+    norm_is_walk = probe(d / d_nn, "normalized d/d_nn")
+    print()
+    print("  Raw mandala units + default T are a random walk; T is ~1e8 times")
+    print("  larger than any energy difference. Normalize distances (or scale T)")
+    print("  before trusting any anneal() result built on MandalaMap(u=20).")
+    ok = raw_is_walk and not norm_is_walk
+    print(f"  {'PASS' if ok else 'FAIL'}: detector separates the two regimes")
+    print()
+    return ok
+
+
 if __name__ == "__main__":
     results = [
         test_stochasticity(),
@@ -156,6 +208,7 @@ if __name__ == "__main__":
         test_fret_scaling(),
         test_no_optimality_guarantee(),
         test_phi_threshold_arbitrary(),
+        test_temperature_scale(),
     ]
     print("=" * 60)
     print(f"VALIDATION SUMMARY: {sum(results)}/{len(results)} tests passed")
