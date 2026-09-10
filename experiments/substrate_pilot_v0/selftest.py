@@ -269,7 +269,8 @@ class V2_maria_fixture(unittest.TestCase):
     def test_fixture_loads_validates_and_tallies(self):
         header, body = locus_tally.load(os.path.join(HERE, "fixtures", "maria_locus.jsonl"))
         self.assertIn("three-grader coding", header["_header"]); self.assertIn("DeepSeek", header["_header"]); self.assertIn("GPT", header["_header"])
-        self.assertEqual(len(body), 13)
+        graded = [r for r in body if r.get("graders", {}).get("round1")]
+        self.assertEqual(len(graded), 13)                                      # + ungraded verbatim rows C1-C4, A1, A2
         t = locus_tally.tally(body)
         self.assertEqual(t["coarse"], {"regime": 10, "mixed": 2, "physical_damage": 1})
         self.assertEqual(t["second_grader_rows"], 13)
@@ -284,13 +285,16 @@ class V2_maria_fixture(unittest.TestCase):
         self.assertEqual(a["pure_physical_damage_rows"], [1, 0])
         self.assertEqual(a["sub_axis"], {"comparable": 12, "exact": 2, "overlap": 4, "disjoint": 6})
         self.assertFalse(a["N-1_fires"])
-        self.assertEqual([r["row"] for r in body if r["site"] != r["second_grader_site"]], [10])
+        self.assertEqual([r["row"] for r in graded if r["site"] != r["second_grader_site"]], [10])
 
     def test_site_is_a_record_fact(self):
         header, body = locus_tally.load(os.path.join(HERE, "fixtures", "maria_locus.jsonl"))
         for r in body:
-            self.assertIn(r["site_record"], SITES)
-            self.assertIn("site_field", r["graders"]["round1"]["gpt"])       # graded sites retained as history only
+            if r.get("graders", {}).get("round1"):
+                self.assertIn(r["site_record"], SITES)
+                self.assertIn("site_field", r["graders"]["round1"]["gpt"])   # graded sites retained as history only
+            else:
+                self.assertIsNone(r["locus"])                                  # verbatim rows are ungraded
         self.assertIn("RECORD FACT", header["site_rule"])
 
     def test_three_way_figures_computed_from_rows(self):
@@ -324,12 +328,33 @@ class V2_maria_fixture(unittest.TestCase):
             self.assertFalse(rt["evaluable"])
             self.assertGreater(rt["stated_cause_pending"], 0)
             for r in body:
-                self.assertIn(r["doc_type"], ("audit", "review", "self-review"))
+                self.assertIn(r["doc_type"], ("audit", "review", "self-review", "press"))
         src = json.load(open(os.path.join(HERE, "fixtures", "sources.json")))["docs"]
-        self.assertTrue(all(not d["fetched"] for d in src.values()))
+        self.assertTrue(src["M1"]["fetched"] is True and src["K3"]["fetched"] is True)     # full / partial text loaded
+        self.assertFalse(src["K1"]["fetched"])                                            # logistics chapter unread
         tmpl = [json.loads(l) for l in open(os.path.join(HERE, "fixtures", "maria_locus_round3_template.jsonl")) if l.strip()]
-        self.assertEqual(len(tmpl) - 1, 14)
-        self.assertTrue(all(r["oig_verbatim"] is None and r["grader_a"] is None for r in tmpl[1:]))
+        self.assertEqual(len(tmpl) - 1, 17)                                        # 14 rows + C1-C3 candidates
+        self.assertTrue(all(r["oig_verbatim"] and r["oig_page"] is not None for r in tmpl[1:]))   # verbatim filled
+        self.assertTrue(all(r["grader_a"] is None and r["grader_b"] is None for r in tmpl[1:]))   # unrun
+        sc = [json.loads(l) for l in open(os.path.join(HERE, "fixtures", "stated_causes_grader_template.jsonl")) if l.strip()]
+        self.assertGreaterEqual(len(sc) - 1, 8)
+        self.assertTrue(all(r["text"] and r["grader_a"] is None for r in sc[1:]))
+
+    def test_record_sites_from_the_source_and_invalid_codings_flagged(self):
+        _, body = locus_tally.load(os.path.join(HERE, "fixtures", "maria_locus.jsonl"))
+        by = {str(r["row"]): r for r in body}
+        self.assertEqual(by["9"]["site_record"], "undamaged")
+        self.assertEqual(by["10"]["site_record"], "unknown")
+        self.assertEqual(by["10"]["site_record_history"]["section4_table"], "undamaged")
+        self.assertEqual(by["8"]["graders"]["round2"]["8b"]["site_record"], "damaged")
+        self.assertTrue(all(by[k].get("oig_verbatim") for k in map(str, range(1, 14))))
+        self.assertFalse(by["9"]["graders"]["round2"]["9"]["gpt_schema_valid_under_record_site"])
+        self.assertTrue(by["9"]["graders"]["round2"]["9"]["deepseek_schema_valid_under_record_site"])
+        self.assertFalse(by["10"]["graders"]["round1"]["deepseek"]["schema_valid_under_record_site"])
+        r2 = locus_tally.round2(body)
+        self.assertEqual(r2["schema_invalid_under_record_site"], [("9", "gpt")])
+        self.assertEqual((r2["excluding_invalid"]["n"], r2["excluding_invalid"]["exact"]), (13, 11))
+        self.assertIn("C2", by); self.assertIsNone(by["C2"]["locus"]); self.assertIn("2,402", by["C2"]["oig_verbatim"])
 
 
 class V3_regime_class(unittest.TestCase):

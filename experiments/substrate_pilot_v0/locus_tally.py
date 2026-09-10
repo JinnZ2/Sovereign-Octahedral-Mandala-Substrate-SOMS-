@@ -44,7 +44,7 @@ def tally(body, key="locus"):
     t = Counter(top_level(r[key]) for r in rows)
     return {"n": len(rows), "coarse": {k: t.get(k, 0) for k in ("regime", "mixed", "physical_damage")},
             "by_locus": dict(Counter(r[key] for r in rows)),
-            "by_site": dict(Counter(r["site" if key == "locus" else "second_grader_site"] for r in rows)),
+            "by_site": dict(Counter((r.get("site_record") or r.get("site")) if key == "locus" else r.get("second_grader_site") for r in rows)),
             "second_grader_rows": sum(1 for r in body if r.get("second_grader_locus") is not None),
             "disagreements": sum(1 for r in body if r.get("disagreement"))}
 
@@ -92,7 +92,7 @@ def _pairs(seq):
 
 
 def three_way(body):
-    rows = [r for r in body if r.get("graders")]
+    rows = [r for r in body if r.get("graders", {}).get("round1")]     # rows with a round-1 coding
     if not rows:
         return None
     graders = list(rows[0]["graders"]["round1"])
@@ -152,11 +152,22 @@ def round2(body):
     pe = sum((ca.count(c) / n) * (cb.count(c) / n) for c in cats)
     kappa = (po - pe) / (1 - pe) if pe < 1 else None
     custody_both = sum(1 for x, y in zip(a, b) if any(p.startswith("regime.custody") for p in x) and any(p.startswith("regime.custody") for p in y))
+    # codings that are schema-invalid under the RECORD site (physical_damage where site_record != damaged)
+    invalid = []
+    for (sub, g), x, y in zip(rows, a, b):
+        for who, parts in (("gpt", x), ("deepseek", y)):
+            if g.get(who + "_schema_valid_under_record_site") is False:
+                invalid.append((sub, who))
+    valid_rows = [(sub, g) for sub, g in rows if not any(s == sub for s, _ in invalid)]
+    va = [set(parse_locus(g["gpt"])) for _, g in valid_rows]; vb = [set(parse_locus(g["deepseek"])) for _, g in valid_rows]
+    v_exact = sum(1 for x, y in zip(va, vb) if x == y)
     dmg = [sum(1 for x in a if "physical_damage" in x), sum(1 for y in b if "physical_damage" in y)]
     return {"n": n, "exact": exact, "overlap": overlap, "disjoint": disjoint, "disjoint_rows": disjoint_rows,
             "mean_jaccard": round(sum(jac) / n, 3), "kappa_label_sets": round(kappa, 3),
             "observed": round(po, 3), "expected": round(pe, 3),
             "custody_in_both": custody_both, "physical_damage_rows": dmg,
+            "schema_invalid_under_record_site": invalid,
+            "excluding_invalid": {"n": len(valid_rows), "exact": v_exact},
             "label_tally": {"gpt": dict(Counter("+".join(sorted(x)) for x in a)), "deepseek": dict(Counter("+".join(sorted(y)) for y in b))}}
 
 
@@ -173,10 +184,13 @@ def report_type_split(body, sources):
         out["by_doc_type"][dt] = {"coded_rows": len(sub), "top_level": dict(t),
                                   "damage_component_share": round(dmg_any / len(sub), 2) if sub else None,
                                   "kinds": dict(Counter(r["row_kind"] for r in sub))}
-    out["stated_cause_codable"] = sum(1 for r in rows if r["row_kind"] == "stated_cause" and r.get("locus"))
-    out["stated_cause_pending"] = sum(1 for r in rows if r["row_kind"] == "stated_cause" and not r.get("locus"))
+    sc = [r for r in rows if r["row_kind"] in ("stated_cause", "measurand_declaration", "self_review_rebuttal")]
+    out["stated_cause_codable"] = sum(1 for r in sc if r.get("locus"))
+    out["stated_cause_pending"] = sum(1 for r in sc if not r.get("locus"))
+    out["stated_cause_verbatim_ungraded"] = sum(1 for r in sc if not r.get("locus") and (r.get("text") or r.get("oig_verbatim")))
     out["evaluable"] = out["stated_cause_codable"] > 0
-    out["null_check"] = ("NOT EVALUABLE: no coded stated-cause rows; extraction pending" if not out["evaluable"] else "see by_doc_type")
+    out["null_check"] = (("NOT EVALUABLE: %d verbatim stated-cause rows present, none graded (fixtures/stated_causes_grader_template.jsonl)"
+                          % out["stated_cause_verbatim_ungraded"]) if not out["evaluable"] else "see by_doc_type")
     ret = [r for r in rows if r.get("doc_id") == "K3" and r.get("recurred_in_M1") is not None]
     out["retention_K3_to_M1"] = dict(Counter(str(r["recurred_in_M1"]).split(" ")[0] for r in ret))
     ret_all = [r for r in rows if r.get("row_kind") == "mechanism_finding" and r.get("recurred_in_M1") is not None]
@@ -226,6 +240,8 @@ def main(paths):
             print("  ROUND 2 (V1 definitions, SITE supplied, n=%d): exact %d | overlap %d | disjoint %d %s | mean Jaccard %.3f | kappa(label sets) %.3f (obs %.3f, exp %.3f) | custody in both %d | physical_damage rows %s" % (
                 r2["n"], r2["exact"], r2["overlap"], r2["disjoint"], r2["disjoint_rows"], r2["mean_jaccard"], r2["kappa_label_sets"],
                 r2["observed"], r2["expected"], r2["custody_in_both"], r2["physical_damage_rows"]))
+            print("    schema-invalid under the record site: %s | excluding those rows: exact %d/%d" % (
+                r2["schema_invalid_under_record_site"], r2["excluding_invalid"]["exact"], r2["excluding_invalid"]["n"]))
         rt = out[n]["report_type_split"]
         if rt:
             print("  V10b report-type split: %s | stated-cause coded %d, pending %d | retention K3-sourced->M1 %s, all recalled rows->M1 %s" % (

@@ -23,7 +23,8 @@ only, paper-operable. One failure source: DHS OIG-20-76.
 | `exercise.py` | SPEC §4 replay, injects I-1..I-13 in order; OIG baselines vs operator `TARGETS`; shall and target columns |
 | `selftest.py` | FT-01..FT-18 and V1..V11 as unittest; prints its count |
 | `spec_rows.json` | V11: climate of every spec row's baseline |
-| `fixtures/*_locus.jsonl`, `locus_tally.py` | V2/V10 LOCUS-coded findings (Maria 13 rows; Katrina and GAO 2018 partial, unverified); tallies side by side |
+| `fixtures/*_locus.jsonl`, `locus_tally.py` | V2/V10 LOCUS-coded findings with three graders and a round-2 re-grade (Maria), Katrina and GAO 2018 partial; tallies and agreement computed from the rows |
+| `fixtures/maria_verbatim.jsonl`, `fixtures/katrina_passages.jsonl` | verbatim source sentences with pages and record sites (public domain); V2c and V10b grader templates draw from them |
 | `CLAIM_TABLE.md`, `BUILD_NOTE_v0.1.md` | claim statuses V1–V10 and nulls N-1..N-4; Q-1 answer and resolutions |
 | `forms/` | T-card, gate log, delivery receipt: the physical channel on paper |
 | `onboarding/field_map.json` | SPEC §3 field map (Phase 1 ADAPTER) |

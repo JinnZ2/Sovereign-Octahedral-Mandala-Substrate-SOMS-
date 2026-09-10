@@ -11,7 +11,8 @@
    "url": "https://www.govinfo.gov/content/pkg/CRPT-109hrpt377/html/CRPT-109hrpt377.htm",
    "chapter": "Logistics and contracting",
    "verified": true,
-   "fetched": false
+   "fetched": false,
+   "status": "logistics chapter NOT read"
   },
   "K2": {
    "title": "The Federal Response to Hurricane Katrina: Lessons Learned",
@@ -23,7 +24,8 @@
    "url": "https://biotech.law.lsu.edu/katrina/govdocs/katrina-lessons-learned.pdf",
    "note": "17 lessons, 125 recommendations",
    "verified": true,
-   "fetched": false
+   "fetched": "footnote 2 only",
+   "fetched_via": "globalsecurity.org appendix mirror"
   },
   "K3": {
    "title": "A Performance Review of FEMA's Disaster Management Activities in Response to Hurricane Katrina",
@@ -34,7 +36,11 @@
    "event": "katrina",
    "url": "https://www.oig.dhs.gov/reports/2006-03/performance-review-femas-disaster-management-activities-response-hurricane-katrina",
    "verified": true,
-   "fetched": false
+   "fetched": true,
+   "fetched_by": "Claude Opus 5, 2026-09-10",
+   "fetched_via": "archive.org full text",
+   "fetched_file": "fixtures/katrina_passages.jsonl",
+   "coverage": "pp.1-43 read; pp.66-77 and pp.128-134 NOT read"
   },
   "M1": {
    "title": "FEMA Mismanaged the Commodity Distribution Process in Response to Hurricanes Irma and Maria",
@@ -44,7 +50,10 @@
    "doc_type": "audit",
    "event": "maria",
    "verified": true,
-   "fetched": false
+   "fetched": true,
+   "fetched_by": "Claude Opus 5, 2026-09-10, full-text fetch; page = printed page number in the report",
+   "url": "https://www.oig.dhs.gov/sites/default/files/assets/2020-09/OIG-20-76-Sep20.pdf",
+   "fetched_file": "fixtures/maria_verbatim.jsonl"
   },
   "M2": {
    "title": "2017 Hurricanes and Wildfires: Initial Observations on the Federal Response and Key Recovery Challenges",
@@ -55,7 +64,7 @@
    "event": "maria",
    "url": "https://www.gao.gov/products/gao-18-472",
    "verified": true,
-   "fetched": false
+   "fetched": "product-page highlights only"
   },
   "M3": {
    "title": "2017 Hurricane Season FEMA After-Action Report",
@@ -66,7 +75,7 @@
    "event": "maria",
    "url": "https://www.fema.gov/sites/default/files/2020-08/fema_hurricane-season-after-action-report_2017.pdf",
    "verified": true,
-   "fetched": false
+   "fetched": "one sentence (snippet; page not resolved)"
   },
   "LINK": {
    "title": "FEMA logistics 'great strides' post-Katrina",
@@ -79,6 +88,14 @@
    "verified": false,
    "fetched": false,
    "status": "[locate]"
+  },
+  "K-press": {
+   "title": "FEMA statement on Katrina ice deliveries (NBC News, 2006)",
+   "doc_type": "press",
+   "event": "katrina",
+   "url": "https://www.nbcnews.com/news/amp/wbna9665486",
+   "verified": true,
+   "fetched": "paraphrase only (copyrighted)"
   }
  },
  "doc_types": {

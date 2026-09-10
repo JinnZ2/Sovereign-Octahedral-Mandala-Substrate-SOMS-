@@ -150,3 +150,33 @@ shall/target split (now every row); gate-in = delivery; `record_custody` ≠ uni
   mechanism rows only, by me, marked.
 - **V2c** exists as an instrument: two custody sub-loci in the enum and a 14-row round-3
   template whose verbatim and grader slots are empty.
+
+## Source text loaded (maria_verbatim.jsonl, katrina_passages.jsonl)
+
+- **SITE corrections came from the record, not from a grader.** Row 9: the OIG sentence
+  places the signal loss on barges and at staging yards on shipments TO Puerto Rico, so the
+  site is undamaged. The fixture's section-4 site already said undamaged; the site supplied to
+  the round-2 graders said damaged, in error, and row 9 was the only round-2 disjoint row.
+  Under the record site GPT's `physical_damage` is schema-invalid; the coding is kept and
+  flagged, and round 2 is reported both ways. Row 10: where the food expired is not stated, so
+  the site changes undamaged -> `unknown`, which is what the enum value was added for; the
+  round-1 DeepSeek `mixed(physical_damage, custody)` on that row is schema-invalid under it.
+  Row 8b (within Puerto Rico) is damaged; 8a (to Puerto Rico) is not.
+- **Row 13 is two sources.** The 20%-of-drivers figure is press; the OIG sentence is the
+  infrastructure damage statement. The fixture notes it; the section-4 finding text stays.
+- **V2c is ready to run.** The round-3 template carries the verbatim sentence, page, record
+  site and context for all 14 rows plus C1-C3; grader slots are empty.
+- **New verbatim candidates C1-C4 and audit stated causes A1-A2** are carried as rows with
+  `locus: null`. C2 is FT-02's relabel in the OIG's own words (2,402 records to "unknown FSAs").
+  C4 is FEMA's management comment that reconciliation found all but 19 of 9,775 containers,
+  with the OIG's reply that finding containers is not finding contents: a measurand crossing
+  inside a self-review, carried under doc_type self-review for V10b. A1 names both damage and
+  "did not follow established policies and procedures" in one sentence; graders will have to
+  code the mechanism.
+- **Katrina.** K3 pp.1-43 verbatim replaces the locator stubs. K3-4 ("in the pipeline") is the
+  location-as-status relabel, the Katrina shape of C2. K3-8 is a positive control (Mississippi,
+  authority at the contact node). K1's logistics chapter is still unread; the recalled rows for
+  it stay marked as recalled.
+- **V10b stays NOT EVALUABLE**: every stated-cause row is now verbatim, and none is graded.
+  `fixtures/stated_causes_grader_template.jsonl` lists them across documents and events.
+- `spec_rows.json` now points FT rows at their verbatim OIG rows and pages where one exists.

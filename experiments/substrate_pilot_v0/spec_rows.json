@@ -1,27 +1,244 @@
 {
-  "_note": "V11: every spec row carries the CLIMATE its finding/baseline was measured in. A claim is valid only inside its declared climate. OIG-20-76 and the Katrina/2017 findings are variable-climate observations; drill and design figures are stable.",
-  "rows": [
-    {"id": "FT-01", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "T+A"},
-    {"id": "FT-02", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "I+T"},
-    {"id": "FT-03", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "T/E"},
-    {"id": "FT-04", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "I+T"},
-    {"id": "FT-05", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "A"},
-    {"id": "FT-06", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "A"},
-    {"id": "FT-07", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "I+T"},
-    {"id": "FT-08", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "I+A"},
-    {"id": "FT-09", "climate": "stable", "baseline_source": "2011 exercise AAR, pre-event", "verify": "I+A"},
-    {"id": "FT-10", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "I+D"},
-    {"id": "FT-11", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "T+A"},
-    {"id": "FT-12", "climate": "stable", "baseline_source": "advance contract, pre-event", "verify": "I+E"},
-    {"id": "FT-13", "climate": "variable", "baseline_source": "OIG-20-76 municipal survey", "verify": "E+I"},
-    {"id": "FT-14", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "E"},
-    {"id": "FT-15", "climate": "variable", "baseline_source": "Natural Hazards Center quick-response", "verify": "E"},
-    {"id": "FT-16", "climate": "variable", "baseline_source": "OIG-20-76 findings 2, 3", "verify": "T+A"},
-    {"id": "FT-17", "climate": "variable", "baseline_source": "OIG-20-76 (detection in months)", "verify": "T+A"},
-    {"id": "FT-18", "climate": "variable", "baseline_source": "none: no resolver existed", "verify": "T"},
-    {"id": "V3", "climate": "stable", "baseline_source": "design rule", "verify": "T"},
-    {"id": "V4", "climate": "variable", "baseline_source": "MIL-STD-882E logic applied at event", "verify": "T"},
-    {"id": "V8", "climate": "stable", "baseline_source": "standing plan, post-event", "verify": "I"},
-    {"id": "V11", "climate": "variable", "baseline_source": "this rule", "verify": "T+I"}
-  ]
+ "_note": "V11: every spec row carries the CLIMATE its finding/baseline was measured in. A claim is valid only inside its declared climate. OIG-20-76 and the Katrina/2017 findings are variable-climate observations; drill and design figures are stable.",
+ "rows": [
+  {
+   "id": "FT-01",
+   "climate": "variable",
+   "baseline_source": "OIG-20-76",
+   "verify": "T+A",
+   "oig_verbatim_rows": [
+    "1"
+   ],
+   "oig_pages": [
+    6
+   ]
+  },
+  {
+   "id": "FT-02",
+   "climate": "variable",
+   "baseline_source": "OIG-20-76",
+   "verify": "I+T",
+   "oig_verbatim_rows": [
+    "C2"
+   ],
+   "oig_pages": [
+    7
+   ]
+  },
+  {
+   "id": "FT-03",
+   "climate": "variable",
+   "baseline_source": "OIG-20-76",
+   "verify": "T/E",
+   "oig_verbatim_rows": [
+    "8a",
+    "8b",
+    "9"
+   ],
+   "oig_pages": [
+    11,
+    "11-12",
+    11
+   ]
+  },
+  {
+   "id": "FT-04",
+   "climate": "variable",
+   "baseline_source": "OIG-20-76",
+   "verify": "I+T",
+   "oig_verbatim_rows": [
+    "2",
+    "3"
+   ],
+   "oig_pages": [
+    12,
+    12
+   ]
+  },
+  {
+   "id": "FT-05",
+   "climate": "variable",
+   "baseline_source": "OIG-20-76",
+   "verify": "A",
+   "oig_verbatim_rows": [
+    "C1"
+   ],
+   "oig_pages": [
+    14
+   ]
+  },
+  {
+   "id": "FT-06",
+   "climate": "variable",
+   "baseline_source": "OIG-20-76",
+   "verify": "A",
+   "oig_verbatim_rows": [
+    "11"
+   ],
+   "oig_pages": [
+    8
+   ]
+  },
+  {
+   "id": "FT-07",
+   "climate": "variable",
+   "baseline_source": "OIG-20-76",
+   "verify": "I+T",
+   "oig_verbatim_rows": [
+    "7"
+   ],
+   "oig_pages": [
+    10
+   ]
+  },
+  {
+   "id": "FT-08",
+   "climate": "variable",
+   "baseline_source": "OIG-20-76",
+   "verify": "I+A",
+   "oig_verbatim_rows": [
+    "10"
+   ],
+   "oig_pages": [
+    10
+   ]
+  },
+  {
+   "id": "FT-09",
+   "climate": "stable",
+   "baseline_source": "2011 exercise AAR, pre-event",
+   "verify": "I+A",
+   "oig_verbatim_rows": [
+    "5"
+   ],
+   "oig_pages": [
+    "4-5"
+   ]
+  },
+  {
+   "id": "FT-10",
+   "climate": "variable",
+   "baseline_source": "OIG-20-76",
+   "verify": "I+D",
+   "oig_verbatim_rows": [
+    "12",
+    "C1"
+   ],
+   "oig_pages": [
+    15,
+    14
+   ]
+  },
+  {
+   "id": "FT-11",
+   "climate": "variable",
+   "baseline_source": "OIG-20-76",
+   "verify": "T+A",
+   "oig_verbatim_rows": [
+    "4",
+    "C3"
+   ],
+   "oig_pages": [
+    19,
+    17
+   ]
+  },
+  {
+   "id": "FT-12",
+   "climate": "stable",
+   "baseline_source": "advance contract, pre-event",
+   "verify": "I+E",
+   "oig_verbatim_rows": [
+    "6"
+   ],
+   "oig_pages": [
+    16
+   ]
+  },
+  {
+   "id": "FT-13",
+   "climate": "variable",
+   "baseline_source": "OIG-20-76 municipal survey",
+   "verify": "E+I"
+  },
+  {
+   "id": "FT-14",
+   "climate": "variable",
+   "baseline_source": "OIG-20-76",
+   "verify": "E",
+   "oig_verbatim_rows": [
+    "13"
+   ],
+   "oig_pages": [
+    1
+   ]
+  },
+  {
+   "id": "FT-15",
+   "climate": "variable",
+   "baseline_source": "Natural Hazards Center quick-response",
+   "verify": "E"
+  },
+  {
+   "id": "FT-16",
+   "climate": "variable",
+   "baseline_source": "OIG-20-76 findings 2, 3",
+   "verify": "T+A",
+   "oig_verbatim_rows": [
+    "2",
+    "C1"
+   ],
+   "oig_pages": [
+    12,
+    14
+   ]
+  },
+  {
+   "id": "FT-17",
+   "climate": "variable",
+   "baseline_source": "OIG-20-76 (detection in months)",
+   "verify": "T+A",
+   "oig_verbatim_rows": [
+    "8a",
+    "8b",
+    "C2"
+   ],
+   "oig_pages": [
+    11,
+    "11-12",
+    7
+   ]
+  },
+  {
+   "id": "FT-18",
+   "climate": "variable",
+   "baseline_source": "none: no resolver existed",
+   "verify": "T"
+  },
+  {
+   "id": "V3",
+   "climate": "stable",
+   "baseline_source": "design rule",
+   "verify": "T"
+  },
+  {
+   "id": "V4",
+   "climate": "variable",
+   "baseline_source": "MIL-STD-882E logic applied at event",
+   "verify": "T"
+  },
+  {
+   "id": "V8",
+   "climate": "stable",
+   "baseline_source": "standing plan, post-event",
+   "verify": "I"
+  },
+  {
+   "id": "V11",
+   "climate": "variable",
+   "baseline_source": "this rule",
+   "verify": "T+I"
+  }
+ ],
+ "_verbatim_note": "oig_verbatim_rows index fixtures/maria_verbatim.jsonl; FT-13 and FT-15 have no verbatim row in that file"
 }
