@@ -13,6 +13,7 @@ validate specific physical mechanisms that the architecture is built on.
 |--------|-------|--------|
 | `validate_annealer.py` | Core SOMS claims: stochasticity, 1/r^6 coupling, no optimality guarantee, Phi threshold is arbitrary, **T/J scale (random-walk detector)** | Ready (numpy/scipy) |
 | `benchmark_sat.py` | MAX-SAT: SOMS vs vanilla SA, with and without the clauses in the energy | Ready (numpy/scipy) |
+| `run_symmetry_identifiability.py` | E07a: label-isometry groups, collision classes, L_R = L_sym + L_excess, cross-geometry recovery, negative controls, BranchSet out | Ready (numpy); writes `docs/experiment_07_*` |
 | `firefly_swarm.py` | Stochastic resonance in coupled oscillators — does intermediate noise beat zero noise? | Ready (numpy/scipy/matplotlib) |
 | `constraint_drift.py` | Semantic drift detection: tracks constraint loss when a term's meaning silently changes over decades | Ready (numpy) |
 | `thermodynamic_audit.py` | Exergy-weighted impact scoring: detects when "profitable" activities are thermodynamically destructive | Ready (no deps) |
@@ -32,6 +33,9 @@ python firefly_swarm.py --sweep
 
 # MAX-SAT benchmark (three arms, ~30 s)
 python benchmark_sat.py
+
+# E07a symmetry / identifiability (from the repo root, ~5 s; regenerates docs/experiment_07_*)
+python experiments/run_symmetry_identifiability.py
 
 # Constraint drift detection
 python constraint_drift.py
@@ -109,6 +113,22 @@ actually goes, and where it was leaking.
 | `thermal_bridge_quantum.py` | crashed (QuTiP 5 API) | **Supported**: peak qubit-2 population 0.143 (bridge ON) vs 0.080 (OFF) | Same convention bug: it measured the level that spontaneous decay pumps into, so "transfer" happened with the bridge off too. Added the bridge-OFF control. |
 | `constraint_drift.py` | yes | Runs; framework demo, not a hypothesis test | Interpretation text hard-coded "0.80" while reporting 100%. Now prints the computed score. |
 | `thermodynamic_audit.py` | yes | Runs; framework demo, not a hypothesis test | Unchanged. Weights are hand-picked; there is no falsifiable claim yet. |
+
+### E07a and E09 (added after the run-through)
+
+- `docs/experiment_07_symmetry_identifiability_report.md` — static arm of the
+  symmetry/identifiability work order. Headline: the joint (G1,G2,G4,G6)
+  relational representation on 4-cell words has 548 collision pairs not
+  explained by any joint symmetry (reproducing the E06 count from an
+  independent regeneration); every one of them is a label-isometry pair
+  under G2 and under G4, and a genuine collision under G1 and G6. G2 and G4
+  lose only what their symmetry removes (L_excess = 0); G1 and G6 do not.
+  The E06 and E05 artifacts were not reachable; those two controls are
+  recorded as blocked, not passed.
+- `docs/experiment_09_representation_invariant_quantity.md` — the annealer
+  scale finding written as a measured Q(Ax) ≠ Q(x) case: the energy ranking
+  is invariant under the distance rescale, the Metropolis procedure at fixed
+  T is not.
 
 ### What moves the project forward
 
