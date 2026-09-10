@@ -18,6 +18,7 @@ validate specific physical mechanisms that the architecture is built on.
 | `t2_rosenblatt_seymour.py` | T2: do ring-type homometric collisions factor as B+C / B−C? set-level lemma, spectral polynomial search, Z12 control | Ready (numpy, ~70 s); writes `docs/experiment_07_T2_*` |
 | `t3_decision_anchor/` | T3: D_state vs D_community case family for Simulators/anchor-measurand-crossing; `predict.py` scores the near-disjoint prediction on the lexicon | Instrument only, unrun (no model endpoint; sources not fetchable) |
 | `t4_frame_rotation/` | T4: Levinson rotation task as text, 4 arms, scorer, constructed fixture | Instrument only, unrun (no model endpoint; authoring session not blind) |
+| `substrate_pilot_v0/` | Substrate coordination pilot v0: C1–C4/FLT/BND ledger with every SPEC §2 shall as a gate, FT battery, I-1..I-8 replay vs OIG-20-76 baselines, paper forms, onboarding tools | Ready (stdlib only); not SOMS physics, placed here for push access |
 | `firefly_swarm.py` | Stochastic resonance in coupled oscillators — does intermediate noise beat zero noise? | Ready (numpy/scipy/matplotlib) |
 | `constraint_drift.py` | Semantic drift detection: tracks constraint loss when a term's meaning silently changes over decades | Ready (numpy) |
 | `thermodynamic_audit.py` | Exergy-weighted impact scoring: detects when "profitable" activities are thermodynamically destructive | Ready (no deps) |

@@ -1,0 +1,10 @@
+DELIVERY RECEIPT  (C3; FT-05, FT-11)
+=====================================
+COMMIT ID ______________   UNIT ID(S) ______________________________
+DELIVERED TO (node) ______________   DATE/TIME ______________
+QTY RECEIVED __________ in declared unit __________   CONDITION __________
+SUBSTITUTION?  [ ] no  [ ] yes: from unit ______ to unit ______ factor ______  (FT-07)
+  factor declared on ____/____/____ by ______________
+RECEIVER MARK  [ ] signature  [ ] stamp  [ ] photo of this sheet
+  name ______________   mark ______________________
+No payment, credit or token settles this delivery without this sheet (FT-11).

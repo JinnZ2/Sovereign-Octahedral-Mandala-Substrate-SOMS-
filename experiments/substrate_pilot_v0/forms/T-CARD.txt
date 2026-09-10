@@ -1,0 +1,17 @@
+T-CARD  (one per unit; travels with the unit; physical channel, FT-03)
+=======================================================================
+UNIT ID      ______________   PARENT ID (if repacked) ______________  (FT-04)
+DECLARED UNIT  [ ] kcal  [ ] protein_g  [ ] L_water  [ ] count        (FT-07)
+QTY          ______________   CONDITION  [ ] GOOD [ ] DAMAGED [ ] SUSPECT
+EXPIRY       ____/____/____                                            (FT-08)
+SEAL NO.     ______________
+CUSTODY LOG  (every hand-off; identity never changes)
+  date/time        from -> to                 signature
+  ______________   ____________________       ______________
+  ______________   ____________________       ______________
+STATUS  [ ] AT_ORIGIN [ ] IN_TRANSIT [ ] AT_REST [ ] RECEIVED [ ] LOST
+  If LOST: last known location ______________ at ____/____ __:__   (FT-02)
+  "UNKNOWN" is a status, never a location.
+RECEIPT  receiver name ______________  [ ] signature [ ] stamp [ ] photo   (FT-05)
+  date/time ______________   need id served ______________
+COPY: transcribe or photograph within one operational period (FT-10).

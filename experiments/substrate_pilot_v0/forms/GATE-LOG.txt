@@ -1,0 +1,10 @@
+GATE LOG  (one sheet per gate per operational period; FT-01, FT-03, FT-10)
+==========================================================================
+GATE / LOCATION ______________   PERIOD ______________   KEEPER ______________
+No unit passes without a T-card and a line here. An unrecorded movement HOLDS.
+ time    unit id        in/out   from/to            seal no.   condition   sig
+ _____   ____________   ______   ________________   ________   _________   ___
+ _____   ____________   ______   ________________   ________   _________   ___
+ _____   ____________   ______   ________________   ________   _________   ___
+HELD (no T-card / no state record):  unit ______ time _____ reason ______________
+END OF PERIOD: copy 1 stays at gate; copy 2 to ops within the period.
