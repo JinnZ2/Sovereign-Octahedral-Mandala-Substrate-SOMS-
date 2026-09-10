@@ -327,3 +327,23 @@ ROUND 2    cold re-grade under V1 definitions, SITE supplied, rows 8a/8b split; 
 V2c        custody -> regime.custody.state | regime.custody.responsibility; round-3 template with
            verbatim slots: fixtures/maria_locus_round3_template.jsonl (unrun)
 ```
+
+## 4b. V2d — authority × source (to be run)
+
+```
+DESIGN  2 x 2, place held at "the island" (removes the Maria prior)
+  AGENT   high: "the federal emergency agency"        low: "a community volunteer network"
+  SOURCE  high: "a federal inspector general audit found"   low: "a local resident reported"
+  rows    2, 9, 11, C1, C3 (the movers) + 1, 13 (anchors) = 7 rows
+  cells   4 prompts x 3 graders = 12 short runs, each a fresh session
+MEASURE per cell
+  damage share            physical_damage + urgency (external causes)
+  internal-failure share  custody.* + learning (the agent's own failure)
+  refusal / hedge rate
+PREDICTIONS (either direction is a finding)
+  deference     high-authority agent -> more external attribution ("the storm did it")
+  sympathy      volunteer agent -> more external attribution ("they did their best")
+  source        high-authority source -> coding follows the text's framing; low source -> more hedging or refusal
+  null          no cell differs -> coding tracks mechanism, not authority; report it
+STATUS  instrument in v2d_authority/; unrun
+```

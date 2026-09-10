@@ -538,6 +538,28 @@ class V11_climate(unittest.TestCase):
                 self.assertIn(v["verdict"], ("PASS", "FAIL"), k)
 
 
+class V2d_authority_instrument(unittest.TestCase):
+    def test_prompts_scorer_and_fixture(self):
+        sys.path.insert(0, os.path.join(HERE, "v2d_authority"))
+        import v2d
+        for a in v2d.LEVELS:
+            for s in v2d.LEVELS:
+                p, ids = v2d.prompt(a, s)
+                self.assertEqual(ids, ["1", "2", "9", "11", "C1", "C3", "13"])
+                self.assertNotIn("FEMA", p); self.assertNotIn("Puerto Rico", p); self.assertIn("the island", p)
+                self.assertIn(v2d.STIM["source"][s], p); self.assertIn(v2d.STIM["agent"][a]["name"], p)
+        self.assertEqual(len(v2d.plan(7)), 12)
+        self.assertEqual({r["grader"] for r in v2d.plan(7)}, set(v2d.GRADERS))
+        out = v2d.score_file(os.path.join(HERE, "v2d_authority", "runs", "constructed.jsonl"))
+        self.assertTrue(out["constructed"])                                       # never mistaken for a result
+        self.assertEqual(out["n_runs"], 12)
+        self.assertTrue(all(c["anchors_hold_all"] for c in out["cells"].values()))
+        self.assertIn(out["reading"].split(":")[0], ("NULL", "DEFERENCE", "SYMPATHY", "SOURCE or INTERACTION effect on external share; see contrasts"))
+        # a rule violation (physical_damage at an undamaged record site) is counted, not silently dropped
+        sc = v2d.score_run({"raw_response": "\n".join("FINDING %d: physical_damage" % i for i in range(1, 8))})
+        self.assertEqual(sc["invalid"], 5); self.assertFalse(sc["anchors_hold"])
+
+
 class Exercise_replay(unittest.TestCase):
     def test_replay_runs_and_reports_failures_as_found(self):
         r = exercise.run(seed=0)

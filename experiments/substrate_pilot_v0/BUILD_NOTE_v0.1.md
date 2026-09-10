@@ -202,3 +202,20 @@ shall/target split (now every row); gate-in = delivery; `record_custody` ≠ uni
   is the audit's own sentence naming both. Computes when the stated-cause rows are graded.
 - **Caveat recorded.** An audit reads the record trail; custody.state may dominate because
   that is what an audit can see. The enum has not been run on a non-audit source.
+
+## V2d built (authority x source)
+
+- Seven verbatim rows rewritten with the agent, contractor, port and place held as
+  placeholders; every row names its verbatim source row so the paraphrase can be checked.
+  SITE stays the record fact and does not vary across cells.
+- The scorer computes the three measures per cell, the three contrasts on each, a null
+  reading at a declared threshold of one row in seven, and per-row movement across cells.
+  Anchors are a manipulation check: row 1 must stay internal and row 13 external, or the
+  cell is reported as broken rather than averaged in.
+- A rule violation (physical_damage at an undamaged record site) is counted and kept, as in
+  rounds 2 and 3.
+- Two confounds are declared, not removed: three of the seven sentences describe records a
+  resident would not see, so the low-source frame is strained there and hedging on those
+  rows may be plausibility rather than credibility; and the rewrite is mine.
+- Constructed fixture carries a deference pattern so the reading path is exercised; it is
+  banner-marked and asserted constructed in the selftest.
