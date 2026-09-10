@@ -1,0 +1,47 @@
+{
+ "pair": "dsa-01",
+ "decision_state": "allocation of Indian Housing Block Grant funds among tribes under the federal need formula",
+ "decision_community": "a First Nation's decision, under its own data governance principles (OCAP: ownership, control, access, possession), whether these household data may be collected about its members, who holds them, who may access them, and for whose benefit they are used",
+ "n_measurands": {
+  "dsa-01-state": 8,
+  "dsa-01-community": 8
+ },
+ "shared_ids": [],
+ "jaccard_by_id": 0.0,
+ "max_text_jaccard_state_to_community": {
+  "aian_persons": 0.33,
+  "hh_under_30_ami": 0.23,
+  "hh_30_50_ami": 0.23,
+  "hh_50_80_ami": 0.23,
+  "hh_overcrowded": 0.15,
+  "hh_cost_burden": 0.14,
+  "housing_shortage": 0.14,
+  "formula_share": 0.07
+ },
+ "max_text_jaccard_community_to_state": {
+  "consent_record": 0.07,
+  "custody_holder": 0.0,
+  "access_rule": 0.07,
+  "ownership": 0.0,
+  "benefit_to_nation": 0.0,
+  "use_purpose": 0.07,
+  "member_definition": 0.0,
+  "hh_need_counts": 0.33
+ },
+ "kind_composition": {
+  "dsa-01-state": {
+   "native": 5,
+   "component": 1,
+   "foreign": 2
+  },
+  "dsa-01-community": {
+   "native": 1,
+   "component": 1,
+   "foreign": 6
+  }
+ },
+ "prediction": "near-disjoint measurand sets",
+ "prediction_holds_on_lexicon": true,
+ "caveat": "scored on the hand-built lexicon, which is the prediction itself; a model run under Simulators/anchor-measurand-crossing ARM D with each decision string is the test",
+ "verbatim_sources": false
+}

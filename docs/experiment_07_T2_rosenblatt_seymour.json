@@ -1,0 +1,1460 @@
+{
+ "D8_cap_B3_order": 8,
+ "E07a_548_vs_this_universe": {
+  "both_words_have_4_distinct_states": 0,
+  "by_number_of_distinct_states_in_word": {
+   "1": 28,
+   "2": 364,
+   "3": 156
+  },
+  "joint_genuine_word_pairs": 548,
+  "of_those_ring_homometric_non_isometric": 0,
+  "of_those_same_underlying_set": 0,
+  "of_those_sets_B3_related": 0,
+  "of_those_sets_D8_related": 0
+ },
+ "canonical_0137": [
+  0,
+  1,
+  2,
+  4
+ ],
+ "cube": {
+  "distinct_multisets": 6,
+  "group_order": 48,
+  "label": "cube/B3",
+  "multiset_complete": true,
+  "pairs_non_isometric": 0,
+  "pairs_same_multiset": 611,
+  "pairs_via_isometry": 611,
+  "subsets": 70
+ },
+ "orbit_of_0137_is_in_a_nonisometric_homometric_class": false,
+ "overlay_check": {
+  "binary": {
+   "D8_cap_B3_order": 4,
+   "pairs_in_common_D8_orbit_and_common_B3_orbit": 155,
+   "pairs_related_by_an_element_of_D8_cap_B3": 90
+  },
+  "gray": {
+   "D8_cap_B3_order": 8,
+   "pairs_in_common_D8_orbit_and_common_B3_orbit": 259,
+   "pairs_related_by_an_element_of_D8_cap_B3": 195
+  }
+ },
+ "pairs_isometric_under_both": 259,
+ "ring": {
+  "distinct_multisets": 7,
+  "group_order": 16,
+  "label": "ring/D8",
+  "multiset_complete": false,
+  "pairs_non_isometric": 64,
+  "pairs_same_multiset": 423,
+  "pairs_via_isometry": 359,
+  "subsets": 70
+ },
+ "rosenblatt_seymour": {
+  "forte_Z_relation_0146_0137": [],
+  "mechanics_control": {
+   "all_recovered": true,
+   "bound": 1,
+   "candidates_found": 178,
+   "checked": [
+    {
+     "S": [
+      2,
+      4,
+      5,
+      7
+     ],
+     "T": [
+      1,
+      3,
+      4,
+      6
+     ],
+     "constructed_P": [
+      0,
+      -1,
+      0,
+      1,
+      -1,
+      0,
+      0,
+      0
+     ],
+     "constructed_Q": [
+      0,
+      0,
+      0,
+      -1,
+      -1,
+      -1,
+      -1,
+      0
+     ],
+     "isometric": true,
+     "recovered": [
+      {
+       "P": [
+        1,
+        0,
+        -2,
+        2,
+        -2,
+        0,
+        1,
+        -2
+       ],
+       "Q": [
+        -1,
+        -1,
+        -1,
+        -1,
+        0,
+        1,
+        1,
+        0
+       ],
+       "S": [
+        2,
+        4,
+        5,
+        7
+       ],
+       "T": [
+        1,
+        2,
+        4,
+        7
+       ]
+      }
+     ],
+     "search_recovers": true
+    },
+    {
+     "S": [
+      4,
+      5,
+      6,
+      7
+     ],
+     "T": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "constructed_P": [
+      -1,
+      0,
+      -1,
+      0,
+      0,
+      -1,
+      0,
+      -1
+     ],
+     "constructed_Q": [
+      -1,
+      1,
+      1,
+      0,
+      -1,
+      0,
+      0,
+      -1
+     ],
+     "isometric": true,
+     "recovered": [
+      {
+       "P": [
+        1,
+        -1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        -1
+       ],
+       "Q": [
+        -1,
+        -1,
+        -1,
+        -1,
+        0,
+        1,
+        1,
+        0
+       ],
+       "S": [
+        4,
+        5,
+        6,
+        7
+       ],
+       "T": [
+        1,
+        2,
+        3,
+        4
+       ]
+      }
+     ],
+     "search_recovers": true
+    },
+    {
+     "S": [
+      4,
+      5,
+      6,
+      7
+     ],
+     "T": [
+      0,
+      1,
+      2,
+      7
+     ],
+     "constructed_P": [
+      0,
+      0,
+      -1,
+      0,
+      -1,
+      0,
+      0,
+      0
+     ],
+     "constructed_Q": [
+      0,
+      0,
+      -1,
+      -1,
+      0,
+      0,
+      0,
+      0
+     ],
+     "isometric": true,
+     "recovered": [
+      {
+       "P": [
+        1,
+        -1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        -1
+       ],
+       "Q": [
+        -1,
+        -1,
+        -1,
+        -1,
+        0,
+        1,
+        1,
+        0
+       ],
+       "S": [
+        4,
+        5,
+        6,
+        7
+       ],
+       "T": [
+        1,
+        2,
+        3,
+        4
+       ]
+      }
+     ],
+     "search_recovers": true
+    }
+   ],
+   "k": 4,
+   "n": 8
+  },
+  "non_isometric_ring_pairs": 64,
+  "pairs": [
+   {
+    "A": [
+     0,
+     1,
+     2,
+     5
+    ],
+    "A_prime": [
+     0,
+     1,
+     3,
+     4
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     2,
+     5
+    ],
+    "A_prime": [
+     0,
+     1,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     2,
+     5
+    ],
+    "A_prime": [
+     0,
+     2,
+     3,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     2,
+     5
+    ],
+    "A_prime": [
+     0,
+     4,
+     5,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     2,
+     5
+    ],
+    "A_prime": [
+     1,
+     2,
+     4,
+     5
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     2,
+     5
+    ],
+    "A_prime": [
+     1,
+     2,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     2,
+     5
+    ],
+    "A_prime": [
+     2,
+     3,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     2,
+     5
+    ],
+    "A_prime": [
+     3,
+     4,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     3,
+     4
+    ],
+    "A_prime": [
+     0,
+     1,
+     4,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     3,
+     4
+    ],
+    "A_prime": [
+     0,
+     3,
+     4,
+     5
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     3,
+     4
+    ],
+    "A_prime": [
+     0,
+     3,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     3,
+     4
+    ],
+    "A_prime": [
+     1,
+     2,
+     3,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     3,
+     4
+    ],
+    "A_prime": [
+     1,
+     4,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     3,
+     4
+    ],
+    "A_prime": [
+     2,
+     3,
+     4,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     3,
+     4
+    ],
+    "A_prime": [
+     2,
+     5,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     4,
+     7
+    ],
+    "A_prime": [
+     0,
+     1,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     4,
+     7
+    ],
+    "A_prime": [
+     0,
+     2,
+     3,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     4,
+     7
+    ],
+    "A_prime": [
+     0,
+     4,
+     5,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     4,
+     7
+    ],
+    "A_prime": [
+     1,
+     2,
+     4,
+     5
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     4,
+     7
+    ],
+    "A_prime": [
+     1,
+     2,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     4,
+     7
+    ],
+    "A_prime": [
+     2,
+     3,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     4,
+     7
+    ],
+    "A_prime": [
+     3,
+     4,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     5,
+     6
+    ],
+    "A_prime": [
+     0,
+     3,
+     4,
+     5
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     5,
+     6
+    ],
+    "A_prime": [
+     0,
+     3,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     5,
+     6
+    ],
+    "A_prime": [
+     1,
+     2,
+     3,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     5,
+     6
+    ],
+    "A_prime": [
+     1,
+     4,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     5,
+     6
+    ],
+    "A_prime": [
+     2,
+     3,
+     4,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     1,
+     5,
+     6
+    ],
+    "A_prime": [
+     2,
+     5,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     2,
+     3,
+     7
+    ],
+    "A_prime": [
+     0,
+     3,
+     4,
+     5
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     2,
+     3,
+     7
+    ],
+    "A_prime": [
+     0,
+     3,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     2,
+     3,
+     7
+    ],
+    "A_prime": [
+     1,
+     2,
+     3,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     2,
+     3,
+     7
+    ],
+    "A_prime": [
+     1,
+     4,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     2,
+     3,
+     7
+    ],
+    "A_prime": [
+     2,
+     3,
+     4,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     2,
+     3,
+     7
+    ],
+    "A_prime": [
+     2,
+     5,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     3,
+     4,
+     5
+    ],
+    "A_prime": [
+     0,
+     4,
+     5,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     3,
+     4,
+     5
+    ],
+    "A_prime": [
+     1,
+     2,
+     4,
+     5
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     3,
+     4,
+     5
+    ],
+    "A_prime": [
+     1,
+     2,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     3,
+     4,
+     5
+    ],
+    "A_prime": [
+     2,
+     3,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     3,
+     4,
+     5
+    ],
+    "A_prime": [
+     3,
+     4,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     3,
+     6,
+     7
+    ],
+    "A_prime": [
+     0,
+     4,
+     5,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     3,
+     6,
+     7
+    ],
+    "A_prime": [
+     1,
+     2,
+     4,
+     5
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     3,
+     6,
+     7
+    ],
+    "A_prime": [
+     1,
+     2,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     3,
+     6,
+     7
+    ],
+    "A_prime": [
+     2,
+     3,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     3,
+     6,
+     7
+    ],
+    "A_prime": [
+     3,
+     4,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     4,
+     5,
+     7
+    ],
+    "A_prime": [
+     1,
+     2,
+     3,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     4,
+     5,
+     7
+    ],
+    "A_prime": [
+     1,
+     4,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     4,
+     5,
+     7
+    ],
+    "A_prime": [
+     2,
+     3,
+     4,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     0,
+     4,
+     5,
+     7
+    ],
+    "A_prime": [
+     2,
+     5,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     1,
+     2,
+     3,
+     6
+    ],
+    "A_prime": [
+     1,
+     2,
+     4,
+     5
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     1,
+     2,
+     3,
+     6
+    ],
+    "A_prime": [
+     1,
+     2,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     1,
+     2,
+     3,
+     6
+    ],
+    "A_prime": [
+     2,
+     3,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     1,
+     2,
+     3,
+     6
+    ],
+    "A_prime": [
+     3,
+     4,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     1,
+     2,
+     4,
+     5
+    ],
+    "A_prime": [
+     1,
+     4,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     1,
+     2,
+     4,
+     5
+    ],
+    "A_prime": [
+     2,
+     3,
+     4,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     1,
+     2,
+     4,
+     5
+    ],
+    "A_prime": [
+     2,
+     5,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     1,
+     2,
+     6,
+     7
+    ],
+    "A_prime": [
+     1,
+     4,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     1,
+     2,
+     6,
+     7
+    ],
+    "A_prime": [
+     2,
+     3,
+     4,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     1,
+     2,
+     6,
+     7
+    ],
+    "A_prime": [
+     2,
+     5,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     1,
+     4,
+     5,
+     6
+    ],
+    "A_prime": [
+     2,
+     3,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     1,
+     4,
+     5,
+     6
+    ],
+    "A_prime": [
+     3,
+     4,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     2,
+     3,
+     4,
+     7
+    ],
+    "A_prime": [
+     2,
+     3,
+     5,
+     6
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     2,
+     3,
+     4,
+     7
+    ],
+    "A_prime": [
+     3,
+     4,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     2,
+     3,
+     5,
+     6
+    ],
+    "A_prime": [
+     2,
+     5,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   },
+   {
+    "A": [
+     2,
+     5,
+     6,
+     7
+    ],
+    "A_prime": [
+     3,
+     4,
+     6,
+     7
+    ],
+    "example": null,
+    "factors": 0
+   }
+  ],
+  "positive_control_Z12_forte": {
+   "homometric_in_Z12": true,
+   "non_isometric_in_Z12": true,
+   "pair": [
+    [
+     0,
+     1,
+     4,
+     6
+    ],
+    [
+     0,
+     1,
+     3,
+     7
+    ]
+   ],
+   "search": {
+    "Q_polynomials_searched": 531440,
+    "classes": [
+     {
+      "canonical_A": [
+       0,
+       1,
+       3,
+       7
+      ],
+      "canonical_A_prime": [
+       0,
+       1,
+       4,
+       6
+      ],
+      "representative_pair": [
+       [
+        0,
+        1,
+        4,
+        6
+       ],
+       [
+        0,
+        1,
+        3,
+        7
+       ]
+      ]
+     }
+    ],
+    "coefficient_bound": 1,
+    "examples": [],
+    "free_frequency_report": {
+     "[[0, 1, 3, 7], [0, 1, 4, 6]]": {
+      "S_hat_zero_frequencies": [],
+      "complex_free_frequencies_unhandled": [],
+      "real_free_frequency_handled": false
+     }
+    },
+    "pairs_factoring": 0,
+    "pairs_total": 1,
+    "unfactored": [
+     [
+      [
+       0,
+       1,
+       3,
+       7
+      ],
+      [
+       0,
+       1,
+       4,
+       6
+      ]
+     ]
+    ]
+   }
+  },
+  "rs_reachable_classes_Z8": {
+   "coefficient_bound": 1,
+   "non_isometric_classes_reachable": [],
+   "polynomials": 6560
+  },
+  "set_factorizations_B_plus_C": 0,
+  "set_fraction": 0.0,
+  "set_level_lemma": "With |B| = |C| = 2 and 0 in C = {0, c} (translate), B - C = B \u222a (B - c) = (B + C) - c, so T is always a translate of S. No 4-element homometric pair in any cyclic group is a set-level Rosenblatt\u2013Seymour pair; the 0/64 above is forced, not found.",
+  "spectral_search": {
+   "Q_polynomials_searched": 5764800,
+   "classes": [
+    {
+     "canonical_A": [
+      0,
+      1,
+      2,
+      5
+     ],
+     "canonical_A_prime": [
+      0,
+      1,
+      3,
+      4
+     ],
+     "representative_pair": [
+      [
+       0,
+       1,
+       2,
+       5
+      ],
+      [
+       0,
+       1,
+       3,
+       4
+      ]
+     ]
+    }
+   ],
+   "coefficient_bound": 3,
+   "examples": [],
+   "free_frequency_report": {
+    "[[0, 1, 2, 5], [0, 1, 3, 4]]": {
+     "S_hat_zero_frequencies": [
+      4
+     ],
+     "complex_free_frequencies_unhandled": [],
+     "real_free_frequency_handled": true
+    }
+   },
+   "pairs_factoring": 0,
+   "pairs_total": 1,
+   "unfactored": [
+    [
+     [
+      0,
+      1,
+      2,
+      5
+     ],
+     [
+      0,
+      1,
+      3,
+      4
+     ]
+    ]
+   ]
+  }
+ },
+ "universe": "4-subsets of 8 states, multiset-of-distances readout"
+}

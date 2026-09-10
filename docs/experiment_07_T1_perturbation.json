@@ -1,0 +1,476 @@
+{
+ "cells": {
+  "G1_numeric|level|multiset": {
+   "L_R_bits": 6.168930935841297,
+   "classes": 70,
+   "colliding_pairs": 170296,
+   "genuine_pairs": 107720,
+   "geometry": "G1_numeric",
+   "iso_order": 2,
+   "perturbation": "level",
+   "readout": "multiset"
+  },
+  "G1_numeric|level|sum": {
+   "L_R_bits": 6.168930935841297,
+   "classes": 70,
+   "colliding_pairs": 170296,
+   "genuine_pairs": 107720,
+   "geometry": "G1_numeric",
+   "iso_order": 2,
+   "perturbation": "level",
+   "readout": "sum"
+  },
+  "G1_numeric|level|vector": {
+   "L_R_bits": 2.51358545176255,
+   "classes": 848,
+   "colliding_pairs": 11368,
+   "genuine_pairs": 8648,
+   "geometry": "G1_numeric",
+   "iso_order": 2,
+   "perturbation": "level",
+   "readout": "vector"
+  },
+  "G1_numeric|none|multiset": {
+   "L_R_bits": 6.168930935841297,
+   "classes": 70,
+   "colliding_pairs": 170296,
+   "genuine_pairs": 107720,
+   "geometry": "G1_numeric",
+   "iso_order": 2,
+   "perturbation": "none",
+   "readout": "multiset"
+  },
+  "G1_numeric|none|sum": {
+   "L_R_bits": 7.625639558542285,
+   "classes": 26,
+   "colliding_pairs": 443224,
+   "genuine_pairs": 380648,
+   "geometry": "G1_numeric",
+   "iso_order": 2,
+   "perturbation": "none",
+   "readout": "sum"
+  },
+  "G1_numeric|none|vector": {
+   "L_R_bits": 2.51358545176255,
+   "classes": 848,
+   "colliding_pairs": 11368,
+   "genuine_pairs": 8648,
+   "geometry": "G1_numeric",
+   "iso_order": 2,
+   "perturbation": "none",
+   "readout": "vector"
+  },
+  "G1_numeric|pair|multiset": {
+   "L_R_bits": 3.9209704840787474,
+   "classes": 295,
+   "colliding_pairs": 31640,
+   "genuine_pairs": 476,
+   "geometry": "G1_numeric",
+   "iso_order": 1,
+   "perturbation": "pair",
+   "readout": "multiset"
+  },
+  "G1_numeric|pair|sum": {
+   "L_R_bits": 3.9209704840787474,
+   "classes": 295,
+   "colliding_pairs": 31640,
+   "genuine_pairs": 476,
+   "geometry": "G1_numeric",
+   "iso_order": 1,
+   "perturbation": "pair",
+   "readout": "sum"
+  },
+  "G1_numeric|pair|vector": {
+   "L_R_bits": 0.1015625,
+   "classes": 3893,
+   "colliding_pairs": 224,
+   "genuine_pairs": 140,
+   "geometry": "G1_numeric",
+   "iso_order": 1,
+   "perturbation": "pair",
+   "readout": "vector"
+  },
+  "G2_cyclic|level|multiset": {
+   "L_R_bits": 7.5576892340787465,
+   "classes": 28,
+   "colliding_pairs": 451904,
+   "genuine_pairs": 36864,
+   "geometry": "G2_cyclic",
+   "iso_order": 16,
+   "perturbation": "level",
+   "readout": "multiset"
+  },
+  "G2_cyclic|level|sum": {
+   "L_R_bits": 7.5576892340787465,
+   "classes": 28,
+   "colliding_pairs": 451904,
+   "genuine_pairs": 36864,
+   "geometry": "G2_cyclic",
+   "iso_order": 16,
+   "perturbation": "level",
+   "readout": "sum"
+  },
+  "G2_cyclic|level|vector": {
+   "L_R_bits": 3.984375,
+   "classes": 260,
+   "colliding_pairs": 30464,
+   "genuine_pairs": 0,
+   "geometry": "G2_cyclic",
+   "iso_order": 16,
+   "perturbation": "level",
+   "readout": "vector"
+  },
+  "G2_cyclic|none|multiset": {
+   "L_R_bits": 7.5576892340787465,
+   "classes": 28,
+   "colliding_pairs": 451904,
+   "genuine_pairs": 36864,
+   "geometry": "G2_cyclic",
+   "iso_order": 16,
+   "perturbation": "none",
+   "readout": "multiset"
+  },
+  "G2_cyclic|none|sum": {
+   "L_R_bits": 8.745812262186213,
+   "classes": 14,
+   "colliding_pairs": 1074368,
+   "genuine_pairs": 659328,
+   "geometry": "G2_cyclic",
+   "iso_order": 16,
+   "perturbation": "none",
+   "readout": "sum"
+  },
+  "G2_cyclic|none|vector": {
+   "L_R_bits": 3.984375,
+   "classes": 260,
+   "colliding_pairs": 30464,
+   "genuine_pairs": 0,
+   "geometry": "G2_cyclic",
+   "iso_order": 16,
+   "perturbation": "none",
+   "readout": "vector"
+  },
+  "G2_cyclic|pair|multiset": {
+   "L_R_bits": 3.9209704840787474,
+   "classes": 295,
+   "colliding_pairs": 31640,
+   "genuine_pairs": 476,
+   "geometry": "G2_cyclic",
+   "iso_order": 1,
+   "perturbation": "pair",
+   "readout": "multiset"
+  },
+  "G2_cyclic|pair|sum": {
+   "L_R_bits": 3.9209704840787474,
+   "classes": 295,
+   "colliding_pairs": 31640,
+   "genuine_pairs": 476,
+   "geometry": "G2_cyclic",
+   "iso_order": 1,
+   "perturbation": "pair",
+   "readout": "sum"
+  },
+  "G2_cyclic|pair|vector": {
+   "L_R_bits": 0.1015625,
+   "classes": 3893,
+   "colliding_pairs": 224,
+   "genuine_pairs": 140,
+   "geometry": "G2_cyclic",
+   "iso_order": 1,
+   "perturbation": "pair",
+   "readout": "vector"
+  },
+  "G4_gray|level|multiset": {
+   "L_R_bits": 8.263299049199505,
+   "classes": 19,
+   "colliding_pairs": 758528,
+   "genuine_pairs": 0,
+   "geometry": "G4_gray",
+   "iso_order": 48,
+   "perturbation": "level",
+   "readout": "multiset"
+  },
+  "G4_gray|level|sum": {
+   "L_R_bits": 8.263299049199505,
+   "classes": 19,
+   "colliding_pairs": 758528,
+   "genuine_pairs": 0,
+   "geometry": "G4_gray",
+   "iso_order": 48,
+   "perturbation": "level",
+   "readout": "sum"
+  },
+  "G4_gray|level|vector": {
+   "L_R_bits": 5.2164474616473875,
+   "classes": 120,
+   "colliding_pairs": 78848,
+   "genuine_pairs": 0,
+   "geometry": "G4_gray",
+   "iso_order": 48,
+   "perturbation": "level",
+   "readout": "vector"
+  },
+  "G4_gray|none|multiset": {
+   "L_R_bits": 8.263299049199505,
+   "classes": 19,
+   "colliding_pairs": 758528,
+   "genuine_pairs": 0,
+   "geometry": "G4_gray",
+   "iso_order": 48,
+   "perturbation": "none",
+   "readout": "multiset"
+  },
+  "G4_gray|none|sum": {
+   "L_R_bits": 9.223872364684123,
+   "classes": 10,
+   "colliding_pairs": 1459328,
+   "genuine_pairs": 700800,
+   "geometry": "G4_gray",
+   "iso_order": 48,
+   "perturbation": "none",
+   "readout": "sum"
+  },
+  "G4_gray|none|vector": {
+   "L_R_bits": 5.2164474616473875,
+   "classes": 120,
+   "colliding_pairs": 78848,
+   "genuine_pairs": 0,
+   "geometry": "G4_gray",
+   "iso_order": 48,
+   "perturbation": "none",
+   "readout": "vector"
+  },
+  "G4_gray|pair|multiset": {
+   "L_R_bits": 3.9209704840787474,
+   "classes": 295,
+   "colliding_pairs": 31640,
+   "genuine_pairs": 476,
+   "geometry": "G4_gray",
+   "iso_order": 1,
+   "perturbation": "pair",
+   "readout": "multiset"
+  },
+  "G4_gray|pair|sum": {
+   "L_R_bits": 3.9209704840787474,
+   "classes": 295,
+   "colliding_pairs": 31640,
+   "genuine_pairs": 476,
+   "geometry": "G4_gray",
+   "iso_order": 1,
+   "perturbation": "pair",
+   "readout": "sum"
+  },
+  "G4_gray|pair|vector": {
+   "L_R_bits": 0.1015625,
+   "classes": 3893,
+   "colliding_pairs": 224,
+   "genuine_pairs": 140,
+   "geometry": "G4_gray",
+   "iso_order": 1,
+   "perturbation": "pair",
+   "readout": "vector"
+  },
+  "G6_cayley|level|multiset": {
+   "L_R_bits": 6.497005014150823,
+   "classes": 60,
+   "colliding_pairs": 231528,
+   "genuine_pairs": 181075,
+   "geometry": "G6_cayley",
+   "iso_order": 2,
+   "perturbation": "level",
+   "readout": "multiset"
+  },
+  "G6_cayley|level|sum": {
+   "L_R_bits": 6.497005014150823,
+   "classes": 60,
+   "colliding_pairs": 231528,
+   "genuine_pairs": 181075,
+   "geometry": "G6_cayley",
+   "iso_order": 2,
+   "perturbation": "level",
+   "readout": "sum"
+  },
+  "G6_cayley|level|vector": {
+   "L_R_bits": 3.2581744774299306,
+   "classes": 592,
+   "colliding_pairs": 25140,
+   "genuine_pairs": 20131,
+   "geometry": "G6_cayley",
+   "iso_order": 2,
+   "perturbation": "level",
+   "readout": "vector"
+  },
+  "G6_cayley|none|multiset": {
+   "L_R_bits": 6.497005014150823,
+   "classes": 60,
+   "colliding_pairs": 231528,
+   "genuine_pairs": 181075,
+   "geometry": "G6_cayley",
+   "iso_order": 2,
+   "perturbation": "none",
+   "readout": "multiset"
+  },
+  "G6_cayley|none|sum": {
+   "L_R_bits": 8.338560702032469,
+   "classes": 19,
+   "colliding_pairs": 795888,
+   "genuine_pairs": 745435,
+   "geometry": "G6_cayley",
+   "iso_order": 2,
+   "perturbation": "none",
+   "readout": "sum"
+  },
+  "G6_cayley|none|vector": {
+   "L_R_bits": 3.2581744774299306,
+   "classes": 592,
+   "colliding_pairs": 25140,
+   "genuine_pairs": 20131,
+   "geometry": "G6_cayley",
+   "iso_order": 2,
+   "perturbation": "none",
+   "readout": "vector"
+  },
+  "G6_cayley|pair|multiset": {
+   "L_R_bits": 3.9209704840787474,
+   "classes": 295,
+   "colliding_pairs": 31640,
+   "genuine_pairs": 476,
+   "geometry": "G6_cayley",
+   "iso_order": 1,
+   "perturbation": "pair",
+   "readout": "multiset"
+  },
+  "G6_cayley|pair|sum": {
+   "L_R_bits": 3.9209704840787474,
+   "classes": 295,
+   "colliding_pairs": 31640,
+   "genuine_pairs": 476,
+   "geometry": "G6_cayley",
+   "iso_order": 1,
+   "perturbation": "pair",
+   "readout": "sum"
+  },
+  "G6_cayley|pair|vector": {
+   "L_R_bits": 0.1015625,
+   "classes": 3893,
+   "colliding_pairs": 224,
+   "genuine_pairs": 140,
+   "geometry": "G6_cayley",
+   "iso_order": 1,
+   "perturbation": "pair",
+   "readout": "vector"
+  }
+ },
+ "seed": 0,
+ "verdicts": {
+  "G1_numeric": {
+   "equality_floor_expected_28x(1+n)": 140,
+   "equality_floor_pairs": 140,
+   "genuine_by_readout_and_perturbation": {
+    "multiset": {
+     "level": 107720,
+     "none": 107720,
+     "pair": 476
+    },
+    "sum": {
+     "level": 107720,
+     "none": 380648,
+     "pair": 476
+    },
+    "vector": {
+     "level": 8648,
+     "none": 8648,
+     "pair": 140
+    }
+   },
+   "mechanism_for_E07a_readout": "(b-tie) level degeneracy: 8508 pairs vanish under pair-noise, 0 under level-noise; additive coincidences contribute nothing; 140 remain as the equality floor (d(a,a)=0), which is relational label-blindness, not (a) or (b)",
+   "multiset_additive_contribution": 0,
+   "multiset_tie_contribution": 107244,
+   "sum_additive_contribution": 272928,
+   "vector_additive_contribution": 0,
+   "vector_tie_contribution": 8508
+  },
+  "G2_cyclic": {
+   "equality_floor_expected_28x(1+n)": 140,
+   "equality_floor_pairs": 140,
+   "genuine_by_readout_and_perturbation": {
+    "multiset": {
+     "level": 36864,
+     "none": 36864,
+     "pair": 476
+    },
+    "sum": {
+     "level": 36864,
+     "none": 659328,
+     "pair": 476
+    },
+    "vector": {
+     "level": 0,
+     "none": 0,
+     "pair": 140
+    }
+   },
+   "mechanism_for_E07a_readout": "no genuine collisions under the vector readout; the 140 floor pairs appear under pair-noise only because the perturbation destroys the label isometry that explained them (transitive Iso), not because a new collision was created",
+   "multiset_additive_contribution": 0,
+   "multiset_tie_contribution": 36388,
+   "sum_additive_contribution": 622464,
+   "vector_additive_contribution": 0,
+   "vector_tie_contribution": 0
+  },
+  "G4_gray": {
+   "equality_floor_expected_28x(1+n)": 140,
+   "equality_floor_pairs": 140,
+   "genuine_by_readout_and_perturbation": {
+    "multiset": {
+     "level": 0,
+     "none": 0,
+     "pair": 476
+    },
+    "sum": {
+     "level": 0,
+     "none": 700800,
+     "pair": 476
+    },
+    "vector": {
+     "level": 0,
+     "none": 0,
+     "pair": 140
+    }
+   },
+   "mechanism_for_E07a_readout": "no genuine collisions under the vector readout; the 140 floor pairs appear under pair-noise only because the perturbation destroys the label isometry that explained them (transitive Iso), not because a new collision was created",
+   "multiset_additive_contribution": 0,
+   "multiset_tie_contribution": -476,
+   "sum_additive_contribution": 700800,
+   "vector_additive_contribution": 0,
+   "vector_tie_contribution": 0
+  },
+  "G6_cayley": {
+   "equality_floor_expected_28x(1+n)": 140,
+   "equality_floor_pairs": 140,
+   "genuine_by_readout_and_perturbation": {
+    "multiset": {
+     "level": 181075,
+     "none": 181075,
+     "pair": 476
+    },
+    "sum": {
+     "level": 181075,
+     "none": 745435,
+     "pair": 476
+    },
+    "vector": {
+     "level": 20131,
+     "none": 20131,
+     "pair": 140
+    }
+   },
+   "mechanism_for_E07a_readout": "(b-tie) level degeneracy: 19991 pairs vanish under pair-noise, 0 under level-noise; additive coincidences contribute nothing; 140 remain as the equality floor (d(a,a)=0), which is relational label-blindness, not (a) or (b)",
+   "multiset_additive_contribution": 0,
+   "multiset_tie_contribution": 180599,
+   "sum_additive_contribution": 564360,
+   "vector_additive_contribution": 0,
+   "vector_tie_contribution": 19991
+  }
+ },
+ "word_length": 4
+}
