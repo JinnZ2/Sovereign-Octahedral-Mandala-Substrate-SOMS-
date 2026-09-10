@@ -1,0 +1,1468 @@
+{
+ "G2_is_function_of_G1": true,
+ "G3_angular_check": {
+  "excluded_from_joint": true,
+  "isometry_group_identical_to_G2": true,
+  "partition_identical_to_G2": true
+ },
+ "branch_set": {
+  "branches": [
+   {
+    "access_kind": null,
+    "cost": 1152.0,
+    "discriminator": "enumerate Iso x S_n images of x",
+    "eliminated_by": "E07a exhaustive enumeration: explains 0 joint-genuine pairs",
+    "generator": "y = g(x o sigma) for some g in Iso(d_R), sigma in S_n",
+    "id": "symmetry_equivalence",
+    "instrument_history": [],
+    "origin_pattern": "E07a_joint_collision_set",
+    "predicted_divergence": "pair lies in one combined-group orbit",
+    "predicts_elsewhere": [
+     {
+      "already_in_record": "unknown",
+      "domain": "E07b_dynamic_arm",
+      "pattern": "pair lies in one combined-group orbit",
+      "record_state": "no_measurement_needed"
+     }
+    ],
+    "status": "eliminated",
+    "suppression_cause": "prior"
+   },
+   {
+    "access_kind": null,
+    "cost": 24.0,
+    "discriminator": "enumerate S_n images of x",
+    "eliminated_by": null,
+    "generator": "y = x o sigma, sigma in S_n",
+    "id": "component_reindexing",
+    "instrument_history": [],
+    "origin_pattern": "E07a_joint_collision_set",
+    "predicted_divergence": "pair lies in one S_n orbit",
+    "predicts_elsewhere": [
+     {
+      "already_in_record": "unknown",
+      "domain": "E07b_dynamic_arm",
+      "pattern": "pair lies in one S_n orbit",
+      "record_state": "no_measurement_needed"
+     }
+    ],
+    "status": "survived",
+    "suppression_cause": "prior"
+   },
+   {
+    "access_kind": null,
+    "cost": 48.0,
+    "discriminator": "enumerate Iso images of x",
+    "eliminated_by": "E07a exhaustive enumeration: explains 0 joint-genuine pairs",
+    "generator": "y = g(x), g in Iso(d_R)",
+    "id": "state_label_isometry",
+    "instrument_history": [],
+    "origin_pattern": "E07a_joint_collision_set",
+    "predicted_divergence": "pair lies in one Iso orbit",
+    "predicts_elsewhere": [
+     {
+      "already_in_record": "unknown",
+      "domain": "E07b_dynamic_arm",
+      "pattern": "pair lies in one Iso orbit",
+      "record_state": "no_measurement_needed"
+     }
+    ],
+    "status": "eliminated",
+    "suppression_cause": "prior"
+   },
+   {
+    "access_kind": "instrument_missing",
+    "cost": 1.0,
+    "discriminator": "apply E05 correspondence P R P^T",
+    "eliminated_by": null,
+    "generator": "x and y correspond under the E05 generating correspondence",
+    "id": "correspondence_equivalence",
+    "instrument_history": [],
+    "origin_pattern": "E07a_joint_collision_set",
+    "predicted_divergence": "pair is related by the E05 correspondence matrix",
+    "predicts_elsewhere": [
+     {
+      "already_in_record": "unknown",
+      "domain": "E07b_dynamic_arm",
+      "pattern": "pair is related by the E05 correspondence matrix",
+      "record_state": "missing_piece"
+     }
+    ],
+    "status": "open",
+    "suppression_cause": "access"
+   },
+   {
+    "access_kind": null,
+    "cost": 6.0,
+    "discriminator": "evaluate one more geometry on the pair",
+    "eliminated_by": null,
+    "generator": "M_R(x) = M_R(y) with no declared symmetry relating x and y",
+    "id": "representation_collision",
+    "instrument_history": [],
+    "origin_pattern": "E07a_joint_collision_set",
+    "predicted_divergence": "another geometry separates the pair",
+    "predicts_elsewhere": [
+     {
+      "already_in_record": "unknown",
+      "domain": "E07b_dynamic_arm",
+      "pattern": "another geometry separates the pair",
+      "record_state": "instrument_exists_unrun"
+     }
+    ],
+    "status": "survived",
+    "suppression_cause": "prior"
+   },
+   {
+    "access_kind": null,
+    "cost": 4.0,
+    "discriminator": "compare readout images of x and y",
+    "eliminated_by": null,
+    "generator": "readout Q(x) = Q(y) although M_R(x) != M_R(y) (e.g. state>=4 -> True)",
+    "id": "measurement_collision",
+    "instrument_history": [],
+    "origin_pattern": "E07a_joint_collision_set",
+    "predicted_divergence": "pair separated by M_R but merged by the readout quotient",
+    "predicts_elsewhere": [
+     {
+      "already_in_record": "unknown",
+      "domain": "E07b_dynamic_arm",
+      "pattern": "pair separated by M_R but merged by the readout quotient",
+      "record_state": "instrument_exists_unrun"
+     }
+    ],
+    "status": "survived",
+    "suppression_cause": "prior"
+   }
+  ],
+  "schema_version": "1.0"
+ },
+ "colliding_under_all_equals_joint_colliding": true,
+ "colliding_under_all_geometries": 668,
+ "cross_geometry_recovery": {
+  "G1_numeric": {
+   "G2_cyclic": {
+    "fraction": 0.0,
+    "genuine_pairs_of_i": 8648,
+    "j_genuine_pairs_resolved_by_i": 0,
+    "separated_by_j": 0,
+    "verdict": "redundant"
+   },
+   "G4_gray": {
+    "fraction": 0.48103607770582796,
+    "genuine_pairs_of_i": 8648,
+    "j_genuine_pairs_resolved_by_i": 0,
+    "separated_by_j": 4160,
+    "verdict": "partially_resolving"
+   },
+   "G6_cayley": {
+    "fraction": 0.9343200740055504,
+    "genuine_pairs_of_i": 8648,
+    "j_genuine_pairs_resolved_by_i": 19488,
+    "separated_by_j": 8080,
+    "verdict": "partially_resolving"
+   }
+  },
+  "G2_cyclic": {
+   "G1_numeric": {
+    "genuine_pairs_of_i": 0,
+    "separated_by_j": 0,
+    "verdict": "n/a"
+   },
+   "G4_gray": {
+    "genuine_pairs_of_i": 0,
+    "separated_by_j": 0,
+    "verdict": "n/a"
+   },
+   "G6_cayley": {
+    "genuine_pairs_of_i": 0,
+    "separated_by_j": 0,
+    "verdict": "n/a"
+   }
+  },
+  "G4_gray": {
+   "G1_numeric": {
+    "genuine_pairs_of_i": 0,
+    "separated_by_j": 0,
+    "verdict": "n/a"
+   },
+   "G2_cyclic": {
+    "genuine_pairs_of_i": 0,
+    "separated_by_j": 0,
+    "verdict": "n/a"
+   },
+   "G6_cayley": {
+    "genuine_pairs_of_i": 0,
+    "separated_by_j": 0,
+    "verdict": "n/a"
+   }
+  },
+  "G6_cayley": {
+   "G1_numeric": {
+    "fraction": 0.9680592121603497,
+    "genuine_pairs_of_i": 20131,
+    "j_genuine_pairs_resolved_by_i": 8080,
+    "separated_by_j": 19488,
+    "verdict": "partially_resolving"
+   },
+   "G2_cyclic": {
+    "fraction": 0.9392479260841489,
+    "genuine_pairs_of_i": 20131,
+    "j_genuine_pairs_resolved_by_i": 0,
+    "separated_by_j": 18908,
+    "verdict": "partially_resolving"
+   },
+   "G4_gray": {
+    "fraction": 0.8822214495057374,
+    "genuine_pairs_of_i": 20131,
+    "j_genuine_pairs_resolved_by_i": 0,
+    "separated_by_j": 17760,
+    "verdict": "partially_resolving"
+   }
+  }
+ },
+ "discriminator_economy": {
+  "discriminators": {
+   "add one geometry": {
+    "blocked": false,
+    "cost": 6,
+    "delta_pairs": 5,
+    "delta_pairs_per_cost": 0.8333333333333334
+   },
+   "apply E05 correspondence": {
+    "blocked": true,
+    "cost": null,
+    "delta_pairs": 5,
+    "delta_pairs_per_cost": null
+   },
+   "compare readout images": {
+    "blocked": false,
+    "cost": 4,
+    "delta_pairs": 5,
+    "delta_pairs_per_cost": 1.25
+   },
+   "enumerate Iso": {
+    "blocked": false,
+    "cost": 48,
+    "delta_pairs": 5,
+    "delta_pairs_per_cost": 0.10416666666666667
+   },
+   "enumerate Iso x S_n": {
+    "blocked": false,
+    "cost": 1152,
+    "delta_pairs": 9,
+    "delta_pairs_per_cost": 0.0078125
+   },
+   "enumerate S_n": {
+    "blocked": false,
+    "cost": 24,
+    "delta_pairs": 5,
+    "delta_pairs_per_cost": 0.20833333333333334
+   }
+  },
+  "order_cheapest_first": [
+   "compare readout images",
+   "add one geometry",
+   "enumerate S_n",
+   "enumerate Iso",
+   "enumerate Iso x S_n"
+  ],
+  "order_delta_pairs_per_cost": [
+   "compare readout images",
+   "add one geometry",
+   "enumerate S_n",
+   "enumerate Iso",
+   "enumerate Iso x S_n"
+  ],
+  "orderings_agree": true
+ },
+ "experiment": "E07a symmetry / identifiability / information loss (static arm)",
+ "geometries": {
+  "G1_numeric": {
+   "colliding_pairs_total": 11368,
+   "combined_group_order": 48,
+   "combined_orbits": 170,
+   "component_group_order": 24,
+   "genuine_pairs": 8648,
+   "information_loss_bits": {
+    "H_classes": 9.48641454823745,
+    "H_iso_orbits": 11.0,
+    "L_R": 2.51358545176255,
+    "L_excess": 1.51358545176255,
+    "L_sym": 1.0,
+    "log2_X": 12.0
+   },
+   "iso_orbits": 2048,
+   "label_isometry_group_order": 2,
+   "max_class_size": 14,
+   "n_classes": 848,
+   "name": "G1_numeric",
+   "nontrivial_classes": 848,
+   "orbit_size_distribution_combined": {
+    "2": 8,
+    "6": 24,
+    "8": 224,
+    "12": 144,
+    "24": 2160,
+    "48": 1536
+   },
+   "pairs_by_lattice": {
+    "combined_only": 336,
+    "comp_only": 336,
+    "either": 84,
+    "genuine": 8648,
+    "iso_only": 1964
+   },
+   "pairs_by_precedence": {
+    "combined_symmetry": 336,
+    "component_permutation": 420,
+    "genuine_collision": 8648,
+    "state_label_isometry": 1964
+   },
+   "seconds": 0.21079683303833008,
+   "singleton_classes": 0,
+   "stabilizer_size_distribution_combined": {
+    "1": 1536,
+    "2": 2160,
+    "4": 144,
+    "6": 224,
+    "8": 24,
+    "24": 8
+   },
+   "state_space_size": 4096,
+   "word_length": 4
+  },
+  "G2_cyclic": {
+   "colliding_pairs_total": 30464,
+   "combined_group_order": 384,
+   "combined_orbits": 29,
+   "component_group_order": 24,
+   "genuine_pairs": 0,
+   "information_loss_bits": {
+    "H_classes": 8.015625,
+    "H_iso_orbits": 8.015625,
+    "L_R": 3.984375,
+    "L_excess": 0.0,
+    "L_sym": 3.984375,
+    "log2_X": 12.0
+   },
+   "iso_orbits": 260,
+   "label_isometry_group_order": 16,
+   "max_class_size": 16,
+   "n_classes": 260,
+   "name": "G2_cyclic",
+   "nontrivial_classes": 260,
+   "orbit_size_distribution_combined": {
+    "8": 8,
+    "24": 24,
+    "32": 32,
+    "48": 192,
+    "64": 192,
+    "96": 384,
+    "192": 2496,
+    "384": 768
+   },
+   "pairs_by_lattice": {
+    "either": 924,
+    "iso_only": 29540
+   },
+   "pairs_by_precedence": {
+    "component_permutation": 924,
+    "state_label_isometry": 29540
+   },
+   "seconds": 0.558626651763916,
+   "singleton_classes": 0,
+   "stabilizer_size_distribution_combined": {
+    "1": 768,
+    "2": 2496,
+    "4": 384,
+    "6": 192,
+    "8": 192,
+    "12": 32,
+    "16": 24,
+    "48": 8
+   },
+   "state_space_size": 4096,
+   "word_length": 4
+  },
+  "G3_angular": {
+   "colliding_pairs_total": 30464,
+   "combined_group_order": 384,
+   "combined_orbits": 29,
+   "component_group_order": 24,
+   "genuine_pairs": 0,
+   "information_loss_bits": {
+    "H_classes": 8.015625,
+    "H_iso_orbits": 8.015625,
+    "L_R": 3.984375,
+    "L_excess": 0.0,
+    "L_sym": 3.984375,
+    "log2_X": 12.0
+   },
+   "iso_orbits": 260,
+   "label_isometry_group_order": 16,
+   "max_class_size": 16,
+   "n_classes": 260,
+   "name": "G3_angular",
+   "nontrivial_classes": 260,
+   "orbit_size_distribution_combined": {
+    "8": 8,
+    "24": 24,
+    "32": 32,
+    "48": 192,
+    "64": 192,
+    "96": 384,
+    "192": 2496,
+    "384": 768
+   },
+   "pairs_by_lattice": {
+    "either": 924,
+    "iso_only": 29540
+   },
+   "pairs_by_precedence": {
+    "component_permutation": 924,
+    "state_label_isometry": 29540
+   },
+   "seconds": 0.4720325469970703,
+   "singleton_classes": 0,
+   "stabilizer_size_distribution_combined": {
+    "1": 768,
+    "2": 2496,
+    "4": 384,
+    "6": 192,
+    "8": 192,
+    "12": 32,
+    "16": 24,
+    "48": 8
+   },
+   "state_space_size": 4096,
+   "word_length": 4
+  },
+  "G4_gray": {
+   "colliding_pairs_total": 78848,
+   "combined_group_order": 1152,
+   "combined_orbits": 19,
+   "component_group_order": 24,
+   "genuine_pairs": 0,
+   "information_loss_bits": {
+    "H_classes": 6.7835525383526125,
+    "H_iso_orbits": 6.7835525383526125,
+    "L_R": 5.2164474616473875,
+    "L_excess": 0.0,
+    "L_sym": 5.2164474616473875,
+    "log2_X": 12.0
+   },
+   "iso_orbits": 120,
+   "label_isometry_group_order": 48,
+   "max_class_size": 48,
+   "n_classes": 120,
+   "name": "G4_gray",
+   "nontrivial_classes": 120,
+   "orbit_size_distribution_combined": {
+    "8": 8,
+    "24": 24,
+    "32": 32,
+    "48": 48,
+    "72": 144,
+    "96": 192,
+    "144": 288,
+    "192": 192,
+    "288": 1440,
+    "576": 1728
+   },
+   "pairs_by_lattice": {
+    "either": 2700,
+    "iso_only": 76148
+   },
+   "pairs_by_precedence": {
+    "component_permutation": 2700,
+    "state_label_isometry": 76148
+   },
+   "seconds": 1.5294835567474365,
+   "singleton_classes": 0,
+   "stabilizer_size_distribution_combined": {
+    "2": 1728,
+    "4": 1440,
+    "6": 192,
+    "8": 288,
+    "12": 192,
+    "16": 144,
+    "24": 48,
+    "36": 32,
+    "48": 24,
+    "144": 8
+   },
+   "state_space_size": 4096,
+   "word_length": 4
+  },
+  "G6_cayley": {
+   "colliding_pairs_total": 25140,
+   "combined_group_order": 48,
+   "combined_orbits": 239,
+   "component_group_order": 24,
+   "genuine_pairs": 20131,
+   "information_loss_bits": {
+    "H_classes": 8.74182552257007,
+    "H_iso_orbits": 11.31640625,
+    "L_R": 3.2581744774299306,
+    "L_excess": 2.5745807274299306,
+    "L_sym": 0.68359375,
+    "log2_X": 12.0
+   },
+   "iso_orbits": 2696,
+   "label_isometry_group_order": 2,
+   "max_class_size": 48,
+   "n_classes": 592,
+   "name": "G6_cayley",
+   "nontrivial_classes": 568,
+   "orbit_size_distribution_combined": {
+    "1": 6,
+    "2": 2,
+    "4": 120,
+    "6": 96,
+    "8": 104,
+    "12": 864,
+    "24": 1944,
+    "48": 960
+   },
+   "pairs_by_lattice": {
+    "combined_only": 1572,
+    "comp_only": 2037,
+    "either": 219,
+    "genuine": 20131,
+    "iso_only": 1181
+   },
+   "pairs_by_precedence": {
+    "combined_symmetry": 1572,
+    "component_permutation": 2256,
+    "genuine_collision": 20131,
+    "state_label_isometry": 1181
+   },
+   "seconds": 0.25679612159729004,
+   "singleton_classes": 24,
+   "stabilizer_size_distribution_combined": {
+    "1": 960,
+    "2": 1944,
+    "4": 864,
+    "6": 104,
+    "8": 96,
+    "12": 120,
+    "24": 2,
+    "48": 6
+   },
+   "state_space_size": 4096,
+   "word_length": 4
+  },
+  "joint": {
+   "colliding_pairs_total": 668,
+   "combined_group_order": 24,
+   "combined_orbits": 330,
+   "component_group_order": 24,
+   "genuine_pairs": 548,
+   "information_loss_bits": {
+    "H_classes": 11.76925369871568,
+    "H_iso_orbits": 12.0,
+    "L_R": 0.23074630128432005,
+    "L_excess": 0.23074630128432005,
+    "L_sym": 0.0,
+    "log2_X": 12.0
+   },
+   "iso_orbits": 4096,
+   "label_isometry_group_order": 1,
+   "max_class_size": 8,
+   "n_classes": 3706,
+   "name": "joint",
+   "nontrivial_classes": 250,
+   "orbit_size_distribution_combined": {
+    "1": 8,
+    "4": 224,
+    "6": 168,
+    "12": 2016,
+    "24": 1680
+   },
+   "pairs_by_lattice": {
+    "comp_only": 120,
+    "genuine": 548
+   },
+   "pairs_by_precedence": {
+    "component_permutation": 120,
+    "genuine_collision": 548
+   },
+   "seconds": 0.1285090446472168,
+   "singleton_classes": 3456,
+   "stabilizer_size_distribution_combined": {
+    "1": 1680,
+    "2": 2016,
+    "4": 168,
+    "6": 224,
+    "24": 8
+   },
+   "state_space_size": 4096,
+   "word_length": 4
+  }
+ },
+ "joint_genuine_by_single_geometry_explanation": {
+  "G1_numeric=genuine+G2_cyclic=sym+G4_gray=sym+G6_cayley=genuine": 463,
+  "G1_numeric=genuine+G2_cyclic=sym+G4_gray=sym+G6_cayley=sym": 5,
+  "G1_numeric=sym+G2_cyclic=sym+G4_gray=sym+G6_cayley=genuine": 80
+ },
+ "measurement_readout": {
+  "fraction_of_all_pairs_merged": 0.06227106227106227,
+  "joint_M_classes": 3706,
+  "of_which_joint_M_separates": 522010,
+  "pairs_merged_by_readout": 522240,
+  "readout": "state >= 4 -> True (SAT decoding used in benchmark_sat.py)",
+  "readout_classes": 16
+ },
+ "more_data_control": {
+  "same_geometry_more_samples": {
+   "G1_numeric": {
+    "64": {
+     "H_exhaustive": 9.48641454823745,
+     "H_plugin": 5.800704882778696,
+     "classes_exhaustive": 848,
+     "classes_observed": 58
+    },
+    "256": {
+     "H_exhaustive": 9.48641454823745,
+     "H_plugin": 7.670841162084022,
+     "classes_exhaustive": 848,
+     "classes_observed": 215
+    },
+    "1024": {
+     "H_exhaustive": 9.48641454823745,
+     "H_plugin": 8.804952093076622,
+     "classes_exhaustive": 848,
+     "classes_observed": 525
+    },
+    "4096": {
+     "H_exhaustive": 9.48641454823745,
+     "H_plugin": 9.308029609968205,
+     "classes_exhaustive": 848,
+     "classes_observed": 798
+    },
+    "16384": {
+     "H_exhaustive": 9.48641454823745,
+     "H_plugin": 9.433242739023548,
+     "classes_exhaustive": 848,
+     "classes_observed": 848
+    },
+    "65536": {
+     "H_exhaustive": 9.48641454823745,
+     "H_plugin": 9.473337474069293,
+     "classes_exhaustive": 848,
+     "classes_observed": 848
+    }
+   },
+   "G4_gray": {
+    "64": {
+     "H_exhaustive": 6.7835525383526125,
+     "H_plugin": 5.46875,
+     "classes_exhaustive": 120,
+     "classes_observed": 49
+    },
+    "256": {
+     "H_exhaustive": 6.7835525383526125,
+     "H_plugin": 6.4077558125951875,
+     "classes_exhaustive": 120,
+     "classes_observed": 99
+    },
+    "1024": {
+     "H_exhaustive": 6.7835525383526125,
+     "H_plugin": 6.723931095994472,
+     "classes_exhaustive": 120,
+     "classes_observed": 120
+    },
+    "4096": {
+     "H_exhaustive": 6.7835525383526125,
+     "H_plugin": 6.76234624006427,
+     "classes_exhaustive": 120,
+     "classes_observed": 120
+    },
+    "16384": {
+     "H_exhaustive": 6.7835525383526125,
+     "H_plugin": 6.7822405177266365,
+     "classes_exhaustive": 120,
+     "classes_observed": 120
+    },
+    "65536": {
+     "H_exhaustive": 6.7835525383526125,
+     "H_plugin": 6.783495571903337,
+     "classes_exhaustive": 120,
+     "classes_observed": 120
+    }
+   }
+  },
+  "same_samples_plus_geometry": {
+   "G1_numeric+G2_cyclic": {
+    "N": 1024,
+    "classes_G1_only": 546,
+    "classes_joint": 546,
+    "gain": 0
+   },
+   "G1_numeric+G4_gray": {
+    "N": 1024,
+    "classes_G1_only": 546,
+    "classes_joint": 664,
+    "gain": 118
+   },
+   "G1_numeric+G6_cayley": {
+    "N": 1024,
+    "classes_G1_only": 546,
+    "classes_joint": 871,
+    "gain": 325
+   }
+  }
+ },
+ "negative_controls": {
+  "1_global_cyclic_shift": {
+   "G1_numeric": {
+    "combined": false,
+    "component_permutation": false,
+    "label_isometry": false,
+    "same_class": false
+   },
+   "G2_cyclic": {
+    "combined": true,
+    "component_permutation": false,
+    "label_isometry": true,
+    "same_class": true
+   },
+   "expected": "label_isometry under G2 (shift is a rotation of the 8-cycle); distinguished under G1 (|a-b| not shift-invariant across the wrap)",
+   "pass": true
+  },
+  "2_pure_component_permutation": {
+   "expected": "detected as component_permutation under every geometry; same_class only if the permutation is an automorphism of M_R(x)",
+   "pass": true,
+   "relations": {
+    "G1_numeric": {
+     "combined": true,
+     "component_permutation": true,
+     "label_isometry": false,
+     "same_class": false
+    },
+    "G2_cyclic": {
+     "combined": true,
+     "component_permutation": true,
+     "label_isometry": false,
+     "same_class": false
+    },
+    "G4_gray": {
+     "combined": true,
+     "component_permutation": true,
+     "label_isometry": false,
+     "same_class": false
+    },
+    "G6_cayley": {
+     "combined": true,
+     "component_permutation": true,
+     "label_isometry": false,
+     "same_class": false
+    }
+   }
+  },
+  "3_pure_label_isometry_G4": {
+   "G4_gray": {
+    "combined": true,
+    "component_permutation": false,
+    "label_isometry": true,
+    "same_class": true
+   },
+   "expected": "same_class and label_isometry under G4",
+   "pass": true
+  },
+  "4_E05_known_correspondence": {
+   "expected": "reproduce the E05 generating correspondence",
+   "pass": null,
+   "reason": "artifact not reachable from this repository (not in SOMS, method-layer, or Simulators); regenerated set used instead",
+   "status": "blocked"
+  },
+  "5_E06_known_genuine_collision": {
+   "expected": "reproduce the E06 joint-geometry collision set",
+   "pass": null,
+   "reason": "artifact not reachable from this repository (not in SOMS, method-layer, or Simulators); regenerated set used instead",
+   "status": "blocked"
+  },
+  "6_asymmetric_vector": {
+   "candidate_config": [
+    0,
+    1,
+    3,
+    7
+   ],
+   "candidate_stabilizers": {
+    "G1_numeric": 1,
+    "G2_cyclic": 1,
+    "G4_gray": 6,
+    "G6_cayley": 2,
+    "joint": 1
+   },
+   "expected": "min stabilizer 1 under G1, G2, G6 and joint; min stabilizer 2 under G4 (no regular orbit of the cube group on 4-subsets at n=4)",
+   "min_stabilizer_by_geometry": {
+    "G1_numeric": {
+     "min_stabilizer": 1,
+     "words_attaining": 1536
+    },
+    "G2_cyclic": {
+     "min_stabilizer": 1,
+     "words_attaining": 768
+    },
+    "G4_gray": {
+     "min_stabilizer": 2,
+     "words_attaining": 1728
+    },
+    "G6_cayley": {
+     "min_stabilizer": 1,
+     "words_attaining": 960
+    },
+    "joint": {
+     "min_stabilizer": 1,
+     "words_attaining": 1680
+    }
+   },
+   "pass": true
+  },
+  "7_identical_state_duplicated": {
+   "expected": "same_class, distance 0",
+   "pass": true,
+   "relations": {
+    "G1_numeric": {
+     "combined": true,
+     "component_permutation": true,
+     "label_isometry": true,
+     "same_class": true
+    },
+    "G2_cyclic": {
+     "combined": true,
+     "component_permutation": true,
+     "label_isometry": true,
+     "same_class": true
+    },
+    "G4_gray": {
+     "combined": true,
+     "component_permutation": true,
+     "label_isometry": true,
+     "same_class": true
+    },
+    "G6_cayley": {
+     "combined": true,
+     "component_permutation": true,
+     "label_isometry": true,
+     "same_class": true
+    }
+   }
+  }
+ },
+ "results_sha256_excluding_timings": "c96d90f7ac6f5d7358d64a6ec3e05a11b57fd4b3d915c3b93c49515e0295870e",
+ "scaling_with_word_length": {
+  "2": {
+   "G1_numeric": {
+    "L_R": 3.1726808573540763,
+    "n_classes": 8
+   },
+   "G2_cyclic": {
+    "L_R": 3.75,
+    "n_classes": 5
+   },
+   "G4_gray": {
+    "L_R": 4.1887218755408675,
+    "n_classes": 4
+   },
+   "G6_cayley": {
+    "L_R": 3.6542405302983596,
+    "n_classes": 6
+   },
+   "joint": {
+    "L_R": 1.7346804688852169,
+    "n_classes": 22
+   }
+  },
+  "3": {
+   "G1_numeric": {
+    "L_R": 2.8274342976232605,
+    "n_classes": 85
+   },
+   "G2_cyclic": {
+    "L_R": 3.9375,
+    "n_classes": 34
+   },
+   "G4_gray": {
+    "L_R": 4.8609023444260835,
+    "n_classes": 20
+   },
+   "G6_cayley": {
+    "L_R": 3.5591291414483717,
+    "n_classes": 57
+   },
+   "joint": {
+    "L_R": 0.650505175831956,
+    "n_classes": 379
+   }
+  },
+  "4": {
+   "G1_numeric": {
+    "L_R": 2.51358545176255,
+    "n_classes": 848
+   },
+   "G2_cyclic": {
+    "L_R": 3.984375,
+    "n_classes": 260
+   },
+   "G4_gray": {
+    "L_R": 5.2164474616473875,
+    "n_classes": 120
+   },
+   "G6_cayley": {
+    "L_R": 3.2581744774299306,
+    "n_classes": 592
+   },
+   "joint": {
+    "L_R": 0.23074630128432005,
+    "n_classes": 3706
+   }
+  }
+ },
+ "seed": 0,
+ "symmetry_breaking": {
+  "asymmetric_control": {
+   "G1_numeric": {
+    "ambiguity_reduced": false,
+    "class_size": 2,
+    "class_size_after": 4,
+    "orbit": 48,
+    "orbit_after": 24,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     1,
+     1,
+     3,
+     7
+    ],
+    "stabilizer": 1,
+    "stabilizer_after": 2
+   },
+   "G2_cyclic": {
+    "ambiguity_reduced": false,
+    "class_size": 16,
+    "class_size_after": 16,
+    "orbit": 384,
+    "orbit_after": 96,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     1,
+     1,
+     3,
+     7
+    ],
+    "stabilizer": 1,
+    "stabilizer_after": 4
+   },
+   "G4_gray": {
+    "ambiguity_reduced": false,
+    "class_size": 48,
+    "class_size_after": 48,
+    "orbit": 192,
+    "orbit_after": 288,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     1,
+     1,
+     3,
+     7
+    ],
+    "stabilizer": 6,
+    "stabilizer_after": 4
+   },
+   "G6_cayley": {
+    "ambiguity_reduced": false,
+    "class_size": 3,
+    "class_size_after": 10,
+    "orbit": 24,
+    "orbit_after": 24,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     2,
+     1,
+     3,
+     7
+    ],
+    "stabilizer": 2,
+    "stabilizer_after": 2
+   },
+   "config": [
+    0,
+    1,
+    3,
+    7
+   ],
+   "joint": {
+    "ambiguity_reduced": false,
+    "class_size": 1,
+    "class_size_after": 1,
+    "orbit": 24,
+    "orbit_after": 12,
+    "perturbation_magnitude": 6.0,
+    "perturbed_config": [
+     1,
+     1,
+     3,
+     7
+    ],
+    "stabilizer": 1,
+    "stabilizer_after": 2
+   }
+  },
+  "combined": {
+   "G1_numeric": {
+    "ambiguity_reduced": false,
+    "class_size": 8,
+    "class_size_after": 8,
+    "orbit": 12,
+    "orbit_after": 24,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     1,
+     4,
+     4,
+     0
+    ],
+    "stabilizer": 4,
+    "stabilizer_after": 2
+   },
+   "G2_cyclic": {
+    "ambiguity_reduced": false,
+    "class_size": 8,
+    "class_size_after": 16,
+    "orbit": 24,
+    "orbit_after": 192,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     1,
+     4,
+     4,
+     0
+    ],
+    "stabilizer": 16,
+    "stabilizer_after": 2
+   },
+   "G4_gray": {
+    "ambiguity_reduced": false,
+    "class_size": 24,
+    "class_size_after": 24,
+    "orbit": 72,
+    "orbit_after": 288,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     1,
+     4,
+     4,
+     0
+    ],
+    "stabilizer": 16,
+    "stabilizer_after": 4
+   },
+   "G6_cayley": {
+    "ambiguity_reduced": true,
+    "class_size": 16,
+    "class_size_after": 6,
+    "orbit": 12,
+    "orbit_after": 24,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     2,
+     4,
+     4,
+     0
+    ],
+    "stabilizer": 4,
+    "stabilizer_after": 2
+   },
+   "config": [
+    0,
+    4,
+    4,
+    0
+   ],
+   "joint": {
+    "ambiguity_reduced": true,
+    "class_size": 2,
+    "class_size_after": 1,
+    "orbit": 6,
+    "orbit_after": 12,
+    "perturbation_magnitude": 6.0,
+    "perturbed_config": [
+     1,
+     4,
+     4,
+     0
+    ],
+    "stabilizer": 4,
+    "stabilizer_after": 2
+   }
+  },
+  "component_symmetric": {
+   "G1_numeric": {
+    "ambiguity_reduced": true,
+    "class_size": 14,
+    "class_size_after": 12,
+    "orbit": 12,
+    "orbit_after": 24,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     0,
+     2,
+     2,
+     1
+    ],
+    "stabilizer": 4,
+    "stabilizer_after": 2
+   },
+   "G2_cyclic": {
+    "ambiguity_reduced": false,
+    "class_size": 16,
+    "class_size_after": 16,
+    "orbit": 48,
+    "orbit_after": 192,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     0,
+     2,
+     2,
+     1
+    ],
+    "stabilizer": 8,
+    "stabilizer_after": 2
+   },
+   "G4_gray": {
+    "ambiguity_reduced": false,
+    "class_size": 24,
+    "class_size_after": 48,
+    "orbit": 72,
+    "orbit_after": 576,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     0,
+     2,
+     2,
+     1
+    ],
+    "stabilizer": 16,
+    "stabilizer_after": 2
+   },
+   "G6_cayley": {
+    "ambiguity_reduced": false,
+    "class_size": 18,
+    "class_size_after": 18,
+    "orbit": 6,
+    "orbit_after": 4,
+    "perturbation_magnitude": 2.0,
+    "perturbed_config": [
+     2,
+     2,
+     2,
+     1
+    ],
+    "stabilizer": 8,
+    "stabilizer_after": 12
+   },
+   "config": [
+    1,
+    2,
+    2,
+    1
+   ],
+   "joint": {
+    "ambiguity_reduced": false,
+    "class_size": 6,
+    "class_size_after": 6,
+    "orbit": 6,
+    "orbit_after": 4,
+    "perturbation_magnitude": 5.0,
+    "perturbed_config": [
+     2,
+     2,
+     2,
+     1
+    ],
+    "stabilizer": 4,
+    "stabilizer_after": 6
+   }
+  },
+  "cyclic": {
+   "G1_numeric": {
+    "ambiguity_reduced": false,
+    "class_size": 4,
+    "class_size_after": 6,
+    "orbit": 48,
+    "orbit_after": 48,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     1,
+     2,
+     4,
+     6
+    ],
+    "stabilizer": 1,
+    "stabilizer_after": 1
+   },
+   "G2_cyclic": {
+    "ambiguity_reduced": false,
+    "class_size": 16,
+    "class_size_after": 16,
+    "orbit": 48,
+    "orbit_after": 384,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     1,
+     2,
+     4,
+     6
+    ],
+    "stabilizer": 8,
+    "stabilizer_after": 1
+   },
+   "G4_gray": {
+    "ambiguity_reduced": false,
+    "class_size": 48,
+    "class_size_after": 48,
+    "orbit": 48,
+    "orbit_after": 576,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     1,
+     2,
+     4,
+     6
+    ],
+    "stabilizer": 24,
+    "stabilizer_after": 2
+   },
+   "G6_cayley": {
+    "ambiguity_reduced": false,
+    "class_size": 6,
+    "class_size_after": 18,
+    "orbit": 48,
+    "orbit_after": 24,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     2,
+     2,
+     4,
+     6
+    ],
+    "stabilizer": 1,
+    "stabilizer_after": 2
+   },
+   "config": [
+    0,
+    2,
+    4,
+    6
+   ],
+   "joint": {
+    "ambiguity_reduced": false,
+    "class_size": 1,
+    "class_size_after": 1,
+    "orbit": 24,
+    "orbit_after": 24,
+    "perturbation_magnitude": 6.0,
+    "perturbed_config": [
+     1,
+     2,
+     4,
+     6
+    ],
+    "stabilizer": 1,
+    "stabilizer_after": 1
+   }
+  },
+  "half_cycle": {
+   "G1_numeric": {
+    "ambiguity_reduced": false,
+    "class_size": 8,
+    "class_size_after": 8,
+    "orbit": 12,
+    "orbit_after": 24,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     1,
+     4,
+     0,
+     4
+    ],
+    "stabilizer": 4,
+    "stabilizer_after": 2
+   },
+   "G2_cyclic": {
+    "ambiguity_reduced": false,
+    "class_size": 8,
+    "class_size_after": 16,
+    "orbit": 24,
+    "orbit_after": 192,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     1,
+     4,
+     0,
+     4
+    ],
+    "stabilizer": 16,
+    "stabilizer_after": 2
+   },
+   "G4_gray": {
+    "ambiguity_reduced": false,
+    "class_size": 24,
+    "class_size_after": 24,
+    "orbit": 72,
+    "orbit_after": 288,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     1,
+     4,
+     0,
+     4
+    ],
+    "stabilizer": 16,
+    "stabilizer_after": 4
+   },
+   "G6_cayley": {
+    "ambiguity_reduced": true,
+    "class_size": 16,
+    "class_size_after": 6,
+    "orbit": 12,
+    "orbit_after": 24,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     2,
+     4,
+     0,
+     4
+    ],
+    "stabilizer": 4,
+    "stabilizer_after": 2
+   },
+   "config": [
+    0,
+    4,
+    0,
+    4
+   ],
+   "joint": {
+    "ambiguity_reduced": true,
+    "class_size": 2,
+    "class_size_after": 1,
+    "orbit": 6,
+    "orbit_after": 12,
+    "perturbation_magnitude": 6.0,
+    "perturbed_config": [
+     1,
+     4,
+     0,
+     4
+    ],
+    "stabilizer": 4,
+    "stabilizer_after": 2
+   }
+  },
+  "repeated_state": {
+   "G1_numeric": {
+    "ambiguity_reduced": false,
+    "class_size": 8,
+    "class_size_after": 14,
+    "orbit": 2,
+    "orbit_after": 8,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     2,
+     3,
+     3,
+     3
+    ],
+    "stabilizer": 24,
+    "stabilizer_after": 6
+   },
+   "G2_cyclic": {
+    "ambiguity_reduced": false,
+    "class_size": 8,
+    "class_size_after": 16,
+    "orbit": 8,
+    "orbit_after": 64,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     2,
+     3,
+     3,
+     3
+    ],
+    "stabilizer": 48,
+    "stabilizer_after": 6
+   },
+   "G4_gray": {
+    "ambiguity_reduced": false,
+    "class_size": 8,
+    "class_size_after": 24,
+    "orbit": 8,
+    "orbit_after": 96,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     0,
+     3,
+     3,
+     3
+    ],
+    "stabilizer": 144,
+    "stabilizer_after": 12
+   },
+   "G6_cayley": {
+    "ambiguity_reduced": true,
+    "class_size": 8,
+    "class_size_after": 6,
+    "orbit": 1,
+    "orbit_after": 4,
+    "perturbation_magnitude": 1.0,
+    "perturbed_config": [
+     0,
+     3,
+     3,
+     3
+    ],
+    "stabilizer": 48,
+    "stabilizer_after": 12
+   },
+   "config": [
+    3,
+    3,
+    3,
+    3
+   ],
+   "joint": {
+    "ambiguity_reduced": true,
+    "class_size": 8,
+    "class_size_after": 6,
+    "orbit": 1,
+    "orbit_after": 4,
+    "perturbation_magnitude": 5.0,
+    "perturbed_config": [
+     2,
+     3,
+     3,
+     3
+    ],
+    "stabilizer": 24,
+    "stabilizer_after": 6
+   }
+  }
+ },
+ "temporal_extension": {
+  "reason": "trajectory generator requires the annealer; annealer scale fix pending (experiments/README.md Results)",
+  "status": "deferred_to_E07b"
+ },
+ "timings_seconds": {
+  "G1_numeric": 0.21079683303833008,
+  "G2_cyclic": 0.558626651763916,
+  "G3_angular": 0.4720325469970703,
+  "G4_gray": 1.5294835567474365,
+  "G6_cayley": 0.25679612159729004,
+  "joint": 0.1285090446472168
+ },
+ "word_length": 4
+}
