@@ -5,6 +5,7 @@ DECLARED UNIT  [ ] kcal  [ ] protein_g  [ ] L_water  [ ] count        (FT-07)
 CLASS  [ ] R0 drop-and-hook [ ] R1 signed tally [ ] R2 constant custody [ ] R3 dual/escort
 AXIS   [ ] urgency  [ ] custody      ("critical" alone is not a class)        (V3)
 MAX SILENCE (R2/R3) ______ h   last check-in ____/____ __:__ by ______________   (FT-17)
+CLIMATE  [ ] stable  [ ] partial  [ ] variable   (blank = stable, and flagged)     (V11)
 QTY          ______________   CONDITION  [ ] GOOD [ ] DAMAGED [ ] SUSPECT
 EXPIRY       ____/____/____                                            (FT-08)
 SEAL NO.     ______________

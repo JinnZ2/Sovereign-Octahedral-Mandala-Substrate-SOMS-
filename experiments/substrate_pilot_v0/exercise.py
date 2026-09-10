@@ -23,15 +23,20 @@ sys.path.insert(0, HERE)
 from ledger import Ledger, Refused, OP_PERIOD_H  # noqa: E402
 
 # Operator-set targets, declared before the run. Change them here, not after.
+# V11: every target carries the climate it was measured in. A target is applied only in a run of the
+# same climate; otherwise the row reads NOT VALID (climate). FT-05's 95% is a pre-event drill figure
+# (stable) and is deliberately left so, to show the rule working on a real case.
 TARGETS = {
-    "FT-01": {"metric": "visibility_lost_pct", "op": "<=", "value": 5.0, "baseline": "38% lost"},
-    "FT-05": {"metric": "receipt_rate_pct", "op": ">=", "value": 95.0, "baseline": "4% documented"},
-    "FT-06": {"metric": "dwell_max_h", "op": "<=", "value": 4 * OP_PERIOD_H, "baseline": "~48 d custody dwell"},
-    "FT-11": {"metric": "refuse_unreceipted_pct", "op": "==", "value": 100.0, "baseline": "paid without proof"},
-    "FT-16": {"metric": "unsigned_transfers_detected_pct", "op": ">=", "value": 100.0, "baseline": "identity lost at transfer"},
-    "FT-17": {"metric": "detection_latency_h_max", "op": "<=", "value": OP_PERIOD_H, "baseline": "months"},
-    "FT-18": {"metric": "resolver_acted_within_h", "op": "<=", "value": OP_PERIOD_H, "baseline": "no resolver"},
+    "FT-01": {"metric": "visibility_lost_pct", "op": "<=", "value": 5.0, "baseline": "38% lost", "climate": "variable", "measured_in": "operator target set for a declared event"},
+    "FT-05": {"metric": "receipt_rate_pct", "op": ">=", "value": 95.0, "baseline": "4% documented", "climate": "stable", "measured_in": "pre-event drill, all custodians present"},
+    "FT-06": {"metric": "dwell_max_h", "op": "<=", "value": 4 * OP_PERIOD_H, "baseline": "~48 d custody dwell", "climate": "variable", "measured_in": "operator target set for a declared event"},
+    "FT-11": {"metric": "refuse_unreceipted_pct", "op": "==", "value": 100.0, "baseline": "paid without proof", "climate": "variable", "measured_in": "rule, climate-independent by construction; declared variable"},
+    "FT-16": {"metric": "unsigned_transfers_detected_pct", "op": ">=", "value": 100.0, "baseline": "identity lost at transfer", "climate": "variable", "measured_in": "operator target set for a declared event"},
+    "FT-17": {"metric": "detection_latency_h_max", "op": "<=", "value": OP_PERIOD_H, "baseline": "months", "climate": "variable", "measured_in": "operator target set for a declared event"},
+    "FT-18": {"metric": "resolver_acted_within_h", "op": "<=", "value": OP_PERIOD_H, "baseline": "no resolver", "climate": "variable", "measured_in": "operator target set for a declared event"},
 }
+SPEC_ROWS = {r["id"]: r for r in json.load(open(os.path.join(HERE, "spec_rows.json")))["rows"]}
+FIX = lambda who: {"sign": who, "dof": ["route", "custody", "hold"], "state_updated": True}   # a node's field-fix check
 DWELL_LIMIT_H = 2 * OP_PERIOD_H
 HEARTBEAT_H = OP_PERIOD_H
 
@@ -113,11 +118,13 @@ def run(seed=0, out_dir=None, keep_root=False):
             exp = -1
         cls, axis = ("R2", "custody") if kind == "L_water" else ("R1", "urgency")
         u = L.create_unit("U%03d" % i, kind, qty, ts=2, expiry_ts=exp, seal_no="S%03d" % i, tcard="T%03d" % i,
-                          regime_class=cls, axis=axis, max_silence_h=HEARTBEAT_H)
+                          regime_class=cls, axis=axis, max_silence_h=HEARTBEAT_H, climate="stable")
         units.append(u["unit_id"])
 
-    # I-13: load declared "critical", no axis (V3)
+    # I-13: load declared "critical", no axis (V3). Also created with no climate: defaults to stable, flagged (V11)
     L.create_unit("CRIT-1", "kcal", 1000, ts=2, seal_no="SC1", tcard="TC1")
+    defaulted = [f for f in L.flags if f["code"] == "CLIMATE_DEFAULTED"]
+    note("-", "V11", "load with no climate defaulted to stable and flagged", units=[f["unit_id"] for f in defaulted])
     try:
         L.declare_load("CRIT-1", "critical", ts=2)
         note("I-13", "V3", "FAIL: 'critical' with no axis accepted")
@@ -139,9 +146,13 @@ def run(seed=0, out_dir=None, keep_root=False):
     water_before = {u: L.units[u]["regime_class"] for u in units if L.units[u]["declared_unit"] == "L_water"}
     for u in list(water_before)[:5]:                         # a few water loads were intaken low on purpose
         L.units[u]["regime_class"], L.units[u]["axis"] = "R0", "urgency"
+    climate_before = L.climate
     reclassed = L.declare_event("declared_event", ts=3, damaged_sites=["RSA2"] + pantries[30:])
     water_after = {u: L.units[u]["regime_class"] for u in water_before}
     ev = L.events_declared[-1]
+    note("I-11", "V11", "event declaration flipped climate through the trigger table",
+         before=climate_before, after=L.climate, loads_changed=ev["climate_changed"],
+         loads_by_climate=L.metrics(3)["loads_by_climate"])
     note("I-11", "V4", "event declared; loads reclassed from trigger table", reclassed=len(reclassed),
          manual_steps=ev["manual_steps"], water_min_class=min(water_after.values()))
 
@@ -158,17 +169,17 @@ def run(seed=0, out_dir=None, keep_root=False):
     for i, uid in enumerate(units):
         rsa = "RSA%d" % (i % 3)
         carrier = "CARRIER-A" if i % 2 == 0 else "CARRIER-B"
-        c = L.release(uid, rsa, carrier, ts=4 + i % 6, commit_id="C-%s" % uid)
+        c = L.release(uid, rsa, carrier, ts=4 + i % 6, commit_id="C-%s" % uid, field_fix=FIX(carrier))
         ts_arrive = 10 + i % 6
         L.observe(uid, "electronic", "en-route", ts=ts_arrive - 2)     # dropped (cellular down), I-2/FT-03
-        L.observe(uid, "physical", rsa, ts_arrive, event="gate-in %s" % rsa, by=carrier)
-        L.receive(c["commit_id"], ts=ts_arrive, receiver_mark={"kind": "stamp", "by": "%s-gate" % rsa})
-        L.arrive_at_rest(uid, rsa, ts_arrive, custody=rsa)
+        L.observe(uid, "physical", rsa, ts_arrive, event="gate-in %s" % rsa, by=carrier, field_fix=FIX(carrier))
+        L.receive(c["commit_id"], ts=ts_arrive, receiver_mark={"kind": "stamp", "by": "%s-gate" % rsa}, field_fix=FIX(rsa))
+        L.arrive_at_rest(uid, rsa, ts_arrive, custody=rsa, field_fix=FIX(rsa))
 
     # I-3: carrier repacks a container without a manifest (FT-04); generic manifest on a transfer
     L.repack("U010", [("U010-a", 50000), ("U010-b", 50000)], ts=14, manifest=None, by="CARRIER-A")
     L.transfer("U011", "CARRIER-B", ts=14, manifest={"description": "relief supplies", "unit_ids": []},
-               signed_by=("RSA2", "CARRIER-B"))
+               signed_by=("RSA2", "CARRIER-B"), field_fix=FIX("CARRIER-B"))
     L.repack("U012", [("U012-a", 100000)], ts=14, manifest={"lists_unit_ids": True, "seal_no": "S012-r"}, by="CARRIER-A")
     units += ["U010-a", "U010-b", "U012-a"]                  # children move with the last mile
 
@@ -189,17 +200,18 @@ def run(seed=0, out_dir=None, keep_root=False):
         p = pantries[i % len(pantries)]
         need = ("N-%s" if u["declared_unit"] == "kcal" else "W-%s") % p
         cid = "D-%s" % uid
-        L.release(uid, p, "CARRIER-B", ts=20 + i % 10, commit_id=cid)
+        L.release(uid, p, "CARRIER-B", ts=20 + i % 10, commit_id=cid, field_fix=FIX("CARRIER-B"))
         if not L.nodes[p]["available"] and i % 4 == 0:
+            # no custodian present: the drop is a contact with no node to run the field-fix check
             L.observe(uid, "physical", p, 24 + i % 10, event="dropped at gate, no custodian", by="CARRIER-B")
             dropped_unsigned.append(uid)
             continue
-        L.observe(uid, "physical", p, 24 + i % 10, event="arrived %s" % p, by="CARRIER-B")
+        L.observe(uid, "physical", p, 24 + i % 10, event="arrived %s" % p, by="CARRIER-B", field_fix=FIX("CARRIER-B"))
         if i % 25 == 5:                                    # a delivery whose paper receipt did not come back
             unreceipted.append(cid)
             continue
         L.receive(cid, ts=24 + i % 10, receiver_mark={"kind": rng.choice(["signature", "stamp", "photo"]),
-                                                      "by": "%s-lead" % p}, need_id=need)
+                                                      "by": "%s-lead" % p}, need_id=need, field_fix=FIX(p))
     for cid in unreceipted:
         try:
             L.receive(cid, ts=30)
@@ -212,15 +224,15 @@ def run(seed=0, out_dir=None, keep_root=False):
 
     # I-4: meals unavailable, snack boxes substituted (FT-07). Q-1: no factor -> receipt recorded,
     # need NOT credited, failure recorded; a factor is required for credit.
-    L.create_unit("SNACK-1", "count", 1200, ts=30, seal_no="SS1", tcard="TS1", regime_class="R1", axis="urgency")
-    L.release("SNACK-1", "P03", "CARRIER-A", ts=31, commit_id="D-SNACK-1")
-    L.receive("D-SNACK-1", ts=33, receiver_mark={"kind": "signature", "by": "P03-lead"}, need_id="N-P03")
+    L.create_unit("SNACK-1", "count", 1200, ts=30, seal_no="SS1", tcard="TS1", regime_class="R1", axis="urgency", climate="variable")
+    L.release("SNACK-1", "P03", "CARRIER-A", ts=31, commit_id="D-SNACK-1", field_fix=FIX("CARRIER-A"))
+    L.receive("D-SNACK-1", ts=33, receiver_mark={"kind": "signature", "by": "P03-lead"}, need_id="N-P03", field_fix=FIX("P03"))
     sub = [e for e in L.events if e["type"] == "SUBSTITUTION"][-1]
     note("I-4", "FT-07", "substitution logged with pre-declared factor", factor=sub["factor"], converted_kcal=sub["converted_qty"])
-    L.create_unit("SNACK-2", "protein_g", 500, ts=34, seal_no="SS2", tcard="TS2", regime_class="R1", axis="urgency")
-    L.release("SNACK-2", "P04", "CARRIER-A", ts=35, commit_id="D-SNACK-2")
+    L.create_unit("SNACK-2", "protein_g", 500, ts=34, seal_no="SS2", tcard="TS2", regime_class="R1", axis="urgency", climate="variable")
+    L.release("SNACK-2", "P04", "CARRIER-A", ts=35, commit_id="D-SNACK-2", field_fix=FIX("CARRIER-A"))
     before = L.needs["N-P04"]["delivered"]
-    L.receive("D-SNACK-2", ts=36, receiver_mark={"kind": "stamp", "by": "P04-lead"}, need_id="N-P04")
+    L.receive("D-SNACK-2", ts=36, receiver_mark={"kind": "stamp", "by": "P04-lead"}, need_id="N-P04", field_fix=FIX("P04"))
     uncredited = [f for f in L.flags if f["code"] == "SUBSTITUTION_UNCREDITED"]
     note("I-4b", "FT-07", "substitution without declared conversion: delivery RECEIVED, need not credited, failure recorded",
          need_credited=L.needs["N-P04"]["delivered"] - before, unit_status=L.units["SNACK-2"]["status"], failures=len(uncredited))
@@ -259,21 +271,21 @@ def run(seed=0, out_dir=None, keep_root=False):
     # I-7: unregistered community node reports need and stock (FT-15)
     L.register_node("COMM-1", "community", "R1", ts=45, registered=False)
     L.report_need("N-COMM-1", "COMM-1", "kcal", qty=2000 * 30 * 2, by_ts=72, ts=45)
-    L.report_stock("COMM-1", "CU-1", "kcal", 2000 * 30, ts=45, seal_no="CS1", tcard="CT1", regime_class="R1", axis="urgency")
+    L.report_stock("COMM-1", "CU-1", "kcal", 2000 * 30, ts=45, seal_no="CS1", tcard="CT1", regime_class="R1", axis="urgency", climate="variable")
     status_before = L.nodes["COMM-1"]["status"]
-    L.release("CU-1", "P00", "COMM-1", ts=46, commit_id="D-CU-1")
-    L.observe("CU-1", "physical", "P00", 48, event="arrived", by="COMM-1")
-    L.receive("D-CU-1", ts=48, receiver_mark={"kind": "photo", "by": "P00-lead"}, need_id="N-P00")
+    L.release("CU-1", "P00", "COMM-1", ts=46, commit_id="D-CU-1", field_fix=FIX("COMM-1"))
+    L.observe("CU-1", "physical", "P00", 48, event="arrived", by="COMM-1", field_fix=FIX("COMM-1"))
+    L.receive("D-CU-1", ts=48, receiver_mark={"kind": "photo", "by": "P00-lead"}, need_id="N-P00", field_fix=FIX("P00"))
     note("I-7", "FT-15", "provisional node promoted on first kept commitment", before=status_before, after=L.nodes["COMM-1"]["status"])
 
     # I-9: suppress one check-in on an R2 water load in transit (FT-17)
-    L.release("U014", "P07", "CARRIER-A", ts=46, commit_id="D-U014")           # stranded unit finally moves
+    L.release("U014", "P07", "CARRIER-A", ts=46, commit_id="D-U014", field_fix=FIX("CARRIER-A"))   # stranded unit finally moves
     L.checkin("U014", ts=50, by="CARRIER-A")
-    L.release("U015", "P08", "CARRIER-B", ts=46, commit_id="D-U015")           # this one goes silent
+    L.release("U015", "P08", "CARRIER-B", ts=46, commit_id="D-U015", field_fix=FIX("CARRIER-B"))   # this one goes silent
     hb_before = [f for f in L.failures if f["type"] == "HEARTBEAT_MISSED"]
 
     # I-10: competing custody claim at a yard on an R2 load (FT-18)
-    L.observe("U003", "physical", "YARD-1", ts=52, event="staged at yard", by="RSA0")
+    L.observe("U003", "physical", "YARD-1", ts=52, event="staged at yard", by="RSA0", field_fix=FIX("RSA0"))
     claim = L.claim_custody("U003", "CLAIMANT-X", ts=52, basis="verbal tasking")
     L.resolve_claim("U003", ts=52 + 4, resolver_id="RESOLVER-1", award_to=L.units["U003"]["custody"], signed_by=("RESOLVER-1", "RSA0"))
     note("I-10", "FT-18", "competing claim routed to resolver; custody unchanged until resolved",
@@ -303,8 +315,10 @@ def run(seed=0, out_dir=None, keep_root=False):
     m["detection_latency_h_max"] = m["heartbeat"]["detection_latency_h_max"]
     m["resolver_acted_within_h"] = 4
 
+    m["field_fix_missing"] = m["flags"].get("FIELD_FIX_MISSING", 0)
     verdicts = score(L, m, log, dropped_unsigned, unsigned)
-    result = {"version": "v0.1", "seed": seed, "targets": TARGETS, "metrics": m, "verdicts": verdicts, "log": log,
+    result = {"version": "v0.1+V11", "seed": seed, "targets": TARGETS, "metrics": m, "verdicts": verdicts, "log": log,
+              "run_climate": L.climate, "climate_history": L.climate_history,
               "n_nodes": len(L.nodes), "n_events": len(L.events),
               "failures_by_locus": m["failures_by_locus"], "failures_by_site": m["failures_by_site"]}
     if out_dir:
@@ -327,9 +341,21 @@ def score(L, m, log, dropped_unsigned, unsigned):
         by.setdefault(e["ft"], []).append(e)
     v = {}
 
+    run_climate = L.climate
+
     def row(ft, verify, measured, shall, on_target, baseline=None, target=None, note=""):
+        t = TARGETS.get(ft)
+        target_climate = t["climate"] if t else None
+        row_climate = SPEC_ROWS.get(ft, {}).get("climate")
+        if t and target_climate != run_climate:
+            verdict = "NOT VALID (climate)"
+            note = ("target declared in %s climate (%s); run is %s: the claim is not valid here. " %
+                    (target_climate, t["measured_in"], run_climate)) + note
+        else:
+            verdict = "PASS" if shall and on_target else "FAIL"
         v[ft] = {"verify": verify, "baseline": baseline, "target": target, "measured": measured,
-                 "shall_held": bool(shall), "verdict": "PASS" if shall and on_target else "FAIL", "note": note}
+                 "shall_held": bool(shall), "verdict": verdict, "note": note,
+                 "row_climate": row_climate, "target_climate": target_climate, "run_climate": run_climate}
 
     t = TARGETS["FT-01"]
     held = any(e["outcome"] == "held at gate" for e in by.get("FT-01", []))
@@ -410,6 +436,14 @@ def score(L, m, log, dropped_unsigned, unsigned):
     row("V4", "T", {"reclassed": e11["reclassed"], "manual_steps": e11["manual_steps"], "water_min_class": e11["water_min_class"]},
         e11["manual_steps"] == 0 and e11["water_min_class"] >= "R2" and e11["reclassed"] >= 1, True,
         note="I-11: relief water reclassed to R2 minimum from the precomputed table (N-3 watch: manual_steps must stay 0)")
+    e11 = by["V11"]
+    row("V11", "T+I", {"defaulted_and_flagged": e11[0]["units"], "climate_before_event": e11[1]["before"],
+                       "climate_after_event": e11[1]["after"], "loads_flipped": e11[1]["loads_changed"],
+                       "field_fix_checks": m["field_fix_checks"], "field_fix_missing": m["field_fix_missing"]},
+        e11[0]["units"] == ["CRIT-1"] and e11[1]["before"] == "stable" and e11[1]["after"] == "variable"
+        and m["field_fix_checks"] > 0 and all(SPEC_ROWS[k].get("climate") for k in SPEC_ROWS), True,
+        note="missing climate defaulted + flagged; event flipped stable -> variable through the V4 table; contacts under "
+             "variable climate without a node to run the field-fix check (the unattended drops) are flagged")
     e8 = by["V8"]
     row("V8", "I", {"missing_at_activation": e8[0]["missing"], "standing_plan_after_event": e8[1]["standing_plan"]},
         e8[0]["missing"] == ["protein_g"] and "L_water" in e8[1]["standing_plan"], True,
@@ -422,11 +456,13 @@ def write_md(result, path):
     L = ["# Pilot verification exercise v0.1 — results\n",
          "Generated by `experiments/substrate_pilot_v0/exercise.py`. Baselines are OIG-20-76 measurements; "
          "targets are operator-set in `TARGETS` before the run. Failures are reported as found.\n",
-         "| row | verify | OIG baseline | target | measured | shall held | verdict | note |", "|---|---|---|---|---|---|---|---|"]
+         "Run climate: **%s** (history: %s).\n" % (result["run_climate"], "; ".join("%s@%dh %s" % (h["climate"], h["ts"], h["reason"]) for h in result["climate_history"])),
+         "| row | row climate | target climate | verify | OIG baseline | target | measured | shall held | verdict | note |", "|---|---|---|---|---|---|---|---|---|---|"]
     for ft in sorted(v, key=lambda k: (k[0] != "F", k)):
         r = v[ft]
-        L.append("| %s | %s | %s | %s | `%s` | %s | **%s** | %s |" % (
-            ft, r["verify"], r["baseline"] if r["baseline"] is not None else "—",
+        L.append("| %s | %s | %s | %s | %s | %s | `%s` | %s | **%s** | %s |" % (
+            ft, r.get("row_climate") or "—", r.get("target_climate") or "—", r["verify"],
+            r["baseline"] if r["baseline"] is not None else "—",
             r["target"] if r["target"] is not None else "—",
             json.dumps(r["measured"], default=str)[:110], "yes" if r["shall_held"] else "no", r["verdict"], r["note"]))
     L.append("\nFailure records by LOCUS (V1) and SITE in this run:\n")
@@ -453,4 +489,4 @@ if __name__ == "__main__":
     r = run(seed=a.seed, out_dir=a.out)
     for ft in sorted(r["verdicts"], key=lambda k: (k[0] != "F", k)):
         rr = r["verdicts"][ft]
-        print("%-5s shall=%-3s %-4s %s" % (ft, "yes" if rr["shall_held"] else "no", rr["verdict"], rr["note"][:95]))
+        print("%-5s shall=%-3s %-18s %s" % (ft, "yes" if rr["shall_held"] else "no", rr["verdict"], rr["note"][:85]))

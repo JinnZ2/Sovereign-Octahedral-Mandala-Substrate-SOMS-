@@ -21,14 +21,15 @@ only, paper-operable. One failure source: DHS OIG-20-76.
 |---|---|
 | `ledger.py` | the channels; every SPEC §2 shall is a gate (`Refused`) or a `FLAG` record |
 | `exercise.py` | SPEC §4 replay, injects I-1..I-13 in order; OIG baselines vs operator `TARGETS`; shall and target columns |
-| `selftest.py` | FT-01..FT-18 and V1..V8 as unittest; prints its count |
+| `selftest.py` | FT-01..FT-18 and V1..V11 as unittest; prints its count |
+| `spec_rows.json` | V11: climate of every spec row's baseline |
 | `fixtures/*_locus.jsonl`, `locus_tally.py` | V2/V10 LOCUS-coded findings (Maria 13 rows; Katrina and GAO 2018 partial, unverified); tallies side by side |
 | `CLAIM_TABLE.md`, `BUILD_NOTE_v0.1.md` | claim statuses V1–V10 and nulls N-1..N-4; Q-1 answer and resolutions |
 | `forms/` | T-card, gate log, delivery receipt: the physical channel on paper |
 | `onboarding/field_map.json` | SPEC §3 field map (Phase 1 ADAPTER) |
 | `onboarding/shadow.py` | Phase 0 SHADOW divergence classifier over legacy CSV exports |
 | `../../tests/test_substrate_pilot_v0.py` | thin wrapper that collects `selftest.py` under pytest |
-| `runs/exercise_v0_1.md` | last replay: verdict per row, shall-held separate from target, failures by LOCUS/SITE |
+| `runs/exercise_v0_1.md` | last replay: verdict per row with row/target/run climate, shall-held separate from target, failures by LOCUS/SITE |
 
 ```bash
 python experiments/substrate_pilot_v0/exercise.py          # replay, writes runs/

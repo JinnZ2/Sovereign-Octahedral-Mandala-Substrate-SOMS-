@@ -1,0 +1,27 @@
+{
+  "_note": "V11: every spec row carries the CLIMATE its finding/baseline was measured in. A claim is valid only inside its declared climate. OIG-20-76 and the Katrina/2017 findings are variable-climate observations; drill and design figures are stable.",
+  "rows": [
+    {"id": "FT-01", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "T+A"},
+    {"id": "FT-02", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "I+T"},
+    {"id": "FT-03", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "T/E"},
+    {"id": "FT-04", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "I+T"},
+    {"id": "FT-05", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "A"},
+    {"id": "FT-06", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "A"},
+    {"id": "FT-07", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "I+T"},
+    {"id": "FT-08", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "I+A"},
+    {"id": "FT-09", "climate": "stable", "baseline_source": "2011 exercise AAR, pre-event", "verify": "I+A"},
+    {"id": "FT-10", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "I+D"},
+    {"id": "FT-11", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "T+A"},
+    {"id": "FT-12", "climate": "stable", "baseline_source": "advance contract, pre-event", "verify": "I+E"},
+    {"id": "FT-13", "climate": "variable", "baseline_source": "OIG-20-76 municipal survey", "verify": "E+I"},
+    {"id": "FT-14", "climate": "variable", "baseline_source": "OIG-20-76", "verify": "E"},
+    {"id": "FT-15", "climate": "variable", "baseline_source": "Natural Hazards Center quick-response", "verify": "E"},
+    {"id": "FT-16", "climate": "variable", "baseline_source": "OIG-20-76 findings 2, 3", "verify": "T+A"},
+    {"id": "FT-17", "climate": "variable", "baseline_source": "OIG-20-76 (detection in months)", "verify": "T+A"},
+    {"id": "FT-18", "climate": "variable", "baseline_source": "none: no resolver existed", "verify": "T"},
+    {"id": "V3", "climate": "stable", "baseline_source": "design rule", "verify": "T"},
+    {"id": "V4", "climate": "variable", "baseline_source": "MIL-STD-882E logic applied at event", "verify": "T"},
+    {"id": "V8", "climate": "stable", "baseline_source": "standing plan, post-event", "verify": "I"},
+    {"id": "V11", "climate": "variable", "baseline_source": "this rule", "verify": "T+I"}
+  ]
+}

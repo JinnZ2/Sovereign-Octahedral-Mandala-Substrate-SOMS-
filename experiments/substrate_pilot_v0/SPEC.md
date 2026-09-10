@@ -251,3 +251,29 @@ I-11  declare event -> loads reclass                 V4
 I-12  local custodian availability set to 20%        FT-16
 I-13  load declared "critical", no axis              V3
 ```
+
+## 7. V11 — CLIMATE field
+
+```
+V11  CLIMATE FIELD                           every spec row and every load record
+     CLIMATE = stable | partial | variable   carries CLIMATE; missing -> defaults
+     STABLE    inputs in spec, parts in      to stable AND is flagged; event
+               stock, design fixed, help     declaration flips climate to variable
+               reachable in time             via the V4 trigger table (selftest);
+     PARTIAL   some of the above fail,       any efficiency/throughput target in
+               intermittently or in one      the spec carries the climate it was
+               channel                       measured in
+     VARIABLE  shortage, off-spec inputs,
+               changing environment, novel
+               failures
+     RULE  a claim is valid only inside its
+           declared climate
+     NODE  under variable climate, every
+           contact/custody node runs the
+           field-fix check: sign | DOF |
+           state updated
+```
+
+Per-row climate is machine-readable in `spec_rows.json`; operator targets carry
+`climate` in `exercise.TARGETS`. A verdict against a target declared in a climate
+other than the run's is reported as NOT VALID (climate), never as PASS or FAIL.

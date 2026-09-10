@@ -1,6 +1,13 @@
 {
+ "climate_history": [
+  {
+   "climate": "variable",
+   "reason": "event:declared_event",
+   "ts": 3
+  }
+ ],
  "failures_by_locus": {
-  "regime.custody": 62,
+  "regime.custody": 86,
   "regime.market": 4,
   "regime.security": 1,
   "regime.urgency": 1
@@ -8,7 +15,7 @@
  "failures_by_site": {
   "damaged": 10,
   "pre-event": 2,
-  "undamaged": 56
+  "undamaged": 80
  },
  "log": [
   {
@@ -37,6 +44,14 @@
    "outcome": "cellular disabled for the whole exercise"
   },
   {
+   "ft": "V11",
+   "inject": "-",
+   "outcome": "load with no climate defaulted to stable and flagged",
+   "units": [
+    "CRIT-1"
+   ]
+  },
+  {
    "detail": "V3: 'critical' is not a regime class ('R0', 'R1', 'R2', 'R3'); 'critical' alone is invalid",
    "ft": "V3",
    "inject": "I-13",
@@ -53,6 +68,17 @@
    "ft": "V3",
    "inject": "I-13c",
    "outcome": "custody-axis load may not drop custody to expedite"
+  },
+  {
+   "after": "variable",
+   "before": "stable",
+   "ft": "V11",
+   "inject": "I-11",
+   "loads_by_climate": {
+    "variable": 121
+   },
+   "loads_changed": 121,
+   "outcome": "event declaration flipped climate through the trigger table"
   },
   {
    "ft": "V4",
@@ -209,6 +235,14 @@
   }
  ],
  "metrics": {
+  "climate": "variable",
+  "climate_history": [
+   {
+    "climate": "variable",
+    "reason": "event:declared_event",
+    "ts": 3
+   }
+  ],
   "copies_consistent": true,
   "detection_latency_h_max": 11,
   "dwell_h": {
@@ -219,7 +253,7 @@
   },
   "dwell_max_h": 0,
   "failures_by_locus": {
-   "regime.custody": 62,
+   "regime.custody": 86,
    "regime.market": 4,
    "regime.security": 1,
    "regime.urgency": 1
@@ -227,20 +261,24 @@
   "failures_by_site": {
    "damaged": 10,
    "pre-event": 2,
-   "undamaged": 56
+   "undamaged": 80
   },
   "failures_by_type": {
    "CONTESTED_CUSTODY": 1,
    "ESCALATION": 1,
-   "FLAG": 5,
+   "FLAG": 29,
    "HEARTBEAT_MISSED": 30,
    "LOST": 1,
    "MISSING_CLASS_ASSIGNMENT": 1,
    "SETTLEMENT_REFUSED": 1,
    "UNSIGNED_TRANSFER": 28
   },
+  "field_fix_checks": 677,
+  "field_fix_missing": 23,
   "flags": {
+   "CLIMATE_DEFAULTED": 1,
    "EXPIRED_EXCLUDED": 1,
+   "FIELD_FIX_MISSING": 23,
    "REPACK_WITHOUT_MANIFEST": 1,
    "ROUTE_EDGE_UNASSIGNED": 1,
    "SUBSTITUTION_UNCREDITED": 1,
@@ -250,6 +288,9 @@
    "all_within_one_interval": true,
    "detection_latency_h_max": 11,
    "missed": 30
+  },
+  "loads_by_climate": {
+   "variable": 127
   },
   "lost_units": [
    "U013"
@@ -393,48 +434,63 @@
   ],
   "visibility_lost_pct": 25.203252032520325
  },
- "n_events": 1949,
+ "n_events": 2651,
  "n_nodes": 49,
+ "run_climate": "variable",
  "seed": 0,
  "targets": {
   "FT-01": {
    "baseline": "38% lost",
+   "climate": "variable",
+   "measured_in": "operator target set for a declared event",
    "metric": "visibility_lost_pct",
    "op": "<=",
    "value": 5.0
   },
   "FT-05": {
    "baseline": "4% documented",
+   "climate": "stable",
+   "measured_in": "pre-event drill, all custodians present",
    "metric": "receipt_rate_pct",
    "op": ">=",
    "value": 95.0
   },
   "FT-06": {
    "baseline": "~48 d custody dwell",
+   "climate": "variable",
+   "measured_in": "operator target set for a declared event",
    "metric": "dwell_max_h",
    "op": "<=",
    "value": 48
   },
   "FT-11": {
    "baseline": "paid without proof",
+   "climate": "variable",
+   "measured_in": "rule, climate-independent by construction; declared variable",
    "metric": "refuse_unreceipted_pct",
    "op": "==",
    "value": 100.0
   },
   "FT-16": {
    "baseline": "identity lost at transfer",
+   "climate": "variable",
+   "measured_in": "operator target set for a declared event",
    "metric": "unsigned_transfers_detected_pct",
    "op": ">=",
    "value": 100.0
   },
   "FT-17": {
    "baseline": "months",
+   "climate": "variable",
+   "measured_in": "operator target set for a declared event",
    "metric": "detection_latency_h_max",
    "op": "<=",
    "value": 12
   },
   "FT-18": {
    "baseline": "no resolver",
+   "climate": "variable",
+   "measured_in": "operator target set for a declared event",
    "metric": "resolver_acted_within_h",
    "op": "<=",
    "value": 12
@@ -482,8 +538,11 @@
     "visibility_lost_pct": 25.2
    },
    "note": "unrecorded order held at the gate; stale set = the 5 unreceipted deliveries, 23 unsigned drops, the stranded/silent loads",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": "<= 5.0 %",
+   "target_climate": "variable",
    "verdict": "FAIL",
    "verify": "T+A"
   },
@@ -491,8 +550,11 @@
    "baseline": null,
    "measured": "schema rejected 'unknown' location; close refused",
    "note": "",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": null,
+   "target_climate": null,
    "verdict": "PASS",
    "verify": "I+T"
   },
@@ -503,8 +565,11 @@
     "physical_obs_kept": 241
    },
    "note": "electronic channel dark for the whole run; state held on T-cards and gate logs",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": null,
+   "target_climate": null,
    "verdict": "PASS",
    "verify": "T/E"
   },
@@ -516,8 +581,11 @@
     "repack_without_manifest": 1
    },
    "note": "",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": null,
+   "target_climate": null,
    "verdict": "PASS",
    "verify": "I+T"
   },
@@ -526,10 +594,13 @@
    "measured": {
     "receipt_rate_pct": 87.7
    },
-   "note": "unreceipted deliveries stay IN_TRANSIT; counted, not relabelled",
+   "note": "target declared in stable climate (pre-event drill, all custodians present); run is variable: the claim is not valid here. unreceipted deliveries stay IN_TRANSIT; counted, not relabelled",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": ">= 95.0",
-   "verdict": "FAIL",
+   "target_climate": "stable",
+   "verdict": "NOT VALID (climate)",
    "verify": "A"
   },
   "FT-06": {
@@ -539,8 +610,11 @@
     "escalated": 1
    },
    "note": "escalation fired; max dwell 0 h is within the operator target",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": "max dwell <= 48 h; escalate > 24 h",
+   "target_climate": "variable",
    "verdict": "PASS",
    "verify": "A"
   },
@@ -552,8 +626,11 @@
     "direct substitution without a factor refused"
    ],
    "note": "Q-1: no factor -> delivery RECEIVED, need uncredited, failure recorded; direct substitute() refuses",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": null,
+   "target_climate": null,
    "verdict": "PASS",
    "verify": "I+T"
   },
@@ -567,8 +644,11 @@
     ]
    },
    "note": "",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": null,
+   "target_climate": null,
    "verdict": "PASS",
    "verify": "I+A"
   },
@@ -584,8 +664,11 @@
     ]
    },
    "note": "AAR-2011-03 still OPEN at the end: reported, not closed by the pilot",
+   "row_climate": "stable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": null,
+   "target_climate": null,
    "verdict": "PASS",
    "verify": "I+A"
   },
@@ -596,8 +679,11 @@
     "copies": 2
    },
    "note": "",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": null,
+   "target_climate": null,
    "verdict": "PASS",
    "verify": "I+D"
   },
@@ -609,8 +695,11 @@
     "settled": 1
    },
    "note": "",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": "refuse 100% of unreceipted",
+   "target_climate": "variable",
    "verdict": "PASS",
    "verify": "T+A"
   },
@@ -626,8 +715,11 @@
     ]
    },
    "note": "the cross-dock leg is unassigned and flagged; assigning it is the operator's job",
+   "row_climate": "stable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": null,
+   "target_climate": null,
    "verdict": "PASS",
    "verify": "I+E"
   },
@@ -640,8 +732,11 @@
     "prepositioned": 40
    },
    "note": "co-authorship at 36/40: reported as a FAIL, not waived",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": false,
    "target": "100% of nodes",
+   "target_climate": null,
    "verdict": "FAIL",
    "verify": "E+I"
   },
@@ -649,11 +744,14 @@
    "baseline": null,
    "measured": {
     "cellular_up": false,
-    "events": 1949
+    "events": 2651
    },
    "note": "whole exercise ran with the electronic channel dark",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": null,
+   "target_climate": null,
    "verdict": "PASS",
    "verify": "E"
   },
@@ -664,8 +762,11 @@
     "before": "PROVISIONAL"
    },
    "note": "",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": null,
+   "target_climate": null,
    "verdict": "PASS",
    "verify": "E"
   },
@@ -684,8 +785,11 @@
     "of_which_detected_pct": 100.0
    },
    "note": "I-12: at 20% custodian availability every drop without a signed handover reads as an unsigned transfer; the extra detections are the unreceipted deliveries, which are present without custody too",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": "detect >= 100% of drops",
+   "target_climate": "variable",
    "verdict": "PASS",
    "verify": "T+A"
   },
@@ -703,8 +807,11 @@
     "missed_total": 30
    },
    "note": "silence past the declared interval escalated within one interval; the sweep ran every period (the sweep is the detector)",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": "latency <= 12 h",
+   "target_climate": "variable",
    "verdict": "PASS",
    "verify": "T+A"
   },
@@ -719,10 +826,34 @@
     "routed_to": "RESOLVER-1"
    },
    "note": "N-4 watch: the resolver acted in this run; a run where it does not fails target while the shall holds",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": "resolver acts <= 12 h",
+   "target_climate": "variable",
    "verdict": "PASS",
    "verify": "T"
+  },
+  "V11": {
+   "baseline": null,
+   "measured": {
+    "climate_after_event": "variable",
+    "climate_before_event": "stable",
+    "defaulted_and_flagged": [
+     "CRIT-1"
+    ],
+    "field_fix_checks": 677,
+    "field_fix_missing": 23,
+    "loads_flipped": 121
+   },
+   "note": "missing climate defaulted + flagged; event flipped stable -> variable through the V4 table; contacts under variable climate without a node to run the field-fix check (the unattended drops) are flagged",
+   "row_climate": "variable",
+   "run_climate": "variable",
+   "shall_held": true,
+   "target": null,
+   "target_climate": null,
+   "verdict": "PASS",
+   "verify": "T+I"
   },
   "V3": {
    "baseline": null,
@@ -732,8 +863,11 @@
     "custody-axis load may not drop custody to expedite"
    ],
    "note": "I-13: 'critical' alone, class without axis, custody drop all refused",
+   "row_climate": "stable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": null,
+   "target_climate": null,
    "verdict": "PASS",
    "verify": "T"
   },
@@ -745,8 +879,11 @@
     "water_min_class": "R2"
    },
    "note": "I-11: relief water reclassed to R2 minimum from the precomputed table (N-3 watch: manual_steps must stay 0)",
+   "row_climate": "variable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": null,
+   "target_climate": null,
    "verdict": "PASS",
    "verify": "T"
   },
@@ -763,11 +900,14 @@
     ]
    },
    "note": "protein_g has no standing assignment and no waiver: flagged at activation; assignments survive end_event",
+   "row_climate": "stable",
+   "run_climate": "variable",
    "shall_held": true,
    "target": null,
+   "target_climate": null,
    "verdict": "PASS",
    "verify": "I"
   }
  },
- "version": "v0.1"
+ "version": "v0.1+V11"
 }

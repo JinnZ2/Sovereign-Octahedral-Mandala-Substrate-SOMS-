@@ -7,3 +7,7 @@ BOUNDARY / LOCATION ______________   DATE/TIME ______________
 A unit left with a person who does not sign here is an UNSIGNED TRANSFER, not a delivery.
 R2/R3 loads: next check-in due by ______________ (max silence ______ h)      (FT-17)
 Competing claim on any unit above? -> RESOLVER ______________ via radio/in person (FT-18)
+CLIMATE at this boundary  [ ] stable  [ ] partial  [ ] variable                       (V11)
+If VARIABLE, the receiving node runs the FIELD-FIX CHECK before signing:
+  SIGN ______________   DOF (what this node could still change) ______________________
+  STATE UPDATED  [ ] T-card  [ ] gate log  [ ] ledger line

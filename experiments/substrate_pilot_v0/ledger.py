@@ -21,6 +21,10 @@ v0.1 additions
   V6  R2/R3 loads declare a max silence interval; a missed check-in escalates within one interval
   V7  a competing custody claim routes to a resolver reachable without cellular
   V8  class assignments persist in the standing plan; missing + not WAIVED -> flagged at activation
+  V11 CLIMATE (stable | partial | variable) on the ledger, every load and every trigger table;
+      a load with no climate defaults to stable and is flagged; event declaration flips climate
+      through the trigger table; under variable climate every contact/custody node runs the
+      field-fix check (sign | DOF | state updated) or the contact is flagged
 
 Every shall is a gate here. A gate that holds raises Refused; a shall that only
 flags appends a failure record. Nothing is relabelled.
@@ -45,6 +49,10 @@ SITES = ("damaged", "undamaged", "pre-event")
 # V3 regime classes, ordered: a lower index drops custody
 REGIME_CLASSES = ("R0", "R1", "R2", "R3")      # drop-and-hook | signed tally | constant custody | dual/escort
 AXES = ("urgency", "custody")
+
+# V11 climate
+CLIMATES = ("stable", "partial", "variable")
+FIELD_FIX_KEYS = ("sign", "dof", "state_updated")
 
 # failure record types (every one carries locus + site)
 FAILURE_TYPES = ("FLAG", "LOST", "BROKEN", "SETTLEMENT_REFUSED", "ESCALATION", "HEARTBEAT_MISSED",
@@ -114,6 +122,8 @@ class Ledger:
         self.standing_plan = {}          # declared_unit -> {"class","axis"} (V8, persists post-event)
         self.waived_assignments = {}     # declared_unit -> {"owner","date"}
         self.events_declared = []
+        self.climate = "stable"
+        self.climate_history = []
         self.electronic_up = True
         self.cellular_up = True
         self.activated_at = None
@@ -201,10 +211,15 @@ class Ledger:
     # ------------------------------------------------------------------ C1
     def create_unit(self, unit_id, declared_unit, qty, ts, condition="GOOD", expiry_ts=None,
                     custody="origin", location="origin", seal_no=None, tcard=None, parent_id=None,
-                    regime_class=None, axis=None, max_silence_h=None):
+                    regime_class=None, axis=None, max_silence_h=None, climate=None):
         if declared_unit not in DECLARED_UNITS:
             raise Refused("FT-07: unit must carry a declared unit %s" % (DECLARED_UNITS,))
         self._check_location(location)
+        climate_defaulted = climate is None
+        if climate_defaulted:
+            climate = "stable"                                  # V11: defaults to stable AND is flagged
+        if climate not in CLIMATES:
+            raise SchemaError("V11: unknown climate %r" % climate)
         u = {"unit_id": unit_id, "parent_id": parent_id, "declared_unit": declared_unit,
              "qty": float(qty), "condition": condition, "expiry_ts": expiry_ts,
              "custody": custody, "location": location, "status": "AT_ORIGIN",
@@ -216,8 +231,10 @@ class Ledger:
                                        "last_seen_ts": int(ts), "location": location}},
              "children": [], "receipt": None, "reconciliation": None,
              "regime_class": None, "axis": None, "max_silence_h": None, "last_checkin_ts": int(ts),
-             "claims": []}
+             "claims": [], "climate": climate}
         self.units[unit_id] = u
+        if climate_defaulted:
+            self.flag(ts, "CLIMATE_DEFAULTED", "regime.custody", unit_id=unit_id, defaulted_to="stable", location=location)
         if regime_class is not None or axis is not None:
             self._assign_class(u, regime_class, axis, ts, max_silence_h, source="intake")
         self._event("UNIT", ts, **{k: v for k, v in u.items() if k != "channels"})
@@ -254,15 +271,40 @@ class Ledger:
             raise Refused("V3: %s is on the custody axis at %s; dropping to %s (%s) is refused" % (unit_id, cur, new_class, reason))
         self._assign_class(u, new_class, u["axis"] or "urgency", ts, u["max_silence_h"], source=source)
 
-    def declare_trigger_table(self, event_type, table, ts, declared_by):
-        """V4: precomputed before the event. table: declared_unit -> (min_class, axis)."""
+    def set_climate(self, climate, ts, reason, unit_ids=None):
+        """V11: set the ambient climate and the climate of open loads (all, or the given ids)."""
+        if climate not in CLIMATES:
+            raise SchemaError("V11: unknown climate %r" % climate)
+        self.climate = climate
+        self.climate_history.append({"ts": int(ts), "climate": climate, "reason": reason})
+        changed = []
+        for uid, u in self.units.items():
+            if unit_ids is not None and uid not in unit_ids:
+                continue
+            if u["status"] in ("RECEIVED", "CLOSED", "REPACKED"):
+                continue
+            if u["climate"] != climate:
+                u["climate"] = climate
+                changed.append(uid)
+        self._event("CLIMATE", ts, climate=climate, reason=reason, loads_changed=changed)
+        return changed
+
+    def declare_trigger_table(self, event_type, table, ts, declared_by, climate="variable"):
+        """V4: precomputed before the event. table: declared_unit -> (min_class, axis).
+        V11: the table carries the climate the event declaration flips to."""
         for du, (cls, axis) in table.items():
             if du not in DECLARED_UNITS or cls not in REGIME_CLASSES or axis not in AXES:
                 raise SchemaError("V4: bad trigger row %r -> %r" % (du, (cls, axis)))
+        if climate not in CLIMATES:
+            raise SchemaError("V11: trigger table for %r has no valid climate" % event_type)
         self.trigger_table[event_type] = {du: {"min_class": c, "axis": a} for du, (c, a) in table.items()}
+        self.trigger_table[event_type]["_climate"] = climate
         for du, row in self.trigger_table[event_type].items():
+            if du.startswith("_"):
+                continue
             self.standing_plan[du] = {"class": row["min_class"], "axis": row["axis"], "event_type": event_type}
-        self._event("TRIGGER_TABLE", ts, event_type=event_type, table=self.trigger_table[event_type], declared_by=declared_by)
+        self._event("TRIGGER_TABLE", ts, event_type=event_type, table=self.trigger_table[event_type],
+                    declared_by=declared_by, climate=climate)
 
     def declare_event(self, event_type, ts, damaged_sites=()):
         """V4: reclass every load from the trigger table in one step. No deliberation, no manual step.
@@ -273,6 +315,7 @@ class Ledger:
         for n in damaged_sites:
             if n in self.nodes:
                 self.nodes[n]["damage_state"] = "damaged"
+        climate_changed = self.set_climate(table["_climate"], ts, reason="event:" + event_type)   # V11 flip, same step
         reclassed = []
         for u in self.units.values():
             row = table.get(u["declared_unit"])
@@ -283,7 +326,8 @@ class Ledger:
                 self._assign_class(u, row["min_class"], row["axis"], ts, u["max_silence_h"], source="event:" + event_type)
                 reclassed.append(u["unit_id"])
         rec = self._event("EVENT", ts, event_type=event_type, damaged_sites=list(damaged_sites),
-                          reclassed=reclassed, manual_steps=0)
+                          reclassed=reclassed, climate=table["_climate"], climate_changed=len(climate_changed),
+                          manual_steps=0)
         self.events_declared.append(rec)
         return reclassed
 
@@ -298,7 +342,7 @@ class Ledger:
         self._event("WAIVED_ASSIGNMENT", ts, declared_unit=declared_unit, owner=owner, date=date)
 
     # ------------------------------------------------------------------ movement
-    def release(self, unit_id, to_node, carrier, ts, commit_id=None):
+    def release(self, unit_id, to_node, carrier, ts, commit_id=None, field_fix=None):
         """Origin gate. FT-01: no state record -> held. V3: a load without class + axis -> held."""
         u = self.units.get(unit_id)
         if u is None:
@@ -308,18 +352,33 @@ class Ledger:
         if u["regime_class"] is None or u["axis"] is None:
             raise Refused("V3: load %s has no regime class + axis; held at the gate" % unit_id)
         u["status"] = "IN_TRANSIT"
-        self._handover(u, u["custody"], carrier, ts, signed_by=(u["custody"], carrier), kind="release")
+        self._handover(u, u["custody"], carrier, ts, signed_by=(u["custody"], carrier), kind="release", field_fix=field_fix)
         cid = commit_id or "C-%s" % unit_id
         self.commits[cid] = {"commit_id": cid, "actor": carrier, "unit_id": unit_id, "to_node": to_node,
                              "by_ts": None, "status": "OPEN", "receipt": None, "opened_ts": int(ts)}
         self._event("COMMIT", ts, **self.commits[cid])
         return self.commits[cid]
 
-    def _handover(self, u, from_c, to_c, ts, signed_by, kind):
-        """V5 / FT-16: custody changes only by a signed handover naming both parties."""
+    def field_fix(self, node_id, unit_id, ts, check=None):
+        """V11 NODE rule: under variable climate every contact/custody node runs the field-fix check
+        (sign | DOF | state updated). Missing -> flagged. Malformed -> SchemaError."""
+        if self.climate != "variable":
+            return None
+        if check is None:
+            return self.flag(ts, "FIELD_FIX_MISSING", "regime.custody", node_id=node_id, unit_id=unit_id, climate=self.climate)
+        if set(check) != set(FIELD_FIX_KEYS) or not check["sign"] or not isinstance(check["dof"], (list, tuple)) \
+                or check["state_updated"] is not True:
+            raise SchemaError("V11: field-fix check needs sign (who), dof (list of what could be changed), state_updated True")
+        return self._event("FIELD_FIX", ts, node_id=node_id, unit_id=unit_id, sign=check["sign"],
+                           dof=list(check["dof"]), state_updated=True, climate=self.climate)
+
+    def _handover(self, u, from_c, to_c, ts, signed_by, kind, field_fix=None):
+        """V5 / FT-16: custody changes only by a signed handover naming both parties.
+        V11: under variable climate the receiving node runs the field-fix check."""
         if not signed_by or len(signed_by) != 2 or not all(signed_by):
             raise Refused("FT-16: custody transfer of %s needs a handover signed by both parties" % u["unit_id"])
         u["custody"] = to_c
+        self.field_fix(to_c, u["unit_id"], ts, field_fix)
         u["last_checkin_ts"] = int(ts)
         self._touch(u, "physical", u["location"], ts, event="%s: custody %s -> %s" % (kind, from_c, to_c))
         self._event("HANDOVER", ts, unit_id=u["unit_id"], from_custody=from_c, to_custody=to_c,
@@ -334,7 +393,7 @@ class Ledger:
         u["last_known"] = {"location": location, "ts": int(ts)}
         u["location"] = location
 
-    def observe(self, unit_id, channel, location, ts, event=None, by=None):
+    def observe(self, unit_id, channel, location, ts, event=None, by=None, field_fix=None):
         """A state observation on one channel. FT-03: losing the electronic channel loses no state.
         A physical observation by the custodian counts as a check-in (V6)."""
         u = self.units[unit_id]
@@ -345,6 +404,8 @@ class Ledger:
         self._touch(u, channel, location, ts, event=event)
         if channel == "physical" and (by is None or by == u["custody"]):
             u["last_checkin_ts"] = int(ts)
+        if channel == "physical":
+            self.field_fix(by or location, unit_id, ts, field_fix)     # a contact under variable climate
         self._event("OBS", ts, unit_id=unit_id, channel=channel, location=location, by=by)
         return True
 
@@ -356,13 +417,13 @@ class Ledger:
         u["last_checkin_ts"] = int(ts)
         self._event("CHECKIN", ts, unit_id=unit_id, by=by)
 
-    def arrive_at_rest(self, unit_id, location, ts, custody, signed_by=None):
+    def arrive_at_rest(self, unit_id, location, ts, custody, signed_by=None, field_fix=None):
         u = self.units[unit_id]
         self._check_location(location)
         u["status"] = "AT_REST"
         u["rest_since_ts"] = int(ts)
         if custody != u["custody"]:
-            self._handover(u, u["custody"], custody, ts, signed_by or (u["custody"], custody), kind="gate-in")
+            self._handover(u, u["custody"], custody, ts, signed_by or (u["custody"], custody), kind="gate-in", field_fix=field_fix)
         self._touch(u, "physical", location, ts, event="gate-in")
         self._event("REST", ts, unit_id=unit_id, location=location, custody=custody)
 
@@ -405,7 +466,8 @@ class Ledger:
             c = self.create_unit(child_id, p["declared_unit"], qty, ts, condition=p["condition"],
                                  expiry_ts=p["expiry_ts"], custody=p["custody"], location=p["location"],
                                  parent_id=parent_id, seal_no=(manifest or {}).get("seal_no"),
-                                 regime_class=p["regime_class"], axis=p["axis"], max_silence_h=p["max_silence_h"])
+                                 regime_class=p["regime_class"], axis=p["axis"], max_silence_h=p["max_silence_h"],
+                                 climate=p["climate"])
             c["status"] = p["status"]
             p["children"].append(child_id)
             out.append(c)
@@ -413,14 +475,14 @@ class Ledger:
         self._event("REPACK", ts, parent_id=parent_id, children=[c[0] for c in children], manifest=manifest, by=by)
         return out
 
-    def transfer(self, unit_id, to_custody, ts, manifest=None, signed_by=None):
+    def transfer(self, unit_id, to_custody, ts, manifest=None, signed_by=None, field_fix=None):
         """Custody transfer by signed handover (FT-16). A manifest that does not name the unit is
         flagged (regime.market: the carrier's commercial frame in the critical path, finding #2)."""
         u = self.units[unit_id]
         if manifest is None or unit_id not in manifest.get("unit_ids", []):
             self.flag(ts, "TRANSFER_MANIFEST_GENERIC", "regime.market", unit_id=unit_id, to_custody=to_custody,
                       manifest=manifest, location=u["location"])
-        self._handover(u, u["custody"], to_custody, ts, signed_by, kind="transfer")
+        self._handover(u, u["custody"], to_custody, ts, signed_by, kind="transfer", field_fix=field_fix)
         self._event("TRANSFER", ts, unit_id=unit_id, to_custody=to_custody, manifest=manifest)
 
     # ------------------------------------------------------------------ V5 presence without custody
@@ -504,12 +566,12 @@ class Ledger:
                                  routed_to=rid, resolver_paths=self.resolvers[rid]["non_cellular_paths"])
         return self._event("CLAIM_NOTED", ts, unit_id=unit_id, claimant=claimant)
 
-    def resolve_claim(self, unit_id, ts, resolver_id, award_to, signed_by):
+    def resolve_claim(self, unit_id, ts, resolver_id, award_to, signed_by, field_fix=None):
         u = self.units[unit_id]
         if resolver_id not in self.resolvers:
             raise Refused("FT-18: %s is not a declared resolver" % resolver_id)
         if award_to != u["custody"]:
-            self._handover(u, u["custody"], award_to, ts, signed_by, kind="resolved")
+            self._handover(u, u["custody"], award_to, ts, signed_by, kind="resolved", field_fix=field_fix)
         self._event("CLAIM_RESOLVED", ts, unit_id=unit_id, resolver_id=resolver_id, award_to=award_to)
 
     # ------------------------------------------------------------------ FT-07 conversions
@@ -538,7 +600,7 @@ class Ledger:
         return {"converted_qty": converted, "factor": conv["factor"]}
 
     # ------------------------------------------------------------------ C3
-    def receive(self, commit_id, ts, receiver_mark=None, need_id=None):
+    def receive(self, commit_id, ts, receiver_mark=None, need_id=None, field_fix=None):
         """FT-05: delivery = receiver mark. State stays IN_TRANSIT until the receipt exists.
         Q-1 (v0.1): the receipt records the physical fact. If the unit cannot be credited against the
         need (no declared conversion), the delivery is still RECEIVED; the need is not credited and
@@ -551,7 +613,7 @@ class Ledger:
         c["receipt"] = dict(receiver_mark, ts=int(ts))
         u["status"] = "RECEIVED"
         u["receipt"] = c["receipt"]
-        self._handover(u, u["custody"], c["to_node"], ts, signed_by=(u["custody"], receiver_mark["by"]), kind="receipt")
+        self._handover(u, u["custody"], c["to_node"], ts, signed_by=(u["custody"], receiver_mark["by"]), kind="receipt", field_fix=field_fix)
         if need_id and need_id in self.needs:
             need = self.needs[need_id]
             try:
@@ -742,6 +804,10 @@ class Ledger:
             "provisional_nodes": [n for n, v in self.nodes.items() if v["status"] == "PROVISIONAL"],
             "need_gap_declared_units": need_gap,
             "copies_consistent": self.copies_consistent(),
+            "climate": self.climate,
+            "climate_history": list(self.climate_history),
+            "loads_by_climate": _count(list(self.units.values()), "climate"),
+            "field_fix_checks": sum(1 for e in self.events if e["type"] == "FIELD_FIX"),
         }
 
 

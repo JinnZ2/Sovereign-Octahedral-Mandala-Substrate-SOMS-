@@ -12,7 +12,8 @@ import unittest
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-from ledger import Ledger, Refused, SchemaError, OP_PERIOD_H, check_locus  # noqa: E402
+from ledger import Ledger, Refused, SchemaError, OP_PERIOD_H, check_locus, CLIMATES  # noqa: E402
+import json  # noqa: E402
 import exercise  # noqa: E402
 import locus_tally  # noqa: E402
 
@@ -33,6 +34,7 @@ def fresh():
 
 
 def unit(L, uid="U1", du="kcal", qty=1000, cls="R1", axis="urgency", **kw):
+    kw.setdefault("climate", "stable")           # V11: a helper unit declares its climate
     return L.create_unit(uid, du, qty, ts=kw.pop("ts", 0), regime_class=cls, axis=axis, **kw)
 
 
@@ -374,17 +376,73 @@ class V8_retention(unittest.TestCase):
         self.assertEqual(sum(1 for f in L.failures if f["type"] == "MISSING_CLASS_ASSIGNMENT"), 1)   # not flagged again
 
 
+class V11_climate(unittest.TestCase):
+    def test_missing_climate_defaults_to_stable_and_flags(self):
+        L = fresh()
+        L.create_unit("U", "kcal", 1, ts=0)
+        self.assertEqual(L.units["U"]["climate"], "stable")
+        self.assertEqual([f["code"] for f in L.flags if f["unit_id"] == "U"], ["CLIMATE_DEFAULTED"])
+        L.create_unit("V", "kcal", 1, ts=0, climate="partial")
+        self.assertEqual(L.units["V"]["climate"], "partial")
+        with self.assertRaises(SchemaError):
+            L.create_unit("W", "kcal", 1, ts=0, climate="normal")
+
+    def test_event_flips_climate_through_trigger_table(self):
+        L = fresh(); unit(L, "W", "L_water", 1, cls="R0", axis="urgency", climate="stable")
+        self.assertEqual(L.climate, "stable")
+        L.declare_event("ev", ts=1)
+        self.assertEqual((L.climate, L.units["W"]["climate"]), ("variable", "variable"))
+        self.assertEqual(L.events_declared[-1]["climate"], "variable")
+        L2 = Ledger()
+        with self.assertRaises(SchemaError):
+            L2.declare_trigger_table("ev", {"kcal": ("R1", "urgency")}, ts=0, declared_by="ops", climate="calm")
+
+    def test_field_fix_required_only_under_variable(self):
+        L = fresh(); unit(L, climate="stable")
+        L.release("U1", "P00", "CAR", ts=1)                              # stable: no check needed
+        self.assertEqual([f for f in L.flags if f["code"] == "FIELD_FIX_MISSING"], [])
+        L.set_climate("variable", ts=2, reason="test")
+        L.observe("U1", "physical", "P00", ts=3, by="CAR")                 # contact with no check -> flagged
+        self.assertEqual([f["code"] for f in L.flags if f.get("unit_id") == "U1"], ["FIELD_FIX_MISSING"])
+        L.observe("U1", "physical", "P00", ts=4, by="CAR", field_fix={"sign": "CAR", "dof": ["route"], "state_updated": True})
+        self.assertEqual(sum(1 for e in L.events if e["type"] == "FIELD_FIX"), 1)
+        with self.assertRaises(SchemaError):
+            L.observe("U1", "physical", "P00", ts=5, by="CAR", field_fix={"sign": "CAR", "dof": ["route"], "state_updated": False})
+        with self.assertRaises(SchemaError):
+            L.observe("U1", "physical", "P00", ts=5, by="CAR", field_fix={"sign": "CAR"})
+
+    def test_every_spec_row_and_target_carries_climate(self):
+        rows = json.load(open(os.path.join(HERE, "spec_rows.json")))["rows"]
+        ids = {r["id"] for r in rows}
+        self.assertTrue({"FT-%02d" % i for i in range(1, 19)} <= ids)
+        for r in rows:
+            self.assertIn(r["climate"], CLIMATES, r["id"])
+        for k, t in exercise.TARGETS.items():
+            self.assertIn(t["climate"], CLIMATES, k); self.assertTrue(t["measured_in"], k)
+
+    def test_claim_valid_only_inside_declared_climate(self):
+        r = exercise.run(seed=0)
+        self.assertEqual(r["run_climate"], "variable")
+        self.assertEqual(r["verdicts"]["FT-05"]["verdict"], "NOT VALID (climate)")   # stable drill target, variable run
+        self.assertEqual(r["verdicts"]["FT-05"]["target_climate"], "stable")
+        for k, v in r["verdicts"].items():
+            self.assertEqual(v["run_climate"], "variable")
+            if k in exercise.TARGETS and exercise.TARGETS[k]["climate"] == "variable":
+                self.assertIn(v["verdict"], ("PASS", "FAIL"), k)
+
+
 class Exercise_replay(unittest.TestCase):
     def test_replay_runs_and_reports_failures_as_found(self):
         r = exercise.run(seed=0)
         v = r["verdicts"]
         self.assertEqual(sorted(k for k in v if k.startswith("FT")), ["FT-%02d" % i for i in range(1, 19)])
-        for k in ("V3", "V4", "V8"):
+        for k in ("V3", "V4", "V8", "V11"):
             self.assertEqual(v[k]["verdict"], "PASS", k)
         for ft in v:
             self.assertEqual(v[ft]["shall_held"], ft != "FT-13", ft)
         self.assertEqual(v["FT-13"]["verdict"], "FAIL")
         self.assertEqual(v["FT-01"]["verdict"], "FAIL")
+        self.assertEqual(v["FT-05"]["verdict"], "NOT VALID (climate)")
         self.assertLessEqual(r["n_nodes"], 150)
         for locus in r["failures_by_locus"]:
             self.assertNotEqual(locus, "physical_damage")                  # no damage coded in an undamaged-site run

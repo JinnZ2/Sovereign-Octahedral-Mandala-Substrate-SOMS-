@@ -65,3 +65,26 @@ shall/target split (now every row); gate-in = delivery; `record_custody` ≠ uni
 - **V10 sources could not be fetched.** The Katrina and GAO fixtures are coded from
   recall, with `titles_verified: false`, `pages_verified: false`, per-row confidence, and
   `tally_citable: false`. They are placeholders in the schema, not results.
+
+## V11 (added after the v0.1 order)
+
+- **Climate is a ledger state, a load field and a trigger-table field.** `declare_event` flips
+  all three in the same step as the V4 reclass; `climate_changed` is recorded on the EVENT
+  record beside `manual_steps`.
+- **A load created with no climate gets `stable` and a `CLIMATE_DEFAULTED` flag.** CRIT-1 in
+  the replay shows it.
+- **Targets carry `climate` and `measured_in`.** The verdict function compares the target's
+  climate to the run's; a mismatch is `NOT VALID (climate)` with the measured value still
+  shown. FT-05's 95% receipt target was a pre-event drill figure. In v0.1 it read FAIL under
+  I-12; under V11 it reads not valid, which is the truer statement: nobody measured 95% at 20%
+  custodian availability. A variable-climate receipt target has to be declared before it can
+  fail.
+- **Spec rows carry the climate of their baseline** in `spec_rows.json` (OIG rows variable;
+  pre-event and design rows stable). The results table shows row climate, target climate and
+  run climate side by side.
+- **Field-fix check = {sign, dof, state_updated}.** Under variable climate every handover and
+  every physical contact takes one; absent -> `FIELD_FIX_MISSING`; malformed -> SchemaError.
+  The replay's unattended drops are contacts with no node to run it, and they flag twice
+  (unsigned transfer, field-fix missing), which is two different shalls failing on one event.
+  DOF is recorded as the list of things the node could still change; the ledger does not
+  judge the list.
