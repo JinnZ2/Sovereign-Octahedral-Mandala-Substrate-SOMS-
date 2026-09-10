@@ -1,0 +1,9 @@
+CUSTODY HANDOVER  (FT-16; one line per unit per boundary; both parties sign)
+============================================================================
+BOUNDARY / LOCATION ______________   DATE/TIME ______________
+ unit id        class  axis     from (custodian)   to (custodian)     from sig   to sig
+ ____________   R_     U / C    ________________   ________________   ________   ______
+ ____________   R_     U / C    ________________   ________________   ________   ______
+A unit left with a person who does not sign here is an UNSIGNED TRANSFER, not a delivery.
+R2/R3 loads: next check-in due by ______________ (max silence ______ h)      (FT-17)
+Competing claim on any unit above? -> RESOLVER ______________ via radio/in person (FT-18)

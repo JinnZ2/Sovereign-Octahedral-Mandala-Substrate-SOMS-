@@ -1,0 +1,773 @@
+{
+ "failures_by_locus": {
+  "regime.custody": 62,
+  "regime.market": 4,
+  "regime.security": 1,
+  "regime.urgency": 1
+ },
+ "failures_by_site": {
+  "damaged": 10,
+  "pre-event": 2,
+  "undamaged": 56
+ },
+ "log": [
+  {
+   "ft": "FT-09",
+   "inject": "I-8",
+   "open_findings": [
+    {
+     "age_h": 52560,
+     "finding_id": "AAR-2011-03",
+     "source": "2011 exercise AAR"
+    }
+   ],
+   "outcome": "open findings displayed at activation"
+  },
+  {
+   "ft": "V8",
+   "inject": "-",
+   "missing": [
+    "protein_g"
+   ],
+   "outcome": "missing class assignment flagged at activation"
+  },
+  {
+   "ft": "FT-14",
+   "inject": "I-6",
+   "outcome": "cellular disabled for the whole exercise"
+  },
+  {
+   "detail": "V3: 'critical' is not a regime class ('R0', 'R1', 'R2', 'R3'); 'critical' alone is invalid",
+   "ft": "V3",
+   "inject": "I-13",
+   "outcome": "'critical' with no axis refused at intake"
+  },
+  {
+   "detail": "V3: load CRIT-1 declared R2 with no axis (urgency | custody); refused at intake",
+   "ft": "V3",
+   "inject": "I-13b",
+   "outcome": "class with no axis refused at intake"
+  },
+  {
+   "detail": "V3: CRIT-1 is on the custody axis at R2; dropping to R0 (expedite) is refused",
+   "ft": "V3",
+   "inject": "I-13c",
+   "outcome": "custody-axis load may not drop custody to expedite"
+  },
+  {
+   "ft": "V4",
+   "inject": "I-11",
+   "manual_steps": 0,
+   "outcome": "event declared; loads reclassed from trigger table",
+   "reclassed": 5,
+   "water_min_class": "R2"
+  },
+  {
+   "detail": "FT-01: unit GHOST-1 has no state record; movement held at the gate",
+   "ft": "FT-01",
+   "inject": "I-1",
+   "outcome": "held at gate"
+  },
+  {
+   "ft": "FT-16",
+   "inject": "I-12",
+   "outcome": "custodian availability set to 20%: 8 of 40 pantries cannot sign"
+  },
+  {
+   "commit_id": "D-U005",
+   "ft": "FT-05",
+   "inject": "-",
+   "outcome": "unreceipted delivery stays IN_TRANSIT"
+  },
+  {
+   "commit_id": "D-U030",
+   "ft": "FT-05",
+   "inject": "-",
+   "outcome": "unreceipted delivery stays IN_TRANSIT"
+  },
+  {
+   "commit_id": "D-U055",
+   "ft": "FT-05",
+   "inject": "-",
+   "outcome": "unreceipted delivery stays IN_TRANSIT"
+  },
+  {
+   "commit_id": "D-U080",
+   "ft": "FT-05",
+   "inject": "-",
+   "outcome": "unreceipted delivery stays IN_TRANSIT"
+  },
+  {
+   "commit_id": "D-U105",
+   "ft": "FT-05",
+   "inject": "-",
+   "outcome": "unreceipted delivery stays IN_TRANSIT"
+  },
+  {
+   "detected": 28,
+   "dropped": 23,
+   "ft": "FT-16",
+   "inject": "I-12",
+   "outcome": "presence without custody read as unsigned transfer"
+  },
+  {
+   "converted_kcal": 300000.0,
+   "factor": 250.0,
+   "ft": "FT-07",
+   "inject": "I-4",
+   "outcome": "substitution logged with pre-declared factor"
+  },
+  {
+   "failures": 1,
+   "ft": "FT-07",
+   "inject": "I-4b",
+   "need_credited": 0.0,
+   "outcome": "substitution without declared conversion: delivery RECEIVED, need not credited, failure recorded",
+   "unit_status": "RECEIVED"
+  },
+  {
+   "detail": "FT-07: substitution protein_g -> kcal has no declared conversion factor",
+   "ft": "FT-07",
+   "inject": "I-4c",
+   "outcome": "direct substitution without a factor refused"
+  },
+  {
+   "detail": "FT-11: settlement for D-U005 refused; the money ledger may not close ahead of the physical one",
+   "ft": "FT-11",
+   "inject": "I-5",
+   "outcome": "settlement refused"
+  },
+  {
+   "detail": "FT-02: UNKNOWN is a status, never a location",
+   "ft": "FT-02",
+   "inject": "-",
+   "outcome": "'unknown FSA' rejected as a location"
+  },
+  {
+   "detail": "FT-02: cannot close U013 without physical reconciliation (counted_by, qty)",
+   "ft": "FT-02",
+   "inject": "-",
+   "outcome": "closure without reconciliation refused"
+  },
+  {
+   "ft": "FT-08",
+   "inject": "-",
+   "order": [
+    "U004",
+    "U001"
+   ],
+   "outcome": "FEFO order, expired excluded"
+  },
+  {
+   "after": "REGISTERED",
+   "before": "PROVISIONAL",
+   "ft": "FT-15",
+   "inject": "I-7",
+   "outcome": "provisional node promoted on first kept commitment"
+  },
+  {
+   "ft": "FT-18",
+   "inject": "I-10",
+   "outcome": "competing claim routed to resolver; custody unchanged until resolved",
+   "paths": [
+    "radio",
+    "in_person"
+   ],
+   "resolver_acted_within_h": 4,
+   "routed_to": "RESOLVER-1"
+  },
+  {
+   "all_missed_this_sweep": 1,
+   "escalated": [
+    [
+     "U015",
+     2,
+     true
+    ]
+   ],
+   "ft": "FT-17",
+   "inject": "I-9",
+   "outcome": "suppressed check-in escalated at the period sweep"
+  },
+  {
+   "ft": "FT-06",
+   "inject": "-",
+   "outcome": "dwell escalations fired",
+   "units": [
+    "CRIT-1"
+   ]
+  },
+  {
+   "ft": "V8",
+   "inject": "-",
+   "outcome": "event ended; standing plan retained",
+   "standing_plan": [
+    "L_water",
+    "count",
+    "kcal"
+   ]
+  }
+ ],
+ "metrics": {
+  "copies_consistent": true,
+  "detection_latency_h_max": 11,
+  "dwell_h": {
+   "max": 0,
+   "median": 0,
+   "n": 0,
+   "over_limit_escalated": 1
+  },
+  "dwell_max_h": 0,
+  "failures_by_locus": {
+   "regime.custody": 62,
+   "regime.market": 4,
+   "regime.security": 1,
+   "regime.urgency": 1
+  },
+  "failures_by_site": {
+   "damaged": 10,
+   "pre-event": 2,
+   "undamaged": 56
+  },
+  "failures_by_type": {
+   "CONTESTED_CUSTODY": 1,
+   "ESCALATION": 1,
+   "FLAG": 5,
+   "HEARTBEAT_MISSED": 30,
+   "LOST": 1,
+   "MISSING_CLASS_ASSIGNMENT": 1,
+   "SETTLEMENT_REFUSED": 1,
+   "UNSIGNED_TRANSFER": 28
+  },
+  "flags": {
+   "EXPIRED_EXCLUDED": 1,
+   "REPACK_WITHOUT_MANIFEST": 1,
+   "ROUTE_EDGE_UNASSIGNED": 1,
+   "SUBSTITUTION_UNCREDITED": 1,
+   "TRANSFER_MANIFEST_GENERIC": 1
+  },
+  "heartbeat": {
+   "all_within_one_interval": true,
+   "detection_latency_h_max": 11,
+   "missed": 30
+  },
+  "lost_units": [
+   "U013"
+  ],
+  "need_gap_declared_units": {
+   "N-COMM-1": 120000.0,
+   "N-P00": 690000.0,
+   "N-P01": 650000.0,
+   "N-P02": 700000.0,
+   "N-P03": 400000.0,
+   "N-P04": 900000.0,
+   "N-P05": 800000.0,
+   "N-P06": 700000.0,
+   "N-P07": 700000.0,
+   "N-P08": 900000.0,
+   "N-P09": 700000.0,
+   "N-P10": 800000.0,
+   "N-P11": 700000.0,
+   "N-P12": 900000.0,
+   "N-P13": 700000.0,
+   "N-P14": 800000.0,
+   "N-P15": 800000.0,
+   "N-P16": 900000.0,
+   "N-P17": 700000.0,
+   "N-P18": 700000.0,
+   "N-P19": 700000.0,
+   "N-P20": 700000.0,
+   "N-P21": 700000.0,
+   "N-P22": 700000.0,
+   "N-P23": 700000.0,
+   "N-P24": 900000.0,
+   "N-P25": 700000.0,
+   "N-P26": 700000.0,
+   "N-P27": 700000.0,
+   "N-P28": 900000.0,
+   "N-P29": 700000.0,
+   "N-P30": 700000.0,
+   "N-P31": 700000.0,
+   "N-P32": 900000.0,
+   "N-P33": 700000.0,
+   "N-P34": 700000.0,
+   "N-P35": 700000.0,
+   "N-P36": 900000.0,
+   "N-P37": 700000.0,
+   "N-P38": 700000.0,
+   "N-P39": 700000.0,
+   "N-PROT-P00": 22500.0,
+   "W-P00": 1600.0,
+   "W-P01": 1600.0,
+   "W-P02": 0.0,
+   "W-P03": 1600.0,
+   "W-P04": 1800.0,
+   "W-P05": 1600.0,
+   "W-P06": 1600.0,
+   "W-P07": 1600.0,
+   "W-P08": 1800.0,
+   "W-P09": 1600.0,
+   "W-P10": 1600.0,
+   "W-P11": 1600.0,
+   "W-P12": 1800.0,
+   "W-P13": 1600.0,
+   "W-P14": 1600.0,
+   "W-P15": 1800.0,
+   "W-P16": 1800.0,
+   "W-P17": 1600.0,
+   "W-P18": 1600.0,
+   "W-P19": 1600.0,
+   "W-P20": 1600.0,
+   "W-P21": 1600.0,
+   "W-P22": 1600.0,
+   "W-P23": 1600.0,
+   "W-P24": 1800.0,
+   "W-P25": 1800.0,
+   "W-P26": 1600.0,
+   "W-P27": 1600.0,
+   "W-P28": 1800.0,
+   "W-P29": 1600.0,
+   "W-P30": 1800.0,
+   "W-P31": 1600.0,
+   "W-P32": 1800.0,
+   "W-P33": 1600.0,
+   "W-P34": 1600.0,
+   "W-P35": 1600.0,
+   "W-P36": 1800.0,
+   "W-P37": 1600.0,
+   "W-P38": 1600.0,
+   "W-P39": 1600.0
+  },
+  "open_findings": [
+   "AAR-2011-03"
+  ],
+  "provisional_nodes": [],
+  "receipt_rate_pct": 87.70491803278688,
+  "refuse_unreceipted_pct": 100.0,
+  "resolver_acted_within_h": 4,
+  "settlements": {
+   "refusal_rate_pct": 50.0,
+   "refused_no_receipt": 1,
+   "settled": 1
+  },
+  "stale_units": [
+   "U004",
+   "U005",
+   "U008",
+   "U014",
+   "U015",
+   "U016",
+   "U024",
+   "U028",
+   "U030",
+   "U032",
+   "U036",
+   "U044",
+   "U048",
+   "U052",
+   "U055",
+   "U056",
+   "U064",
+   "U068",
+   "U072",
+   "U076",
+   "U080",
+   "U084",
+   "U088",
+   "U092",
+   "U096",
+   "U104",
+   "U105",
+   "U108",
+   "U112",
+   "U116"
+  ],
+  "units_shipped": 123,
+  "unsigned_transfers_detected_pct": 100.0,
+  "unsigned_transfers_extra": [
+   "U005",
+   "U030",
+   "U055",
+   "U080",
+   "U105"
+  ],
+  "visibility_lost_pct": 25.203252032520325
+ },
+ "n_events": 1949,
+ "n_nodes": 49,
+ "seed": 0,
+ "targets": {
+  "FT-01": {
+   "baseline": "38% lost",
+   "metric": "visibility_lost_pct",
+   "op": "<=",
+   "value": 5.0
+  },
+  "FT-05": {
+   "baseline": "4% documented",
+   "metric": "receipt_rate_pct",
+   "op": ">=",
+   "value": 95.0
+  },
+  "FT-06": {
+   "baseline": "~48 d custody dwell",
+   "metric": "dwell_max_h",
+   "op": "<=",
+   "value": 48
+  },
+  "FT-11": {
+   "baseline": "paid without proof",
+   "metric": "refuse_unreceipted_pct",
+   "op": "==",
+   "value": 100.0
+  },
+  "FT-16": {
+   "baseline": "identity lost at transfer",
+   "metric": "unsigned_transfers_detected_pct",
+   "op": ">=",
+   "value": 100.0
+  },
+  "FT-17": {
+   "baseline": "months",
+   "metric": "detection_latency_h_max",
+   "op": "<=",
+   "value": 12
+  },
+  "FT-18": {
+   "baseline": "no resolver",
+   "metric": "resolver_acted_within_h",
+   "op": "<=",
+   "value": 12
+  }
+ },
+ "verdicts": {
+  "FT-01": {
+   "baseline": "38% lost",
+   "measured": {
+    "lost": [
+     "U013"
+    ],
+    "stale": [
+     "U004",
+     "U005",
+     "U008",
+     "U014",
+     "U015",
+     "U016",
+     "U024",
+     "U028",
+     "U030",
+     "U032",
+     "U036",
+     "U044",
+     "U048",
+     "U052",
+     "U055",
+     "U056",
+     "U064",
+     "U068",
+     "U072",
+     "U076",
+     "U080",
+     "U084",
+     "U088",
+     "U092",
+     "U096",
+     "U104",
+     "U105",
+     "U108",
+     "U112",
+     "U116"
+    ],
+    "visibility_lost_pct": 25.2
+   },
+   "note": "unrecorded order held at the gate; stale set = the 5 unreceipted deliveries, 23 unsigned drops, the stranded/silent loads",
+   "shall_held": true,
+   "target": "<= 5.0 %",
+   "verdict": "FAIL",
+   "verify": "T+A"
+  },
+  "FT-02": {
+   "baseline": null,
+   "measured": "schema rejected 'unknown' location; close refused",
+   "note": "",
+   "shall_held": true,
+   "target": null,
+   "verdict": "PASS",
+   "verify": "I+T"
+  },
+  "FT-03": {
+   "baseline": null,
+   "measured": {
+    "electronic_obs_dropped": 120,
+    "physical_obs_kept": 241
+   },
+   "note": "electronic channel dark for the whole run; state held on T-cards and gate logs",
+   "shall_held": true,
+   "target": null,
+   "verdict": "PASS",
+   "verify": "T/E"
+  },
+  "FT-04": {
+   "baseline": null,
+   "measured": {
+    "child_ids_linked": 2,
+    "generic_manifest": 1,
+    "repack_without_manifest": 1
+   },
+   "note": "",
+   "shall_held": true,
+   "target": null,
+   "verdict": "PASS",
+   "verify": "I+T"
+  },
+  "FT-05": {
+   "baseline": "4% documented",
+   "measured": {
+    "receipt_rate_pct": 87.7
+   },
+   "note": "unreceipted deliveries stay IN_TRANSIT; counted, not relabelled",
+   "shall_held": true,
+   "target": ">= 95.0",
+   "verdict": "FAIL",
+   "verify": "A"
+  },
+  "FT-06": {
+   "baseline": "~48 d custody dwell",
+   "measured": {
+    "dwell_max_h": 0,
+    "escalated": 1
+   },
+   "note": "escalation fired; max dwell 0 h is within the operator target",
+   "shall_held": true,
+   "target": "max dwell <= 48 h; escalate > 24 h",
+   "verdict": "PASS",
+   "verify": "A"
+  },
+  "FT-07": {
+   "baseline": null,
+   "measured": [
+    "substitution logged with pre-declared factor",
+    "substitution without declared conversion: delivery RECEIVED, need not credited, failure recorded",
+    "direct substitution without a factor refused"
+   ],
+   "note": "Q-1: no factor -> delivery RECEIVED, need uncredited, failure recorded; direct substitute() refuses",
+   "shall_held": true,
+   "target": null,
+   "verdict": "PASS",
+   "verify": "I+T"
+  },
+  "FT-08": {
+   "baseline": null,
+   "measured": {
+    "expired_excluded": 1,
+    "order": [
+     "U004",
+     "U001"
+    ]
+   },
+   "note": "",
+   "shall_held": true,
+   "target": null,
+   "verdict": "PASS",
+   "verify": "I+A"
+  },
+  "FT-09": {
+   "baseline": null,
+   "measured": {
+    "open_at_activation": [
+     {
+      "age_h": 52560,
+      "finding_id": "AAR-2011-03",
+      "source": "2011 exercise AAR"
+     }
+    ]
+   },
+   "note": "AAR-2011-03 still OPEN at the end: reported, not closed by the pilot",
+   "shall_held": true,
+   "target": null,
+   "verdict": "PASS",
+   "verify": "I+A"
+  },
+  "FT-10": {
+   "baseline": null,
+   "measured": {
+    "consistent": true,
+    "copies": 2
+   },
+   "note": "",
+   "shall_held": true,
+   "target": null,
+   "verdict": "PASS",
+   "verify": "I+D"
+  },
+  "FT-11": {
+   "baseline": "paid without proof",
+   "measured": {
+    "refusal_rate_pct": 50.0,
+    "refused_no_receipt": 1,
+    "settled": 1
+   },
+   "note": "",
+   "shall_held": true,
+   "target": "refuse 100% of unreceipted",
+   "verdict": "PASS",
+   "verify": "T+A"
+  },
+  "FT-12": {
+   "baseline": null,
+   "measured": {
+    "unassigned_edges": [
+     [
+      "port",
+      "FB",
+      "cross-dock"
+     ]
+    ]
+   },
+   "note": "the cross-dock leg is unassigned and flagged; assigning it is the operator's job",
+   "shall_held": true,
+   "target": null,
+   "verdict": "PASS",
+   "verify": "I+E"
+  },
+  "FT-13": {
+   "baseline": "23% co-authored; 90% no pre-positioned stock",
+   "measured": {
+    "coauthored": 36,
+    "familiarity_verified": 40,
+    "pantries": 40,
+    "prepositioned": 40
+   },
+   "note": "co-authorship at 36/40: reported as a FAIL, not waived",
+   "shall_held": false,
+   "target": "100% of nodes",
+   "verdict": "FAIL",
+   "verify": "E+I"
+  },
+  "FT-14": {
+   "baseline": null,
+   "measured": {
+    "cellular_up": false,
+    "events": 1949
+   },
+   "note": "whole exercise ran with the electronic channel dark",
+   "shall_held": true,
+   "target": null,
+   "verdict": "PASS",
+   "verify": "E"
+  },
+  "FT-15": {
+   "baseline": null,
+   "measured": {
+    "after": "REGISTERED",
+    "before": "PROVISIONAL"
+   },
+   "note": "",
+   "shall_held": true,
+   "target": null,
+   "verdict": "PASS",
+   "verify": "E"
+  },
+  "FT-16": {
+   "baseline": "identity lost at transfer",
+   "measured": {
+    "custodian_availability_pct": 20,
+    "dropped_without_custodian": 23,
+    "extra_detections": [
+     "U005",
+     "U030",
+     "U055",
+     "U080",
+     "U105"
+    ],
+    "of_which_detected_pct": 100.0
+   },
+   "note": "I-12: at 20% custodian availability every drop without a signed handover reads as an unsigned transfer; the extra detections are the unreceipted deliveries, which are present without custody too",
+   "shall_held": true,
+   "target": "detect >= 100% of drops",
+   "verdict": "PASS",
+   "verify": "T+A"
+  },
+  "FT-17": {
+   "baseline": "months",
+   "measured": {
+    "I-9_escalation": [
+     [
+      "U015",
+      2,
+      true
+     ]
+    ],
+    "detection_latency_h_max": 11,
+    "missed_total": 30
+   },
+   "note": "silence past the declared interval escalated within one interval; the sweep ran every period (the sweep is the detector)",
+   "shall_held": true,
+   "target": "latency <= 12 h",
+   "verdict": "PASS",
+   "verify": "T+A"
+  },
+  "FT-18": {
+   "baseline": "no resolver",
+   "measured": {
+    "non_cellular_paths": [
+     "radio",
+     "in_person"
+    ],
+    "resolver_acted_within_h": 4,
+    "routed_to": "RESOLVER-1"
+   },
+   "note": "N-4 watch: the resolver acted in this run; a run where it does not fails target while the shall holds",
+   "shall_held": true,
+   "target": "resolver acts <= 12 h",
+   "verdict": "PASS",
+   "verify": "T"
+  },
+  "V3": {
+   "baseline": null,
+   "measured": [
+    "'critical' with no axis refused at intake",
+    "class with no axis refused at intake",
+    "custody-axis load may not drop custody to expedite"
+   ],
+   "note": "I-13: 'critical' alone, class without axis, custody drop all refused",
+   "shall_held": true,
+   "target": null,
+   "verdict": "PASS",
+   "verify": "T"
+  },
+  "V4": {
+   "baseline": null,
+   "measured": {
+    "manual_steps": 0,
+    "reclassed": 5,
+    "water_min_class": "R2"
+   },
+   "note": "I-11: relief water reclassed to R2 minimum from the precomputed table (N-3 watch: manual_steps must stay 0)",
+   "shall_held": true,
+   "target": null,
+   "verdict": "PASS",
+   "verify": "T"
+  },
+  "V8": {
+   "baseline": null,
+   "measured": {
+    "missing_at_activation": [
+     "protein_g"
+    ],
+    "standing_plan_after_event": [
+     "L_water",
+     "count",
+     "kcal"
+    ]
+   },
+   "note": "protein_g has no standing assignment and no waiver: flagged at activation; assignments survive end_event",
+   "shall_held": true,
+   "target": null,
+   "verdict": "PASS",
+   "verify": "I"
+  }
+ },
+ "version": "v0.1"
+}

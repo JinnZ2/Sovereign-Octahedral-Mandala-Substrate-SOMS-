@@ -1,4 +1,4 @@
-# Substrate coordination pilot v0
+# Substrate coordination pilot v0.1
 
 Build of `SPEC.md` (failure-derived tests + legacy onboarding). CC0, stdlib
 only, paper-operable. One failure source: DHS OIG-20-76.
@@ -20,16 +20,20 @@ only, paper-operable. One failure source: DHS OIG-20-76.
 | file | what |
 |---|---|
 | `ledger.py` | the channels; every SPEC §2 shall is a gate (`Refused`) or a `FLAG` record |
-| `exercise.py` | SPEC §4 replay, injects I-1..I-8 in order; OIG baselines vs operator `TARGETS` |
+| `exercise.py` | SPEC §4 replay, injects I-1..I-13 in order; OIG baselines vs operator `TARGETS`; shall and target columns |
+| `selftest.py` | FT-01..FT-18 and V1..V8 as unittest; prints its count |
+| `fixtures/*_locus.jsonl`, `locus_tally.py` | V2/V10 LOCUS-coded findings (Maria 13 rows; Katrina and GAO 2018 partial, unverified); tallies side by side |
+| `CLAIM_TABLE.md`, `BUILD_NOTE_v0.1.md` | claim statuses V1–V10 and nulls N-1..N-4; Q-1 answer and resolutions |
 | `forms/` | T-card, gate log, delivery receipt: the physical channel on paper |
 | `onboarding/field_map.json` | SPEC §3 field map (Phase 1 ADAPTER) |
 | `onboarding/shadow.py` | Phase 0 SHADOW divergence classifier over legacy CSV exports |
-| `../../tests/test_substrate_pilot_v0.py` | the T rows as unittest, one class per FT |
-| `runs/exercise_v0.md` | last replay: verdict per FT, shall-held separate from target |
+| `../../tests/test_substrate_pilot_v0.py` | thin wrapper that collects `selftest.py` under pytest |
+| `runs/exercise_v0_1.md` | last replay: verdict per row, shall-held separate from target, failures by LOCUS/SITE |
 
 ```bash
 python experiments/substrate_pilot_v0/exercise.py          # replay, writes runs/
-python -m unittest tests.test_substrate_pilot_v0            # FT battery (stdlib)
+python experiments/substrate_pilot_v0/selftest.py           # FT battery (stdlib), prints its count
+python experiments/substrate_pilot_v0/locus_tally.py        # LOCUS tallies, Maria | Katrina | GAO 2018
 python experiments/substrate_pilot_v0/onboarding/shadow.py inv.csv rec.csv <ledger_root>
 ```
 

@@ -219,3 +219,35 @@ NOT claimed: lower total cost; performance at nested scale; transfer beyond
              shared-training populations (Buck, Trainor & Aguirre 2006)
 thresholds: OIG baselines are real; targets are operator-set
 ```
+
+## 6. v0.1 additions (WORK ORDER — substrate pilot v0.1)
+
+```
+FT-16  NAMED CUSTODIAN, EVERY BOUNDARY
+       SHALL    custody transfers only by signed handover naming both parties; a unit sitting
+                with a present-but-noncustodial node (gate guard, unattended yard) reads as an
+                unsigned transfer -> flagged
+       VERIFY   T: transfer without handover -> refused; presence past grace -> flagged. A: detection %
+
+FT-17  HEARTBEAT
+       SHALL    silence is never a normal state; max silence interval declared per R2/R3 load;
+                a suppressed check-in escalates within one interval
+       VERIFY   T. METRIC detection latency (Maria baseline: months)
+
+FT-18  CONTESTED CUSTODY
+       SHALL    any competing claim on an R2/R3 load routes to a pre-declared resolver reachable
+                without cellular; custody does not move until resolved
+       VERIFY   T: resolver contact record with cellular-only path -> refused at declaration
+
+V1  failure LOCUS + SITE on every failure record; physical_damage only at site = damaged
+V3  regime class R0..R3 + axis (urgency | custody) per load; "critical" alone refused; custody axis may not drop
+V4  context-severity: event declaration reclasses from a precomputed trigger table, no deliberation
+V8  retention: class assignments persist post-event; missing + not WAIVED -> flagged at activation
+
+Injects, appended to section 4 in order:
+I-9   suppress one check-in                          FT-17
+I-10  competing custody claim at a yard              FT-18
+I-11  declare event -> loads reclass                 V4
+I-12  local custodian availability set to 20%        FT-16
+I-13  load declared "critical", no axis              V3
+```
