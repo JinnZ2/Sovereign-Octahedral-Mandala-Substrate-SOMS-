@@ -130,7 +130,10 @@ class OctahedralCluster:
             return self.active.solve_local(target)
         except RuntimeError:
             if self.failover():
-                return self.active.solve_local(target)
+                try:
+                    return self.active.solve_local(target)
+                except RuntimeError:
+                    return None          # backup failed too: None, per the Optional contract
         return None
 
 
