@@ -120,3 +120,33 @@ shall/target split (now every row); gate-in = delivery; `record_custody` ≠ uni
   definitions, so `tally_citable.sub_axis` is false and stays false until both are recoded
   under them. Row 10's site split is the case SITE `unknown` was added for; the grader
   codings are left as given.
+
+## Third grader, instrument fix, round 2, V10 sources, V10b
+
+- **Every agreement figure is computed from the fixture rows.** Three-way: any regime
+  component 12/13/13; pure damage 1/0/0; pairwise top level C-D 9, C-G 8, D-G 11 of 13;
+  damage flag unanimous NO on rows 1,3,4,5,6,7,8,9 and unanimous YES on none; row 5 has three
+  answers. All match the order's block.
+- **Round-2 figures reproduce**: exact 11/14, overlap 2, disjoint 1 (row 9), mean Jaccard
+  0.857, kappa over label sets 0.664 (observed 0.786, expected 0.362) against the order's 0.66.
+- **One figure differs and is reported as computed.** GPT graded-site vs record mismatches
+  compute to 7 (rows 1, 2, 3, 9, 10, 11, 12) against the order's 5, reading unspecified sites
+  (rows 4, 7, 8) as agreeing with the record and counting pre-event vs undamaged on rows 1 and
+  3. The order may have excluded those two. Either count supports the instrument fix.
+- **Katrina top-level tally moved** from 6/3/1 to 8/1/1 with no recoding: under the top-level
+  rule a regime-regime mix is regime, and two of my recalled rows were such mixes.
+- **SITE is now a record fact.** `site_record` is the supplied value on every row in every
+  fixture and is what `check_locus` reads. Graded sites from round 1 are retained under
+  `graders.round1.<grader>.site` with `site_field: graded (deprecated)`, because they are the
+  evidence for the instrument fix (a grader bent the site to license the locus).
+- **physical_damage tightened** to "destroyed or disabled BY THE EVENT" after row 9 (a
+  handling choice that blocks a signal is not damage). Row 9 carries `site_check`.
+- **8a/8b.** The order names the split; its content is mine: 8a = GPS unused on shipments to
+  PR (>75%), 8b = GPS unused on moves within PR (>96%), from the FT-03 finding text.
+- **V10 sources verified, still unfetchable.** `fixtures/sources.json` carries the resolved
+  titles, IDs, dates and URLs with `fetched: false`. Per the order, nothing is coded from the
+  summary: stated-cause rows exist as locator stubs with `locus: null`, so V10b reads NOT
+  EVALUABLE rather than a number. Retention (`recurred_in_M1`) is coded on the recalled K3-family
+  mechanism rows only, by me, marked.
+- **V2c** exists as an instrument: two custody sub-loci in the enum and a 14-row round-3
+  template whose verbatim and grader slots are empty.

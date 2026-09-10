@@ -229,6 +229,9 @@ class V1_failure_locus_schema(unittest.TestCase):
         for locus in LOCI:
             self.assertTrue(LOCUS_DEFINITIONS.get(locus), locus)
         self.assertEqual(check_locus("regime.learning", "unknown"), ["regime.learning"])
+        self.assertEqual(check_locus("regime.custody.state", "undamaged"), ["regime.custody.state"])   # V2c
+        self.assertIn("BY THE EVENT", LOCUS_DEFINITIONS["physical_damage"])
+        self.assertIn("RECORD FACT", LOCUS_DEFINITIONS["_site"])
 
     def test_physical_damage_rejected_off_damaged_site(self):
         for site in ("undamaged", "pre-event", "unknown"):
@@ -265,12 +268,12 @@ class V1_failure_locus_schema(unittest.TestCase):
 class V2_maria_fixture(unittest.TestCase):
     def test_fixture_loads_validates_and_tallies(self):
         header, body = locus_tally.load(os.path.join(HERE, "fixtures", "maria_locus.jsonl"))
-        self.assertIn("two-grader coding", header["_header"]); self.assertIn("DeepSeek", header["_header"])
+        self.assertIn("three-grader coding", header["_header"]); self.assertIn("DeepSeek", header["_header"]); self.assertIn("GPT", header["_header"])
         self.assertEqual(len(body), 13)
         t = locus_tally.tally(body)
         self.assertEqual(t["coarse"], {"regime": 10, "mixed": 2, "physical_damage": 1})
         self.assertEqual(t["second_grader_rows"], 13)
-        self.assertFalse(header["tally_citable"]["sub_axis"])
+        self.assertFalse(header["tally_citable"]["round1_sub_axis"])
         g2 = locus_tally.tally(body, key="second_grader_locus")
         self.assertEqual(g2["coarse"], {"regime": 11, "mixed": 2, "physical_damage": 0})
         a = locus_tally.agreement(body)
@@ -282,6 +285,51 @@ class V2_maria_fixture(unittest.TestCase):
         self.assertEqual(a["sub_axis"], {"comparable": 12, "exact": 2, "overlap": 4, "disjoint": 6})
         self.assertFalse(a["N-1_fires"])
         self.assertEqual([r["row"] for r in body if r["site"] != r["second_grader_site"]], [10])
+
+    def test_site_is_a_record_fact(self):
+        header, body = locus_tally.load(os.path.join(HERE, "fixtures", "maria_locus.jsonl"))
+        for r in body:
+            self.assertIn(r["site_record"], SITES)
+            self.assertIn("site_field", r["graders"]["round1"]["gpt"])       # graded sites retained as history only
+        self.assertIn("RECORD FACT", header["site_rule"])
+
+    def test_three_way_figures_computed_from_rows(self):
+        _, body = locus_tally.load(os.path.join(HERE, "fixtures", "maria_locus.jsonl"))
+        tw = locus_tally.three_way(body)
+        self.assertEqual(tw["any_regime_component"], {"claude_opus_5": 12, "deepseek": 13, "gpt": 13})
+        self.assertEqual(tw["pure_physical_damage"], {"claude_opus_5": 1, "deepseek": 0, "gpt": 0})
+        self.assertEqual(tw["pairwise_top_level_agree"], {"claude_opus_5-deepseek": 9, "claude_opus_5-gpt": 8, "deepseek-gpt": 11})
+        self.assertEqual(tw["damage_flag_unanimous_no_rows"], [1, 3, 4, 5, 6, 7, 8, 9])
+        self.assertEqual(tw["damage_flag_unanimous_yes_rows"], [])
+        self.assertEqual(tw["sub_axis_majority"][5], None)                  # three graders, three answers
+        self.assertGreaterEqual(len(tw["site_vs_record_mismatches"]["gpt"]), 5)
+
+    def test_round2_figures_computed_from_rows(self):
+        _, body = locus_tally.load(os.path.join(HERE, "fixtures", "maria_locus.jsonl"))
+        r2 = locus_tally.round2(body)
+        self.assertEqual((r2["n"], r2["exact"], r2["overlap"], r2["disjoint"], r2["disjoint_rows"]), (14, 11, 2, 1, ["9"]))
+        self.assertAlmostEqual(r2["mean_jaccard"], 0.857, places=3)
+        self.assertAlmostEqual(r2["kappa_label_sets"], 0.66, places=1)
+        self.assertEqual(r2["physical_damage_rows"], [2, 1])
+        self.assertGreaterEqual(r2["custody_in_both"], 8)
+        for _, g in [(s, g) for r in body for s, g in r["graders"]["round2"].items()]:
+            if _ == "5":
+                self.assertEqual((g["gpt"], g["deepseek"]), ("regime.learning", "regime.learning"))   # class confirmed
+
+    def test_v10b_instrument_not_evaluable_until_extraction(self):
+        for name in ("katrina_locus.jsonl", "gao2018_locus.jsonl"):
+            header, body = locus_tally.load(os.path.join(HERE, "fixtures", name))
+            self.assertTrue(header["titles_verified"]); self.assertFalse(header["pages_verified"])
+            rt = locus_tally.report_type_split(body, None)
+            self.assertFalse(rt["evaluable"])
+            self.assertGreater(rt["stated_cause_pending"], 0)
+            for r in body:
+                self.assertIn(r["doc_type"], ("audit", "review", "self-review"))
+        src = json.load(open(os.path.join(HERE, "fixtures", "sources.json")))["docs"]
+        self.assertTrue(all(not d["fetched"] for d in src.values()))
+        tmpl = [json.loads(l) for l in open(os.path.join(HERE, "fixtures", "maria_locus_round3_template.jsonl")) if l.strip()]
+        self.assertEqual(len(tmpl) - 1, 14)
+        self.assertTrue(all(r["oig_verbatim"] is None and r["grader_a"] is None for r in tmpl[1:]))
 
 
 class V3_regime_class(unittest.TestCase):

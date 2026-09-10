@@ -286,3 +286,44 @@ V11  CLIMATE FIELD                           every spec row and every load recor
 Per-row climate is machine-readable in `spec_rows.json`; operator targets carry
 `climate` in `exercise.TARGETS`. A verdict against a target declared in a climate
 other than the run's is reported as NOT VALID (climate), never as PASS or FAIL.
+
+## 3a. V10 sources — verified 2026-09-10
+
+Registry: `fixtures/sources.json` (K1, K2, K3, M1, M2, M3, LINK OIG-10-101 [locate]) with
+DOC_TYPE audit | review | self-review. None fetchable from the build environment; rows are
+coded from the documents only, never from the order's summary: stated-cause rows are
+locator stubs with `locus: null` until extracted.
+
+### V10b — report-type split (same fixtures)
+
+```
+field      DOC_TYPE = audit | review | self-review   (per row: doc_id, doc_type, row_kind)
+PREDICT    review and self-review documents attribute more to physical_damage / distance /
+           climate than audit documents covering the same event
+TEST       per event, LOCUS tally of each document's STATED CAUSES vs the audit's MECHANISM findings
+RETENTION  K3 (2006) -> OIG-10-101 (2010) -> M1 (2020): recurred_in_M1 = yes | no | not_assessable
+NULL       review docs code no heavier on damage than audits -> no report-level relabel; report it
+STATUS     instrument built (locus_tally.report_type_split); NOT EVALUABLE until stated-cause rows are
+           extracted; retention coded on the recalled K3 mechanism rows only (executor, marked)
+```
+
+## 4a. Maria coding — third grader, three-way, instrument fix, round 2, V2c
+
+Loaded row by row into `fixtures/maria_locus.jsonl` (`graders.round1`, `graders.round2`,
+`site_record`); every figure below is computed by `locus_tally.py` from the rows.
+
+```
+THIRD GRADER (blind, cross-family, 2026-09-10): GPT      tally regime 11 | mixed 2 | physical_damage 0
+THREE-WAY  any regime component 12 | 13 | 13   pure physical_damage 1 | 0 | 0
+           pairwise top level C-D 9/13 | C-G 8/13 | D-G 11/13   (Claude coded the most damage)
+           damage flag unanimous NO on rows 1,3,4,5,6,7,8,9; unanimous YES on none
+           row 5: three graders, three answers -> learning class missing, confirmed
+INSTRUMENT FIX (V1): SITE is a RECORD FACT supplied with each finding, not a graded field
+           (round-1 grader sites retained as history, marked deprecated)
+ROUND 2    cold re-grade under V1 definitions, SITE supplied, rows 8a/8b split; GPT + DeepSeek
+           exact 11/14 | overlap 2 | disjoint 1 (row 9) | mean Jaccard 0.857 | kappa(label sets) computed
+           row 5 both learning -> class confirmed; row 9 [site check]; physical_damage tightened to
+           "destroyed or disabled BY THE EVENT"
+V2c        custody -> regime.custody.state | regime.custody.responsibility; round-3 template with
+           verbatim slots: fixtures/maria_locus_round3_template.jsonl (unrun)
+```

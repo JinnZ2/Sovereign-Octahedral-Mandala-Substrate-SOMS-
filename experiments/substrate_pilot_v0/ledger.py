@@ -44,15 +44,21 @@ NODE_STATUS = ("REGISTERED", "PROVISIONAL")
 
 # V1 failure locus schema. Definitions added after the two-grader run (sub-axis agreement 2/12
 # exact, 6/12 disjoint): the enum was undefined. Code the MECHANISM that failed; motive goes in a note.
-LOCI = ("physical_damage", "regime.market", "regime.urgency", "regime.security", "regime.custody", "regime.learning")
+LOCI = ("physical_damage", "regime.market", "regime.urgency", "regime.security", "regime.custody", "regime.learning",
+        "regime.custody.state", "regime.custody.responsibility")     # V2c split; regime.custody remains valid as the parent
 LOCUS_DEFINITIONS = {
-    "physical_damage": "the site itself is damaged; only codable when SITE = damaged",
+    "physical_damage": "the site's infrastructure destroyed or disabled BY THE EVENT; only codable when SITE = damaged "
+                       "(tightened after round 2, row 9: a handling choice that blocks a signal is not damage)",
     "regime.market": "allocation/priority set by commercial terms, price, contract, vendor capacity",
     "regime.urgency": "speed prioritized over control; controls dropped to expedite",
     "regime.security": "protection against theft, diversion, tampering BY OTHERS",
     "regime.custody": "continuous state record + responsibility held by a named party",
     "regime.learning": "a known finding not converted to a rule (FLT)",
+    "regime.custody.state": "V2c: record continuity failed (the state record broke), holder may have been named",
+    "regime.custody.responsibility": "V2c: no named holder (responsibility not assigned), record may have continued",
     "_rule": "motive vs mechanism: code the MECHANISM that failed; motive goes in a note",
+    "_site": "SITE is a RECORD FACT supplied with each finding (location + inside the impact zone at time of failure), "
+             "never a graded field; the ledger derives it from the node's damage state",
 }
 SITES = ("damaged", "undamaged", "pre-event", "unknown")
 

@@ -1,0 +1,89 @@
+{
+ "_note": "V10 sources verified 2026-09-10 (titles, IDs, dates, URLs resolved) as issued in the work order. None was fetchable from this environment (egress blocked); extraction from the documents is pending. DOC_TYPE per V10b.",
+ "docs": {
+  "K1": {
+   "title": "A Failure of Initiative",
+   "id": "H. Rept. 109-377",
+   "issuer": "House Select Bipartisan Committee",
+   "date": "2006-02-15",
+   "doc_type": "review",
+   "event": "katrina",
+   "url": "https://www.govinfo.gov/content/pkg/CRPT-109hrpt377/html/CRPT-109hrpt377.htm",
+   "chapter": "Logistics and contracting",
+   "verified": true,
+   "fetched": false
+  },
+  "K2": {
+   "title": "The Federal Response to Hurricane Katrina: Lessons Learned",
+   "id": null,
+   "issuer": "White House",
+   "date": "2006-02-23",
+   "doc_type": "review",
+   "event": "katrina",
+   "url": "https://biotech.law.lsu.edu/katrina/govdocs/katrina-lessons-learned.pdf",
+   "note": "17 lessons, 125 recommendations",
+   "verified": true,
+   "fetched": false
+  },
+  "K3": {
+   "title": "A Performance Review of FEMA's Disaster Management Activities in Response to Hurricane Katrina",
+   "id": "DHS OIG-06-32",
+   "issuer": "DHS OIG",
+   "date": "2006-03",
+   "doc_type": "audit",
+   "event": "katrina",
+   "url": "https://www.oig.dhs.gov/reports/2006-03/performance-review-femas-disaster-management-activities-response-hurricane-katrina",
+   "verified": true,
+   "fetched": false
+  },
+  "M1": {
+   "title": "FEMA Mismanaged the Commodity Distribution Process in Response to Hurricanes Irma and Maria",
+   "id": "DHS OIG-20-76",
+   "issuer": "DHS OIG",
+   "date": "2020-09-25",
+   "doc_type": "audit",
+   "event": "maria",
+   "verified": true,
+   "fetched": false
+  },
+  "M2": {
+   "title": "2017 Hurricanes and Wildfires: Initial Observations on the Federal Response and Key Recovery Challenges",
+   "id": "GAO-18-472",
+   "issuer": "GAO",
+   "date": "2018-09-04",
+   "doc_type": "review",
+   "event": "maria",
+   "url": "https://www.gao.gov/products/gao-18-472",
+   "verified": true,
+   "fetched": false
+  },
+  "M3": {
+   "title": "2017 Hurricane Season FEMA After-Action Report",
+   "id": null,
+   "issuer": "FEMA",
+   "date": "2018-07-12",
+   "doc_type": "self-review",
+   "event": "maria",
+   "url": "https://www.fema.gov/sites/default/files/2020-08/fema_hurricane-season-after-action-report_2017.pdf",
+   "verified": true,
+   "fetched": false
+  },
+  "LINK": {
+   "title": "FEMA logistics 'great strides' post-Katrina",
+   "id": "DHS OIG-10-101",
+   "issuer": "DHS OIG",
+   "date": "2010",
+   "doc_type": "audit",
+   "event": "retention-link",
+   "url": null,
+   "verified": false,
+   "fetched": false,
+   "status": "[locate]"
+  }
+ },
+ "doc_types": {
+  "audit": "IG/GAO audit: mechanism findings",
+  "review": "committee / White House / GAO review",
+  "self-review": "the responding agency's own after-action report"
+ }
+}
