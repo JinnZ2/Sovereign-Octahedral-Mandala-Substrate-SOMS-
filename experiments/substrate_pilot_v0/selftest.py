@@ -335,10 +335,28 @@ class V2_maria_fixture(unittest.TestCase):
         tmpl = [json.loads(l) for l in open(os.path.join(HERE, "fixtures", "maria_locus_round3_template.jsonl")) if l.strip()]
         self.assertEqual(len(tmpl) - 1, 17)                                        # 14 rows + C1-C3 candidates
         self.assertTrue(all(r["oig_verbatim"] and r["oig_page"] is not None for r in tmpl[1:]))   # verbatim filled
-        self.assertTrue(all(r["grader_a"] is None and r["grader_b"] is None for r in tmpl[1:]))   # unrun
+        self.assertTrue(all(r["grader_gpt"] is None and r["grader_deepseek"] is None and r["grader_kimi"] is None for r in tmpl[1:]))
+        self.assertEqual(tmpl[0]["graders"]["gemini"], "non-response")
+        rep = locus_tally.round3(tmpl[1:], tmpl[0])
+        self.assertFalse(rep["computed"])                                              # reported, not recomputed
+        self.assertEqual(rep["unanimous_full_enum"], "11/17")
+        # once codings are present the same function computes: synthetic fill on a copy
+        filled = [dict(r, grader_gpt="regime.custody.state", grader_deepseek="regime.custody.state", grader_kimi="regime.custody.state") for r in tmpl[1:]]
+        comp = locus_tally.round3(filled, tmpl[0])
+        self.assertTrue(comp["computed"]); self.assertEqual(comp["unanimous_full_enum"], "17/17")
+        self.assertEqual(comp["unanimous_custody_state_rows"], 17)
+        row9 = next(r for r in filled if r["row"] == "9")
+        row9["grader_gpt"] = "physical_damage"                                         # row 9 site undamaged -> violation
+        comp = locus_tally.round3(filled, tmpl[0])
+        self.assertEqual(comp["rule_violations"], [("9", "gpt")])
         sc = [json.loads(l) for l in open(os.path.join(HERE, "fixtures", "stated_causes_grader_template.jsonl")) if l.strip()]
         self.assertGreaterEqual(len(sc) - 1, 8)
-        self.assertTrue(all(r["text"] and r["grader_a"] is None for r in sc[1:]))
+        self.assertTrue(all(r["text"] and r["grader_gpt"] is None for r in sc[1:]))
+        self.assertIn("NOT A TEST", sc[0]["v10b_status"])
+        _, mbody = locus_tally.load(os.path.join(HERE, "fixtures", "maria_locus.jsonl"))
+        wd = locus_tally.within_document(mbody)
+        self.assertFalse(wd["M1"]["evaluable"])
+        self.assertEqual(wd["M1"]["stated_cause"]["ungraded"], 3)                     # A1, A2, C4
 
     def test_record_sites_from_the_source_and_invalid_codings_flagged(self):
         _, body = locus_tally.load(os.path.join(HERE, "fixtures", "maria_locus.jsonl"))

@@ -171,6 +171,79 @@ def round2(body):
             "label_tally": {"gpt": dict(Counter("+".join(sorted(x)) for x in a)), "deepseek": dict(Counter("+".join(sorted(y)) for y in b))}}
 
 
+# ------------------------------------------------------------------ round 3 (V2c): computes when per-row codings are present
+def collapse_custody(parts):
+    return {("regime.custody" if p.startswith("regime.custody") else p) for p in parts}
+
+
+def round3(template_rows, header, round2_by_row=None):
+    """template_rows: rows of maria_locus_round3_template.jsonl. Returns computed figures if every row has
+    at least two grader codings, else the operator-reported aggregates marked computed: False."""
+    graders = [g for g in ("gpt", "deepseek", "kimi") if any(r.get("grader_" + g) for r in template_rows)]
+    coded = [r for r in template_rows if sum(1 for g in graders if r.get("grader_" + g)) >= 2]
+    if len(graders) < 2 or len(coded) < len(template_rows):
+        rep = dict(header.get("reported_aggregates", {}))
+        rep["computed"] = False
+        rep["per_row_codings_loaded"] = bool(coded)
+        return rep
+    n = len(coded)
+    full = sum(1 for r in coded if len({frozenset(parse_locus(r["grader_" + g])) for g in graders if r.get("grader_" + g)}) == 1)
+    coll = sum(1 for r in coded if len({frozenset(collapse_custody(parse_locus(r["grader_" + g]))) for g in graders if r.get("grader_" + g)}) == 1)
+    pure = {g: sum(1 for r in coded if r.get("grader_" + g) and top_level(r["grader_" + g]) == "physical_damage") for g in graders}
+    custody_labels = Counter()
+    for r in coded:
+        for g in graders:
+            if not r.get("grader_" + g):
+                continue
+            for p in parse_locus(r["grader_" + g]):
+                if p.startswith("regime.custody"):
+                    custody_labels[p] += 1
+    unanimous_state = sum(1 for r in coded if all(r.get("grader_" + g) and "regime.custody.state" in parse_locus(r["grader_" + g]) for g in graders))
+    violations = [(r["row"], g) for r in coded for g in graders
+                  if r.get("grader_" + g) and "physical_damage" in parse_locus(r["grader_" + g]) and r.get("site_record") != "damaged"]
+    stability = {}
+    if round2_by_row:
+        for g in ("gpt", "deepseek"):
+            same = tot = 0
+            for r in coded:
+                r2 = round2_by_row.get(str(r["row"]))
+                if r2 and r.get("grader_" + g):
+                    tot += 1
+                    same += collapse_custody(parse_locus(r2[g])) == collapse_custody(parse_locus(r["grader_" + g]))
+            stability[g] = "%d/%d" % (same, tot)
+    return {"computed": True, "graders": graders, "rows": n, "unanimous_full_enum": "%d/%d" % (full, n),
+            "unanimous_custody_collapsed": "%d/%d" % (coll, n), "pure_physical_damage": pure,
+            "custody_labels": dict(custody_labels), "unanimous_custody_state_rows": unanimous_state,
+            "rule_violations": violations, "stability_r2_to_r3_collapsed": stability}
+
+
+# ------------------------------------------------------------------ V10c: within-document stated-cause vs finding sentences
+def within_document(body):
+    """Per document: top-level tally of stated-cause rows vs finding rows on the same enum. Computes only for
+    rows with a locus; reports counts of ungraded rows otherwise."""
+    docs = {}
+    for r in body:
+        d = r.get("doc_id") or "M1"
+        kind = r.get("row_kind") or ("finding" if r.get("graders", {}).get("round1") else None)
+        if kind is None:
+            continue
+        k = "stated_cause" if kind in ("stated_cause", "self_review_rebuttal") else ("finding" if kind in ("finding", "mechanism_finding", "candidate_finding") else None)
+        if k is None:
+            continue
+        e = docs.setdefault(d, {"stated_cause": {"graded": Counter(), "ungraded": 0}, "finding": {"graded": Counter(), "ungraded": 0}})
+        if r.get("locus"):
+            e[k]["graded"][top_level(r["locus"])] += 1
+        else:
+            e[k]["ungraded"] += 1
+    out = {}
+    for d, e in docs.items():
+        evaluable = sum(e["stated_cause"]["graded"].values()) > 0 and sum(e["finding"]["graded"].values()) > 0
+        out[d] = {"stated_cause": {"graded": dict(e["stated_cause"]["graded"]), "ungraded": e["stated_cause"]["ungraded"]},
+                  "finding": {"graded": dict(e["finding"]["graded"]), "ungraded": e["finding"]["ungraded"]},
+                  "evaluable": evaluable}
+    return out
+
+
 # ------------------------------------------------------------------ V10b report-type split + retention
 def report_type_split(body, sources):
     rows = [r for r in body if r.get("doc_type")]
@@ -208,7 +281,17 @@ def main(paths):
                                     "tally_grader2": tally(body, key="second_grader_locus") if any(r.get("second_grader_locus") for r in body) else None,
                                     "agreement": agreement(body),
                                     "three_way": three_way(body), "round2": round2(body),
-                                    "report_type_split": report_type_split(body, None)}
+                                    "report_type_split": report_type_split(body, None),
+                                    "within_document": within_document(body)}
+        if os.path.basename(p) == "maria_locus.jsonl":
+            tp = os.path.join(HERE, "fixtures", "maria_locus_round3_template.jsonl")
+            if os.path.exists(tp):
+                tr = [json.loads(l) for l in open(tp) if l.strip()]
+                r2map = {}
+                for r in body:
+                    for sub, g in (r.get("graders", {}).get("round2") or {}).items():
+                        r2map[sub] = g
+                out[os.path.basename(p)]["round3"] = round3(tr[1:], tr[0], r2map)
     names = list(out)
     print("%-28s" % "" + "".join("%-26s" % n[:25] for n in names))
     for k in ("regime", "mixed", "physical_damage"):
@@ -242,6 +325,19 @@ def main(paths):
                 r2["observed"], r2["expected"], r2["custody_in_both"], r2["physical_damage_rows"]))
             print("    schema-invalid under the record site: %s | excluding those rows: exact %d/%d" % (
                 r2["schema_invalid_under_record_site"], r2["excluding_invalid"]["exact"], r2["excluding_invalid"]["n"]))
+        r3 = out[n].get("round3")
+        if r3:
+            tag = "computed" if r3.get("computed") else "REPORTED, not recomputed (per-row codings not loaded)"
+            print("  ROUND 3 (%s): unanimous full enum %s | custody collapsed %s | pure damage %s | custody.state %s | rule violation %s | stability r2->r3 %s" % (
+                tag, r3.get("unanimous_full_enum"), r3.get("unanimous_custody_collapsed"), r3.get("pure_physical_damage"),
+                r3.get("custody_state_share") or r3.get("custody_labels"), r3.get("rule_violation") or r3.get("rule_violations"),
+                r3.get("stability_r2_to_r3_collapsed")))
+        wd = out[n].get("within_document")
+        if wd:
+            for d, e in wd.items():
+                print("  V10c within %s: stated-cause graded %s / ungraded %d | finding graded %s / ungraded %d | %s" % (
+                    d, e["stated_cause"]["graded"], e["stated_cause"]["ungraded"], e["finding"]["graded"], e["finding"]["ungraded"],
+                    "evaluable" if e["evaluable"] else "NOT EVALUABLE"))
         rt = out[n]["report_type_split"]
         if rt:
             print("  V10b report-type split: %s | stated-cause coded %d, pending %d | retention K3-sourced->M1 %s, all recalled rows->M1 %s" % (

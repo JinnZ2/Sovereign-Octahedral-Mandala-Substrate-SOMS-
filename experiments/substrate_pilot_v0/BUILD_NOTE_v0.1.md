@@ -180,3 +180,25 @@ shall/target split (now every row); gate-in = delivery; `record_custody` ≠ uni
 - **V10b stays NOT EVALUABLE**: every stated-cause row is now verbatim, and none is graded.
   `fixtures/stated_causes_grader_template.jsonl` lists them across documents and events.
 - `spec_rows.json` now points FT rows at their verbatim OIG rows and pages where one exists.
+
+## Round 3 reported; V10b withdrawn as a test; V10c added
+
+- **Round 3 is loaded as reported, not recomputed.** The report gave aggregates, not per-row
+  codings. They sit in the round-3 template header under `reported_aggregates` with
+  `computed: false`. `locus_tally.round3()` computes the same figures (unanimity on the full
+  enum and with custody collapsed, pure damage, custody.state share and unanimity, rule
+  violations against the record site, stability against round 2 collapsed) the moment
+  `grader_gpt`, `grader_deepseek`, `grader_kimi` are filled. Until then the tally prints
+  the reported line with that label.
+- **Citability follows the report.** `round3_sub_axis_collapsed: true`; custody split citable
+  as state >> responsibility. Both statements carry "reported basis" in the claim table.
+- **GPT row 9 stays.** physical_damage at an undamaged record site is a rule violation;
+  the instrument flags it and keeps it, as in round 2.
+- **V10b is not a test.** One review row and one self-review row give the across-document
+  comparison no denominator. The instrument stays; its status is NOT A TEST.
+- **V10c replaces the question inside the document.** Stated-cause sentences vs finding
+  sentences of the same report on the same enum. M1 has A1 and A2 against the graded
+  findings; A1 reportedly came back unanimous mixed(physical_damage, regime.urgency), which
+  is the audit's own sentence naming both. Computes when the stated-cause rows are graded.
+- **Caveat recorded.** An audit reads the record trail; custody.state may dominate because
+  that is what an audit can see. The enum has not been run on a non-audit source.
