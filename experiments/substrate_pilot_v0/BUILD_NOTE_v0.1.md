@@ -101,3 +101,22 @@ shall/target split (now every row); gate-in = delivery; `record_custody` ≠ uni
   coding (`regime.custody`) because that table is the grader's; an `editor_note` on the row
   says the definition points to learning, for the second grader to decide.
 - The replay's locus tally shifts by one record (the activation flag) from custody to learning.
+
+## V2 second grader loaded
+
+- The DeepSeek coding (blind, cross-family, 2026-09-10) is in the fixture row by row, with
+  `disagreement` filled where the two gradings differ (11 of 13 rows on locus; row 10 on site).
+- `locus_tally.agreement()` computes the agreement block from the rows: SITE 12/13, any regime
+  component 12/13 vs 13/13, top level 9/13 with kappa 0.054 (observed 0.692, expected 0.675), pure
+  physical_damage 1 vs 0, sub-axis exact 2 / overlap 4 / disjoint 6 of 12. Every figure in the
+  order's block reproduces; the selftest asserts them.
+- Top-level class: `regime` = every component a regime axis (so mixed(market,custody) is
+  regime); `mixed` = damage plus a regime axis; `physical_damage` = damage only. That is the
+  reading under which the order's 11 | 2 | 0 holds; the earlier tally counted any two-part
+  locus as mixed and would have read 6 for grader 2.
+- N-1 does not fire. Grader 2 moved no row to physical_damage and dissolved the one pure
+  damage row into mixed(physical_damage, urgency). The separation claim survives both codings.
+- The sub-axis enum did not: 6 of 12 disjoint. Neither grading was made under the V1
+  definitions, so `tally_citable.sub_axis` is false and stays false until both are recoded
+  under them. Row 10's site split is the case SITE `unknown` was added for; the grader
+  codings are left as given.

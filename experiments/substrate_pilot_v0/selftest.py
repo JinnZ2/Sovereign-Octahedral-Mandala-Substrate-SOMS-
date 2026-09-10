@@ -265,14 +265,23 @@ class V1_failure_locus_schema(unittest.TestCase):
 class V2_maria_fixture(unittest.TestCase):
     def test_fixture_loads_validates_and_tallies(self):
         header, body = locus_tally.load(os.path.join(HERE, "fixtures", "maria_locus.jsonl"))
-        self.assertIn("single-grader coding", header["_header"]); self.assertIn("second grader required", header["_header"])
+        self.assertIn("two-grader coding", header["_header"]); self.assertIn("DeepSeek", header["_header"])
         self.assertEqual(len(body), 13)
         t = locus_tally.tally(body)
         self.assertEqual(t["coarse"], {"regime": 10, "mixed": 2, "physical_damage": 1})
-        self.assertEqual(t["second_grader_rows"], 0)
-        self.assertFalse(header["tally_citable"])
-        for r in body:
-            self.assertIn("second_grader_locus", r); self.assertIn("disagreement", r)
+        self.assertEqual(t["second_grader_rows"], 13)
+        self.assertFalse(header["tally_citable"]["sub_axis"])
+        g2 = locus_tally.tally(body, key="second_grader_locus")
+        self.assertEqual(g2["coarse"], {"regime": 11, "mixed": 2, "physical_damage": 0})
+        a = locus_tally.agreement(body)
+        self.assertEqual(a["site_agree"], 12)
+        self.assertEqual(a["any_regime_component"], [12, 13])
+        self.assertEqual(a["top_level_agree"], 9)
+        self.assertAlmostEqual(a["kappa"], 0.05, places=1)
+        self.assertEqual(a["pure_physical_damage_rows"], [1, 0])
+        self.assertEqual(a["sub_axis"], {"comparable": 12, "exact": 2, "overlap": 4, "disjoint": 6})
+        self.assertFalse(a["N-1_fires"])
+        self.assertEqual([r["row"] for r in body if r["site"] != r["second_grader_site"]], [10])
 
 
 class V3_regime_class(unittest.TestCase):
