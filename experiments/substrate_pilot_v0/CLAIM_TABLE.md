@@ -6,7 +6,7 @@ UNRUN (instrument exists, no run) | BLOCKED (reason). Nulls N-1..N-4 have their 
 | id | claim | status | evidence | note |
 |---|---|---|---|---|
 | Q-1 | refusal path identified | ANSWERED | BUILD_NOTE_v0.1.md | two paths; physical-ledger side effect fixed and injects rerun |
-| V1 | every failure record carries LOCUS + SITE; physical_damage rejected off damaged sites | BUILT | selftest `V1_failure_locus_schema` | 9 failure record types route through one validator |
+| V1 | every failure record carries LOCUS + SITE; physical_damage rejected off damaged sites; enum defined (learning added, site unknown added) | BUILT | selftest `V1_failure_locus_schema` incl. `test_enum_is_defined` | 9 failure record types route through one validator; `LOCUS_DEFINITIONS` in ledger.py; the two-grader result (2/12 exact, 6/12 disjoint) is why the definitions exist; ledger-emitted FLT failures recoded custody -> learning; Maria row 5 retained as the table's custody with an editor note for the second grader |
 | V2 | OIG-20-76 coded fixture, 13 rows, header, tally per LOCUS, empty second-grader slots | BUILT | `fixtures/maria_locus.jsonl`, `locus_tally.py`, selftest `V2_maria_fixture` | tally 10/2/1 is single-grader; `tally_citable: false` |
 | V3 | class + axis per load; "critical" alone refused; custody axis may not drop | BUILT | selftest `V3_regime_class`; I-13 | release gate also holds a classless load |
 | V4 | event declaration reclasses from precomputed table with zero manual steps; water -> R2 min | BUILT | selftest `V4_context_severity`; I-11 | `manual_steps` recorded on the EVENT record (N-3 watch) |

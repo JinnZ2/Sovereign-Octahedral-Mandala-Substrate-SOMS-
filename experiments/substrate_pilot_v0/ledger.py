@@ -42,9 +42,19 @@ DECLARED_UNITS = ("kcal", "protein_g", "L_water", "count")
 RECEIVER_MARKS = ("signature", "stamp", "photo")
 NODE_STATUS = ("REGISTERED", "PROVISIONAL")
 
-# V1 failure locus schema
-LOCI = ("physical_damage", "regime.market", "regime.urgency", "regime.security", "regime.custody")
-SITES = ("damaged", "undamaged", "pre-event")
+# V1 failure locus schema. Definitions added after the two-grader run (sub-axis agreement 2/12
+# exact, 6/12 disjoint): the enum was undefined. Code the MECHANISM that failed; motive goes in a note.
+LOCI = ("physical_damage", "regime.market", "regime.urgency", "regime.security", "regime.custody", "regime.learning")
+LOCUS_DEFINITIONS = {
+    "physical_damage": "the site itself is damaged; only codable when SITE = damaged",
+    "regime.market": "allocation/priority set by commercial terms, price, contract, vendor capacity",
+    "regime.urgency": "speed prioritized over control; controls dropped to expedite",
+    "regime.security": "protection against theft, diversion, tampering BY OTHERS",
+    "regime.custody": "continuous state record + responsibility held by a named party",
+    "regime.learning": "a known finding not converted to a rule (FLT)",
+    "_rule": "motive vs mechanism: code the MECHANISM that failed; motive goes in a note",
+}
+SITES = ("damaged", "undamaged", "pre-event", "unknown")
 
 # V3 regime classes, ordered: a lower index drops custody
 REGIME_CLASSES = ("R0", "R1", "R2", "R3")      # drop-and-hook | signed tally | constant custody | dual/escort
@@ -89,6 +99,7 @@ def check_locus(locus, site):
     if site not in SITES:
         raise SchemaError("V1: unknown site %r" % site)
     if "physical_damage" in parts and site != "damaged":
+        # undamaged, pre-event and unknown all reject: damage has to be established before it is coded
         raise SchemaError("V1: physical_damage coded at site %r; damage and regime are separate ledgers" % site)
     return parts
 
@@ -717,7 +728,7 @@ class Ledger:
         in_use = {u["declared_unit"] for u in self.units.values()} | {n["declared_unit"] for n in self.needs.values()}
         for du in sorted(in_use):
             if du not in self.standing_plan and du not in self.waived_assignments:
-                self._failure("MISSING_CLASS_ASSIGNMENT", ts, "regime.custody", "pre-event", declared_unit=du)
+                self._failure("MISSING_CLASS_ASSIGNMENT", ts, "regime.learning", "pre-event", declared_unit=du)
                 missing.append(du)
         self._event("ACTIVATION", ts, open_findings=open_, missing_class_assignments=missing)
         return open_

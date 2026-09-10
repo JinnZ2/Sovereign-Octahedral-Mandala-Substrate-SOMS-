@@ -91,7 +91,7 @@ def run(seed=0, out_dir=None, keep_root=False):
 
     # I-8: prior AAR finding exists, unacted, at activation (FT-09); V8 activation check
     L.register_finding("AAR-2011-03", "2011 exercise AAR", "commodity movement need anticipated",
-                       found_ts=-24 * 365 * 6, locus="regime.custody", site="pre-event")
+                       found_ts=-24 * 365 * 6, locus="regime.learning", site="pre-event")
     # a protein_g need exists so the missing standing assignment is visible at activation (V8)
     L.report_need("N-PROT-P00", "P00", "protein_g", qty=50 * 150 * 3, by_ts=72, ts=-1)
     open_findings = L.activate(ts=0)

@@ -13,7 +13,7 @@ from collections import Counter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from ledger import check_locus, parse_locus  # noqa: E402
+from ledger import check_locus, parse_locus, LOCUS_DEFINITIONS  # noqa: E402
 
 
 def load(path):
@@ -57,6 +57,10 @@ def main(paths):
     print("%-28s" % "rows" + "".join("%-26s" % out[n]["tally"]["n"] for n in names))
     print("%-28s" % "second-grader rows" + "".join("%-26s" % out[n]["tally"]["second_grader_rows"] for n in names))
     print("%-28s" % "citable" + "".join("%-26s" % out[n]["tally_citable"] for n in names))
+    print()
+    print("LOCUS definitions (V1):")
+    for k, v in LOCUS_DEFINITIONS.items():
+        print("  %-18s %s" % (k, v))
     print()
     print(json.dumps(out, indent=1))
     return out

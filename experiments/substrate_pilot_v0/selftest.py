@@ -12,7 +12,7 @@ import unittest
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-from ledger import Ledger, Refused, SchemaError, OP_PERIOD_H, check_locus, CLIMATES  # noqa: E402
+from ledger import Ledger, Refused, SchemaError, OP_PERIOD_H, check_locus, CLIMATES, LOCI, SITES, LOCUS_DEFINITIONS  # noqa: E402
 import json  # noqa: E402
 import exercise  # noqa: E402
 import locus_tally  # noqa: E402
@@ -224,8 +224,14 @@ class FT15_provisional_intake(unittest.TestCase):
 
 
 class V1_failure_locus_schema(unittest.TestCase):
+    def test_enum_is_defined(self):
+        self.assertIn("regime.learning", LOCI); self.assertIn("unknown", SITES)
+        for locus in LOCI:
+            self.assertTrue(LOCUS_DEFINITIONS.get(locus), locus)
+        self.assertEqual(check_locus("regime.learning", "unknown"), ["regime.learning"])
+
     def test_physical_damage_rejected_off_damaged_site(self):
-        for site in ("undamaged", "pre-event"):
+        for site in ("undamaged", "pre-event", "unknown"):
             with self.assertRaises(SchemaError):
                 check_locus("physical_damage", site)
             with self.assertRaises(SchemaError):
@@ -366,7 +372,8 @@ class V8_retention(unittest.TestCase):
         L.declare_trigger_table("ev", {"kcal": ("R1", "urgency")}, ts=-10, declared_by="ops")
         L.create_unit("K", "kcal", 1, ts=-1); L.create_unit("W", "L_water", 1, ts=-1)
         L.activate(0)
-        self.assertEqual([f["declared_unit"] for f in L.failures if f["type"] == "MISSING_CLASS_ASSIGNMENT"], ["L_water"])
+        miss = [f for f in L.failures if f["type"] == "MISSING_CLASS_ASSIGNMENT"]
+        self.assertEqual([(f["declared_unit"], f["locus"]) for f in miss], [("L_water", "regime.learning")])
         L.end_event(ts=5)
         self.assertIn("kcal", L.standing_plan)
         with self.assertRaises(Refused):

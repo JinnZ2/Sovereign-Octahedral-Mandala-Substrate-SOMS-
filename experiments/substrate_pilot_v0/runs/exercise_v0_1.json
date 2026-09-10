@@ -7,7 +7,8 @@
   }
  ],
  "failures_by_locus": {
-  "regime.custody": 86,
+  "regime.custody": 85,
+  "regime.learning": 1,
   "regime.market": 4,
   "regime.security": 1,
   "regime.urgency": 1
@@ -253,7 +254,8 @@
   },
   "dwell_max_h": 0,
   "failures_by_locus": {
-   "regime.custody": 86,
+   "regime.custody": 85,
+   "regime.learning": 1,
    "regime.market": 4,
    "regime.security": 1,
    "regime.urgency": 1

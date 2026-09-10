@@ -240,6 +240,15 @@ FT-18  CONTESTED CUSTODY
        VERIFY   T: resolver contact record with cellular-only path -> refused at declaration
 
 V1  failure LOCUS + SITE on every failure record; physical_damage only at site = damaged
+    LOCUS = physical_damage | regime.market | regime.urgency | regime.security | regime.custody
+          | regime.learning | mixed(<list>)      SITE = damaged | undamaged | pre-event | unknown
+    definitions (added after the two-grader run: sub-axis agreement 2/12 exact, 6/12 disjoint):
+      market    allocation/priority set by commercial terms, price, contract, vendor capacity
+      urgency   speed prioritized over control; controls dropped to expedite
+      security  protection against theft, diversion, tampering BY OTHERS
+      custody   continuous state record + responsibility held by a named party
+      learning  a known finding not converted to a rule (FLT)
+      motive vs mechanism: code the MECHANISM that failed; motive goes in a note
 V3  regime class R0..R3 + axis (urgency | custody) per load; "critical" alone refused; custody axis may not drop
 V4  context-severity: event declaration reclasses from a precomputed trigger table, no deliberation
 V8  retention: class assignments persist post-event; missing + not WAIVED -> flagged at activation

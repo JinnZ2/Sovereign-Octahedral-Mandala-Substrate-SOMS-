@@ -33,7 +33,8 @@ Failure records by LOCUS (V1) and SITE in this run:
 
 | locus | n |
 |---|---|
-| regime.custody | 86 |
+| regime.custody | 85 |
+| regime.learning | 1 |
 | regime.market | 4 |
 | regime.security | 1 |
 | regime.urgency | 1 |

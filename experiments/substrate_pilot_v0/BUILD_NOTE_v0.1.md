@@ -88,3 +88,16 @@ shall/target split (now every row); gate-in = delivery; `record_custody` ≠ uni
   (unsigned transfer, field-fix missing), which is two different shalls failing on one event.
   DOF is recorded as the list of things the node could still change; the ledger does not
   judge the list.
+
+## V1 revision (definitions after the two-grader run)
+
+- `regime.learning` and SITE `unknown` added. `unknown` rejects `physical_damage` like the
+  other non-damaged sites: damage is coded only once it is established.
+- Definitions live in `ledger.LOCUS_DEFINITIONS` and print with every tally, so a grader
+  reads the same text the validator enforces. Mechanism, not motive.
+- Recoded under the definitions: the ledger's own MISSING_CLASS_ASSIGNMENT (V8) and the
+  replay's AAR finding are `regime.learning`; Katrina row 9 (Pam exercise findings not
+  converted) is `regime.learning` (my coding, marked). Maria row 5 keeps the section-4
+  coding (`regime.custody`) because that table is the grader's; an `editor_note` on the row
+  says the definition points to learning, for the second grader to decide.
+- The replay's locus tally shifts by one record (the activation flag) from custody to learning.
