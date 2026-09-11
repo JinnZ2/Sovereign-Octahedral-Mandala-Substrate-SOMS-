@@ -721,6 +721,17 @@ class A7_A8_money_term_and_field_fix(unittest.TestCase):
         self.assertEqual(set(FIELD_FIX_KEYS), {"sign", "dof", "state_updated"})
 
 
+class C3_retention_chain(unittest.TestCase):
+    def test_chain_computed_from_rows_reported_verdicts_carried(self):
+        import retention_chain as rc
+        rc.selftest()
+        out = rc.compute()
+        self.assertEqual(out["rule_fixes"], [])                                        # no fix was a forcing rule (computed)
+        self.assertEqual(out["chains"]["asset_visibility"]["status"], "RECURRED after EQUIPMENT fix")
+        self.assertFalse(out["oig_10_101"]["verified"])                                # C3 stays secondary until the PDF is loaded
+        self.assertEqual(out["paraphrase_rows"], 4)                                    # press rows are not verbatim; never cited as text
+
+
 class Exercise_replay(unittest.TestCase):
     def test_replay_runs_and_reports_failures_as_found(self):
         r = exercise.run(seed=0)

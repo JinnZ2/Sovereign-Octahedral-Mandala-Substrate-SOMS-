@@ -84,10 +84,11 @@
    "date": "2010",
    "doc_type": "audit",
    "event": "retention-link",
-   "url": null,
+   "url": "https://www.congress.gov/event/111th-congress/house-event/LC7115/text",
    "verified": false,
-   "fetched": false,
-   "status": "[locate]"
+   "fetched": "secondhand quotation only",
+   "status": "SECONDARY: quoted in FEMA testimony (congress.gov LC7115); PDF not resolved",
+   "retention_chain": "fixtures/retention_chain.jsonl"
   },
   "K-press": {
    "title": "FEMA statement on Katrina ice deliveries (NBC News, 2006)",

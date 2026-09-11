@@ -30,6 +30,7 @@ only, paper-operable. One failure source: DHS OIG-20-76.
 | `grading_prompt.py`, `prompts/` | reconstructed P0/P1 and the T-a, T-b, T-d, V10c prompt files with canary rows (13, 5); `check_run` marks a run PASS / FAIL / SUSPECT; grader identity is a claim |
 | `money_term.py` | MONEY_TERM gate: NATIVE / DECLARED / PROXY_UNROOTED / CIRCULAR; R-09 token rules; three worked cases |
 | `field_fix.py` | V11 field-fix check at contact nodes: SIGN_INVERSION / DOF_DELETION / STATE_NOT_UPDATED / OK |
+| `fixtures/retention_chain.jsonl`, `retention_chain.py` | C3: dated finding -> fix -> 'improved' -> recurrence rows; chain typing and rule-fix test computed from the rows; press rows are paraphrases |
 | `fixtures/maria_nonaudit_template.jsonl` | B5: non-audit source template for the caveat test; locus null |
 | `proposed/E1-E5_spec_stubs.md` | proposed tests, design only |
 | `v2d_authority/` | V2d authority × source 2×2 on the enum: verbatim rows with declared substitutions, four emitted prompt files, plan, scorer, constructed fixture; unrun |

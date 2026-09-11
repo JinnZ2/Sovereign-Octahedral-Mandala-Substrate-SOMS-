@@ -497,3 +497,11 @@ def main(paths):
 if __name__ == "__main__":
     paths = sys.argv[1:] or sorted(glob.glob(os.path.join(HERE, "fixtures", "*_locus.jsonl")))
     main(paths)
+    try:
+        import retention_chain
+        rc = retention_chain.compute()
+        print("C3 retention chain (computed from fixtures/retention_chain.jsonl): rule fixes %s | %s" % (rc["rule_fixes"], rc["read"]))
+        for k, c in rc["chains"].items():
+            print("   %-32s %s (span %s y)" % (k, c["status"], c["span_years"]))
+    except FileNotFoundError:
+        pass

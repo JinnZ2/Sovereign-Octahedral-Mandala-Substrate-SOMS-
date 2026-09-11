@@ -70,9 +70,13 @@ B5  non-audit Maria source               TEMPLATE  fixtures/maria_nonaudit_templ
 ## C. needs source fetch
 
 ```
-C1-C5  locator stubs stay locus: null    HELD      fixtures/sources.json K1 (logistics chapter unread), K3 pp.66-77 /
-                                                   128-134 unread, OIG-10-101 [locate], Blue Ribbon 2012 + NSF OIG
-                                                   (not registered), NIMS 2004/2008/2017 (not registered); selftest
+C3     retention chain                   LOADED    fixtures/retention_chain.jsonl (uploaded 2026-09-11) -> retention_chain.py
+                                                   computed: 0 of 2 fixes are RULES (equipment, plan); asset-visibility
+                                                   chain recurs 12 y after the GPS fix; OIG-10-101 language is
+                                                   SECONDARY (FEMA testimony), verified false; K3 pp.66-77 still unread
+C1 C2 C4 C5  locator stubs stay locus: null HELD    fixtures/sources.json K1 (logistics chapter unread), K3 pp.66-77 /
+                                                   128-134 unread, Blue Ribbon 2012 + NSF OIG (not registered), NIMS
+                                                   2004/2008/2017 (not registered); selftest
                                                    test_v10b_instrument_not_evaluable_until_extraction holds the nulls
 ```
 
