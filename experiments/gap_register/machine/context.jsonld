@@ -1,0 +1,61 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "schema": "https://schema.org/",
+    "gr": "https://github.com/JinnZ2/Sovereign-Octahedral-Mandala-Substrate-SOMS-/blob/main/experiments/gap_register/machine/context.jsonld#",
+    "identifier": "schema:identifier",
+    "keywords": {
+      "@id": "schema:keywords",
+      "@container": "@set"
+    },
+    "dateCreated": {
+      "@id": "schema:dateCreated",
+      "@type": "schema:Date"
+    },
+    "citation": {
+      "@id": "schema:citation",
+      "@container": "@set"
+    },
+    "additionalType": "schema:additionalType",
+    "quantity": "gr:quantity",
+    "excludingMethod": "gr:excludingMethod",
+    "measuredInstead": "gr:measuredInstead",
+    "closureCondition": "gr:closureCondition",
+    "refutation": "gr:refutation",
+    "venueCheck": "gr:venueCheck",
+    "citationConfound": "gr:citationConfound",
+    "statusByField": {
+      "@id": "gr:statusByField",
+      "@container": "@set"
+    },
+    "field": "gr:field",
+    "status": "gr:status",
+    "evidence": "gr:evidence",
+    "assessed": {
+      "@id": "gr:assessed",
+      "@type": "schema:Date"
+    },
+    "storeHash": "gr:storeHash",
+    "entryType": "gr:entryType"
+  },
+  "gr:contextVersion": "1.0",
+  "gr:definitions": {
+    "gr:quantity": "the thing not measured, in plain nouns",
+    "gr:excludingMethod": "the named method, standard, or table whose construction keeps the quantity from appearing",
+    "gr:measuredInstead": "what that method returns in the quantity's place",
+    "gr:closureCondition": "the observation, checkable by a reader, that would move a field's status to a closed value",
+    "gr:refutation": "the observation that would show the gap is not a gap",
+    "gr:venueCheck": "the table, paper, or committee where the comparison would have to appear; null when none exists",
+    "gr:citationConfound": "the known confound recorded on the entry; citing custody is what makes an entry auditable and what recruits a protective response",
+    "gr:statusByField": "one status per field the entry is evaluated in; the entry-level status is derived from these, never stored",
+    "gr:field": "the domain or discipline an entry is evaluated in; a value from FIELDS.txt",
+    "gr:status": "one of OPEN, CLOSED_MEASURED, CLOSED_INSTRUMENT_EXISTS, OUT_OF_ENVELOPE, UNKNOWN; UNKNOWN is a peer value, not a default",
+    "gr:evidence": "the record pointer behind a field's status; null when the status rests on no record",
+    "gr:assessed": "the date the field's status was set",
+    "gr:storeHash": "sha256 of REGISTER.jsonl at emission time; an emission whose hash differs from the store is stale",
+    "gr:entryType": "T1 absent measurement, T2 undeclared partition, T3 substituted measurand, T4 absent comparison",
+    "gr:GapEntry": "the class of one register entry: one (quantity, excluding method) pair",
+    "gr:contextVersion": "the version of this context file; pinned, changed only by hand",
+    "gr:note": "a plain-text note on the emission itself, not on any entry"
+  }
+}
