@@ -1,0 +1,77 @@
+You are coding failure findings. For each finding, name the MECHANISM that failed using exactly one code from the list below (or a mixed(a,b) pair). Code the mechanism, not the motive. SITE is given as a fact and is not yours to grade. If you cannot decide, write UNSURE. If you will not code a row, write DECLINE.
+
+Codes:
+  physical_damage                the site's infrastructure destroyed or disabled BY THE EVENT; only codable when SITE = damaged
+  regime.market                  allocation/priority set by commercial terms, price, contract, vendor capacity
+  regime.urgency                 speed prioritized over control; controls dropped to expedite
+  regime.security                protection against theft, diversion, tampering BY OTHERS
+  regime.custody                 continuous state record + responsibility held by a named party
+  regime.learning                a known finding not converted to a rule (FLT)
+  regime.custody.state           V2c: record continuity failed (the state record broke), holder may have been named
+  regime.custody.responsibility  V2c: no named holder (responsibility not assigned), record may have continued
+  Rule: physical_damage only where SITE = damaged.
+
+The findings are from a federal audit of a hurricane commodity supply chain.
+
+FINDING 1  [SITE: undamaged]
+FEMA personnel at the Jacksonville FSA reported that FEMA headquarters did not record customer orders in a timely manner, or did not record them at all. As such, FSA personnel in Jacksonville often did not know what commodities were shipped until after they had arrived because no LSCMS records existed.
+
+FINDING 2  [SITE: undamaged]
+However, due to inadequate FEMA oversight, Crowley Maritime Corporation (Crowley), FEMA's transportation contractor, broke the FEMA inventory seals and repackaged commodities at a second cross-docking location in Jacksonville, FL. Disregarding the original packing slips and cargo manifests provided by FEMA, Crowley created generic cargo manifests labeled "relief supplies" that negatively impacted subsequent commodity shipment operations.
+
+FINDING 3  [SITE: undamaged]
+Consequently, our data analysis indicates about 1,000 containers may have never left the Jacksonville port. FEMA personnel in Jacksonville indicated that over 1,500 containers that FEMA packed — most of them early in the disaster — may have never made it to Puerto Rico.
+
+FINDING 4  [SITE: undamaged]
+Also, the contracting officer representative (COR) files contained no proof of delivery of commodity shipments or support for leased and rented equipment. Instead, the COR relied on verbal statements and emails from FEMA personnel in Puerto Rico to confirm the contractor provided required services and potentially paid for services not rendered.
+
+FINDING 5  [SITE: pre-event]
+As reported by the Government Accountability Office (GAO) and in FEMA's own after-action report, FEMA acknowledged it inadequately planned when stating the agency could have better leveraged open-source information and preparedness data, such as capability assessments and exercise findings, for Puerto Rico and the U.S. Virgin Islands. For example, a 2011 exercise after-action report for Puerto Rico indicated the territory would require extensive Federal support in moving commodities from the mainland to the island and throughout to distribution points.
+
+FINDING 6  [SITE: pre-event]
+The original contract quickly reached its capacity because it did not effectively outline the following basic transportation services needed for transoceanic shipments: cross-docking services, transportation to port of embarkation, point of embarkation processing, transportation to port debarkation, port of debarkation processing, and transportation to the FSA and regional staging areas.
+
+FINDING 7  [SITE: undamaged]
+FEMA sent these snack boxes because it was unable to order additional meals ready-to-eat due to the demand from concurrent disasters. Advance contract vendors were at capacity in providing nutritional meals following Hurricane Harvey and could not produce any more to support the effort in Puerto Rico.
+
+FINDING 8a  [SITE: undamaged]
+However, FEMA did not fully utilize its GPS technology to monitor commodity movements for over 75 percent of its shipments to Puerto Rico ... To illustrate, FEMA did not ensure GPS transponders worked properly or record GPS numbers in LSCMS.
+
+FINDING 8b  [SITE: damaged]
+... and over 96 percent of its shipments within Puerto Rico. ... Given inadequate use of the GPS technology, FEMA had GPS data recorded for only 3.4 percent of the commodity shipments transported within Puerto Rico.
+
+FINDING 9  [SITE: undamaged]
+Additionally, FEMA had challenges using its GPS for commodity shipments to Puerto Rico because the vertical stacking of containers on barges and at staging yards caused signal loss that prohibited the transmission of geographic data.
+
+FINDING 10  [SITE: unknown]
+Furthermore, 40 percent (12 out of 30) of municipalities said they experienced significant problems with receiving expired food.
+
+FINDING 11  [SITE: damaged]
+Once on the island, commodities sat in FEMA's custody at various locations on the island approximately 48 days.
+
+FINDING 12  [SITE: damaged]
+The Puerto Rico government lacked a formal records management system to track commodities received from FEMA and distributed to the municipalities. ... Puerto Rico government officials could not provide the supporting commodity distribution records because they were dispersed throughout various locations on the island, including a personal residence.
+
+FINDING 13  [SITE: damaged]
+The storm severely damaged Puerto Rico's transportation, electrical, and communication infrastructures. Damage to these critical infrastructures left Puerto Rico's entire population of 3.7 million without electricity and 95 percent of cell towers out of service.
+
+FINDING C1  [SITE: undamaged]
+FEMA did not require Crowley to return proof of delivery for commodities transported from the ports to facilities throughout the island. FEMA also did not require Crowley to provide access to its logistics tracking system.
+
+FINDING C2  [SITE: undamaged]
+According to FEMA officials, they adjusted LSCMS records for these shipments by changing the last known locations in LSCMS to "unknown FSAs" or "unknown points of distribution." ... For example, in January 2018, FEMA adjusted 2,402 LSCMS records by changing the final locations to unknown FSAs.
+
+FINDING C3  [SITE: undamaged]
+The CO then sent the new sole source justification to FEMA management for review but did not receive any feedback. In the meantime, Crowley continued to perform services and incur costs based on FEMA's verbal direction with no contract in place.
+
+FINDING M1-C4  [SITE: n/a]
+According to FEMA, its reconciliation resulted in accounting for all but 19 of 9,775 containers shipped to Puerto Rico. ... Finding lost containers does not mean FEMA found the commodities in the containers.
+
+FINDING M1-A1  [SITE: unknown]
+This occurred because Hurricane Maria's catastrophic damage in Puerto Rico and multiple, concurrent disasters nationwide challenged FEMA. In efforts to expedite commodity shipments, FEMA did not follow established policies and procedures.
+
+FINDING M1-A2  [SITE: unknown]
+FEMA's emphasis on delivering commodities to disaster survivors overrode the importance of following sound inventory management practices. When combined with poor acquisition planning prior to the hurricanes, FEMA's management of the commodity distribution process did not function properly.
+
+Answer with one line per finding, in this exact form and nothing else:
+FINDING <id>: <code>

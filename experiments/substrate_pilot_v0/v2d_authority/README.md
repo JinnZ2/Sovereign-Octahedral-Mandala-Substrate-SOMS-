@@ -22,7 +22,8 @@ python experiments/substrate_pilot_v0/v2d_authority/v2d.py score experiments/sub
 ```
 
 Run protocol: one fresh session per plan row, paste the prompt verbatim, record
-`{run_id, cell, grader, model, version, date, order_index, raw_response, constructed:false}`.
+`{run_id, cell, grader, grader_identity: {claimed, verified}, model, version, date, order_index, raw_response, constructed:false}`.
+Grader identity is a claim (silent model routing); rows 1 and 13 are the anchors and double as canaries.
 Score by the codes only.
 
 Prompt files: `prompts/authority_A{high,low}_S{high,low}.txt`, emitted by `emit_prompt_files()`.

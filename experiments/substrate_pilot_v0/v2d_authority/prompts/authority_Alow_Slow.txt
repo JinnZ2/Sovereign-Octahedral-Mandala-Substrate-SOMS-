@@ -1,7 +1,7 @@
 You are coding failure findings. For each finding, name the MECHANISM that failed using exactly one code from the list below (or a mixed(a,b) pair). Code the mechanism, not the motive. SITE is given as a fact and is not yours to grade. If you cannot decide, write UNSURE. If you will not code a row, write DECLINE.
 
 Codes:
-  physical_damage                the site's infrastructure destroyed or disabled BY THE EVENT; only codable when SITE = damaged (tightened after round 2, row 9: a handling choice that blocks a signal is not damage)
+  physical_damage                the site's infrastructure destroyed or disabled BY THE EVENT; only codable when SITE = damaged
   regime.market                  allocation/priority set by commercial terms, price, contract, vendor capacity
   regime.urgency                 speed prioritized over control; controls dropped to expedite
   regime.security                protection against theft, diversion, tampering BY OTHERS

@@ -255,3 +255,35 @@ shall/target split (now every row); gate-in = delivery; `record_custody` ≠ uni
   measure. Predictions named: deference, sympathy, credibility, NULL.
 - **The caveat stands.** Every citable statement above is an audit-instrument statement.
   The enum has not been run on a non-audit source.
+
+## Rollup 2026-09-11 — kimi resolved; canaries; money term; field fix
+
+- **Kimi P1 was a paste duplication.** The real run is loaded (`verified: true`); it differs
+  from gemini P1 on rows 2, 9, 11, 12. Name effect for kimi: 14/17 identical, damage 2 -> 1
+  (row 11 to custody.responsibility). Across graders: names -> roles dropped two damage codes
+  (gpt row 9, kimi row 11), both to custody, and added none. This is a signed candidate, not a
+  finding: T-a (label) and T-b (place prior) are the tests that would explain row 9 away.
+  The P1 four-family unanimity is 14/17 with open rows 2, 9, C3; the mixed-family figure
+  (P0 x3 + gemini P1) stays 13/17 with row 11 open, and both are reported.
+- **Grader identity is a claim.** Every results header and template now carries
+  `grader_identity {claimed, verified}`. Every grader-facing prompt carries two canary rows
+  (13 physical_damage, 5 regime.learning), chosen because they are unanimous on every
+  verified grading loaded, which the selftest checks against the results file rather than
+  assuming. `check_run` marks a run SUSPECT when a canary fails that the same claimed grader
+  passed before; a canary never passed is FAIL.
+- **A leak found while emitting prompts.** The physical_damage definition carried a
+  provenance note "(tightened after round 2, row 9: a handling choice that blocks a signal is
+  not damage)". Shown to a grader coding row 9, that is the answer. `ledger.prompt_definitions`
+  strips provenance parentheticals from every grader-facing prompt; the v2d files were
+  re-emitted. Round-3 prompts were the operator's and are not affected by this build; whether
+  they carried the note is unknown (the files were not supplied).
+- **P0/P1 are reconstructed.** The operator's prompt files were referenced by name and never
+  supplied, so `grading_prompt.py` rebuilds them from the verbatim fixture with declared
+  role substitutions; T-a, T-b, T-d and V10c derive from these and are diff-asserted against
+  them. A run pasted back from the operator's originals will differ from these files in
+  wording; the row text and SITE facts are the same.
+- **money_term.py and field_fix.py** are built from SPEC Phase 3/4 and V11 text with the
+  verdict enums the rollup names. Their worked cases are the executor's constructions or
+  readings of cited sources and say so.
+- **A1 and A6 are blocked**, not skipped: their source documents exist in no reachable
+  repository, and their target code lives in Simulators, to which this session cannot push.

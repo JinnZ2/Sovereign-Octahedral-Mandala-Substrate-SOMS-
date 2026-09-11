@@ -26,7 +26,12 @@ only, paper-operable. One failure source: DHS OIG-20-76.
 | `fixtures/*_locus.jsonl`, `locus_tally.py` | V2/V10 LOCUS-coded findings with three graders and a round-2 re-grade (Maria), Katrina and GAO 2018 partial; tallies and agreement computed from the rows |
 | `fixtures/maria_verbatim.jsonl`, `fixtures/katrina_passages.jsonl` | verbatim source sentences with pages and record sites (public domain); V2c and V10b grader templates draw from them |
 | `fixtures/maria_locus_round3_results.jsonl` | round 3 per-row codings (P0 gpt/deepseek/kimi, P1 gemini/deepseek/gpt; kimi P1 marked unverified); `locus_tally.round3_block` recomputes every reported figure; the P0/P1 prompt files are referenced by name, not supplied |
-| `fixtures/pending/small_tests.jsonl` | T-a, T-b, T-d templates; T-c operator note; unrun |
+| `fixtures/pending/small_tests.jsonl` | T-a, T-b, T-d templates; T-c done (kimi P1 resolved); unrun |
+| `grading_prompt.py`, `prompts/` | reconstructed P0/P1 and the T-a, T-b, T-d, V10c prompt files with canary rows (13, 5); `check_run` marks a run PASS / FAIL / SUSPECT; grader identity is a claim |
+| `money_term.py` | MONEY_TERM gate: NATIVE / DECLARED / PROXY_UNROOTED / CIRCULAR; R-09 token rules; three worked cases |
+| `field_fix.py` | V11 field-fix check at contact nodes: SIGN_INVERSION / DOF_DELETION / STATE_NOT_UPDATED / OK |
+| `fixtures/maria_nonaudit_template.jsonl` | B5: non-audit source template for the caveat test; locus null |
+| `proposed/E1-E5_spec_stubs.md` | proposed tests, design only |
 | `v2d_authority/` | V2d authority × source 2×2 on the enum: verbatim rows with declared substitutions, four emitted prompt files, plan, scorer, constructed fixture; unrun |
 | `CLAIM_TABLE.md`, `BUILD_NOTE_v0.1.md` | claim statuses V1–V10 and nulls N-1..N-4; Q-1 answer and resolutions |
 | `forms/` | T-card, gate log, delivery receipt: the physical channel on paper |

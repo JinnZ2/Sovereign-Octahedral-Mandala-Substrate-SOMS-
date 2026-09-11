@@ -62,6 +62,18 @@ LOCUS_DEFINITIONS = {
 }
 SITES = ("damaged", "undamaged", "pre-event", "unknown")
 
+
+def prompt_definitions(label_map=None):
+    """LOCUS_DEFINITIONS as shown to a grader: provenance parentheticals stripped (the physical_damage note names
+    row 9 and would hand a grader that row's answer), private keys dropped, labels optionally renamed (T-a)."""
+    out = {}
+    for k, v in LOCUS_DEFINITIONS.items():
+        if k.startswith("_"):
+            continue
+        v = v.split(" (tightened")[0]
+        out[(label_map or {}).get(k, k)] = v
+    return out
+
 # V3 regime classes, ordered: a lower index drops custody
 REGIME_CLASSES = ("R0", "R1", "R2", "R3")      # drop-and-hook | signed tally | constant custody | dual/escort
 AXES = ("urgency", "custody")

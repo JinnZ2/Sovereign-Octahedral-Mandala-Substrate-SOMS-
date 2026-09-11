@@ -594,20 +594,47 @@ class V2c_round3_results(unittest.TestCase):
         self.assertEqual(b["name_effect"]["deepseek"]["identical"], "17/17")
         self.assertEqual(b["name_effect"]["gpt"]["identical"], "16/17")
         self.assertEqual(b["name_effect"]["gpt"]["flips"], {"9": ("physical_damage", "regime.custody.state")})
-        self.assertEqual(b["name_effect"]["kimi"], "UNVERIFIED")
-        # order lists open rows 2, 9, C3; computed over four families row 11 is also open (kimi pd vs custody)
+        # rollup A2: kimi P1 resolved (the earlier copy was a paste duplication)
+        self.assertEqual(b["name_effect"]["kimi"]["identical"], "14/17")
+        self.assertEqual(sorted(b["name_effect"]["kimi"]["flips"]), ["11", "4", "C1"])
+        # mixed-family (P0 x3 + gemini P1) open rows still include 11; the P1 four-family does not
         self.assertEqual(sorted(b["open_rows"]), ["11", "2", "9", "C3"])
-        self.assertIn("UNVERIFIED", b["kimi_P1"])
+        self.assertIn("RESOLVED", b["kimi_P1"])
+        p1 = b["p1_four_family"]
+        self.assertEqual(p1["graders"], ["gemini", "deepseek", "gpt", "kimi"])
+        self.assertEqual(p1["unanimous_collapsed"], "14/17")
+        self.assertEqual(sorted(p1["open_rows"]), ["2", "9", "C3"])
+        nd = b["name_effect_damage"]
+        self.assertEqual(nd["graders_dropping_damage"], ["gpt", "kimi"]); self.assertEqual(nd["graders_adding_damage"], [])
+        self.assertTrue(nd["all_dropped_moved_to_custody"])
+        self.assertEqual((nd["per_grader"]["gpt"]["damage_P0"], nd["per_grader"]["gpt"]["damage_P1"]), (2, 1))
+        self.assertEqual((nd["per_grader"]["kimi"]["damage_P0"], nd["per_grader"]["kimi"]["damage_P1"]), (2, 1))
+        self.assertEqual(nd["per_grader"]["deepseek"]["dropped"], {})
+        self.assertIn("candidate", nd["status"])                                     # signed candidate, not a finding
+        self.assertEqual(b["grader_identity"]["verified"], False)                   # identity is a claim (A4)
 
-    def test_kimi_P1_is_excluded_not_counted(self):
+    def test_kimi_P1_resolved_and_counted(self):
         hdr, R, unverified = locus_tally._load_results(self.RP)
-        self.assertEqual(R["P1"]["kimi"], R["P1"]["gemini"])                       # byte-identical on all 17 rows
-        self.assertIn(("P1", "kimi"), unverified)                                  # so: loaded, marked, excluded from every figure
+        self.assertNotEqual(R["P1"]["kimi"], R["P1"]["gemini"])                    # the real run differs from gemini P1
+        self.assertEqual(sorted(r for r in R["P1"]["kimi"] if R["P1"]["kimi"][r] != R["P1"]["gemini"][r]), ["11", "12", "2", "9"])   # 4 rows differ
+        self.assertEqual(unverified, set())                                        # nothing excluded now
         self.assertEqual(set(R["P0"]), {"gpt", "deepseek", "kimi"})              # gemini P0 refused
         self.assertEqual(set(R["P1"]), {"gemini", "deepseek", "gpt", "kimi"})
         b = locus_tally.round3_block(self.RP)
-        self.assertEqual(b["name_effect"]["kimi"], "UNVERIFIED")
-        self.assertEqual(b["four_family_unanimous_collapsed"], "13/17")           # four = gpt, deepseek, kimi(P0), gemini(P1)
+        self.assertEqual(b["four_family_unanimous_collapsed"], "13/17")           # mixed: gpt, deepseek, kimi (P0) + gemini (P1)
+        # the exclusion path still works: an unverified line is dropped from every figure
+        import tempfile
+        rows = [json.loads(l) for l in open(self.RP) if l.strip()]
+        for r in rows[1:]:
+            if r["variant"] == "P1" and r["grader"] == "kimi":
+                r["verified"] = False
+        with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as f:
+            for r in rows:
+                f.write(json.dumps(r) + "\n")
+        b2 = locus_tally.round3_block(f.name)
+        self.assertEqual(b2["name_effect"]["kimi"], "UNVERIFIED")
+        self.assertEqual(b2["p1_four_family"]["graders"], ["gemini", "deepseek", "gpt"])
+        os.unlink(f.name)
 
     def test_v10c_M1_computed_A1_unanimous(self):
         v = locus_tally.v10c(self.RP, os.path.join(HERE, "fixtures", "stated_causes_grader_template.jsonl"))
@@ -649,6 +676,49 @@ class V2d_prompt_files(unittest.TestCase):
             for a in v2d.LEVELS:
                 self.assertTrue(v2d.only_declared_substitutions(v2d.VERBATIM[rid]["text"], v2d.render_row(row, a), a)[0], rid)
         self.assertEqual(v2d.GRADERS, ("gpt", "deepseek", "gemini"))              # kimi joins once T-c verifies its copy
+
+
+class A4_A5_canaries_and_prompt_files(unittest.TestCase):
+    def test_grading_prompts_and_canary_logic(self):
+        import grading_prompt as gp
+        gp.selftest()                                                              # emits prompts/, diff-asserts T-a/T-b/T-d/V10c
+        for name in ("P0_reconstructed", "P1_reconstructed", "T-a_row9_event_damage", "T-b_row9_P0", "T-d_gemini_P2_no_carrier_rows", "V10c_M1_stated_causes"):
+            self.assertTrue(os.path.exists(os.path.join(HERE, "prompts", name + ".txt")), name)
+        self.assertEqual(gp.CANARIES, (("13", "physical_damage"), ("5", "regime.learning")))
+        # canary answers are unanimous on every verified grading loaded
+        hdr, R, unverified = locus_tally._load_results(os.path.join(HERE, "fixtures", "maria_locus_round3_results.jsonl"))
+        for variant in R:
+            for g in R[variant]:
+                for row, ans in gp.CANARIES:
+                    self.assertEqual(R[variant][g][row], ans, (variant, g, row))
+        # results slots are empty: no run file exists yet
+        self.assertFalse(os.path.exists(os.path.join(HERE, "fixtures", "grading_runs.jsonl")))
+
+    def test_v2d_run_record_carries_grader_identity(self):
+        sys.path.insert(0, os.path.join(HERE, "v2d_authority"))
+        import v2d
+        self.assertIn("grader_identity", v2d.RUN_FIELDS)
+
+
+class A7_A8_money_term_and_field_fix(unittest.TestCase):
+    def test_money_term_gate(self):
+        import money_term as mt
+        mt.selftest()
+        res = mt.run_cases()
+        self.assertEqual({k: v["verdict"] for k, v in res.items()},
+                         {"obermeyer_cost_as_need": "PROXY_UNROOTED", "solow_cost_share": "CIRCULAR", "choice_system_token": "DECLARED"})
+        self.assertEqual(set(mt.VERDICTS), {"NATIVE", "DECLARED", "PROXY_UNROOTED", "CIRCULAR"})
+
+    def test_field_fix_check(self):
+        import field_fix as ff
+        ff.selftest()
+        res = ff.run_cases()
+        self.assertEqual(res["wax_on_terminal"]["verdict"], "SIGN_INVERSION")
+        self.assertEqual(res["zip_tie_on_sliding_mount"]["verdict"], "DOF_DELETION")
+        self.assertEqual(res["penny_shim_unrecorded"]["verdict"], "STATE_NOT_UPDATED")
+        # the ledger's V11 check and this one agree on the keys
+        from ledger import FIELD_FIX_KEYS
+        self.assertEqual(set(FIELD_FIX_KEYS), {"sign", "dof", "state_updated"})
 
 
 class Exercise_replay(unittest.TestCase):

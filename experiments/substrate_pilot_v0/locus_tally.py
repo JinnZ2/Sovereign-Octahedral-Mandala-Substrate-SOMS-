@@ -278,6 +278,24 @@ def round3_block(results_path, round2_by_row=None):
         name_effect[g] = {"identical": "%d/%d" % (same, len(rows)), "flips": {r: (P0[g][r], P1[g][r]) for r in flips}}
     open_rows = {r: sorted({",".join(sorted(x)) for x in (C["gpt"][r], C["deepseek"][r], C["kimi"][r], gem[r])})
                  for r in rows if r not in unan_4}
+    # P1 four-family: every grader on the SAME prompt (roles), verified graders only
+    p1_graders = [g for g in ("gemini", "deepseek", "gpt", "kimi") if g in P1 and ("P1", g) not in unverified]
+    C1 = {g: {r: collapse_custody(set(parse_locus(P1[g][r]))) for r in rows} for g in p1_graders}
+    unan_p1 = [r for r in rows if len({",".join(sorted(C1[g][r])) for g in p1_graders}) == 1]
+    open_p1 = {r: sorted({",".join(sorted(C1[g][r])) for g in p1_graders}) for r in rows if r not in unan_p1}
+    # name effect on damage codes: names -> roles; where did dropped damage codes go?
+    damage_drop = {}
+    for g in ("gpt", "deepseek", "kimi"):
+        if ("P1", g) in unverified:
+            damage_drop[g] = "UNVERIFIED"
+            continue
+        d0 = {r for r in rows if "physical_damage" in P[g][r]}
+        d1 = {r for r in rows if "physical_damage" in set(parse_locus(P1[g][r]))}
+        dropped = sorted(d0 - d1); added = sorted(d1 - d0)
+        damage_drop[g] = {"damage_P0": len(d0), "damage_P1": len(d1), "dropped": {r: P1[g][r] for r in dropped}, "added": added,
+                          "dropped_to_custody": all("regime.custody" in P1[g][r] for r in dropped)}
+    graders_dropping = [g for g in damage_drop if isinstance(damage_drop[g], dict) and damage_drop[g]["dropped"]]
+    graders_adding = [g for g in damage_drop if isinstance(damage_drop[g], dict) and damage_drop[g]["added"]]
     return {"computed": True, "rows": len(rows), "pairwise_exact_full": pairwise_full, "pairwise_exact_collapsed": pairwise_coll,
             "unanimous_full": "%d/%d" % (len(unan_full), len(rows)), "unanimous_collapsed": "%d/%d" % (len(unan_coll), len(rows)),
             "any_regime_component": any_regime, "pure_physical_damage": pure_pd, "pure_physical_damage_unanimous_rows": pure_pd_unanimous_rows,
@@ -287,7 +305,13 @@ def round3_block(results_path, round2_by_row=None):
             "four_family_unanimous_collapsed": "%d/%d" % (len(unan_4), len(rows)), "four_family_unanimous_rows": unan_4,
             "same_set_as_three_family": set(unan_4) == set(unan_coll),
             "gemini_probe": {"P0": hdr.get("gemini_P0"), "P1": "answered", "read": "names were the trigger; company vs agency not yet split (T-d)"},
-            "name_effect": name_effect, "open_rows": open_rows, "kimi_P1": hdr.get("kimi_P1")}
+            "name_effect": name_effect, "open_rows": open_rows, "kimi_P1": hdr.get("kimi_P1"),
+            "p1_four_family": {"graders": p1_graders, "unanimous_collapsed": "%d/%d" % (len(unan_p1), len(rows)),
+                               "unanimous_rows": unan_p1, "open_rows": open_p1},
+            "name_effect_damage": {"per_grader": damage_drop, "graders_dropping_damage": graders_dropping, "graders_adding_damage": graders_adding,
+                                   "all_dropped_moved_to_custody": all(damage_drop[g]["dropped_to_custody"] for g in graders_dropping),
+                                   "status": "candidate (signed): names -> roles drops damage codes, adds none; needs T-a/T-b before it is a finding"},
+            "grader_identity": hdr.get("grader_identity")}
 
 
 def v10c(results_path, stated_path):

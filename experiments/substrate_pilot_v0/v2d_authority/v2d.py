@@ -44,7 +44,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 PKG = os.path.dirname(HERE)
 sys.path.insert(0, PKG)
-from ledger import LOCUS_DEFINITIONS, parse_locus, SchemaError  # noqa: E402
+from ledger import prompt_definitions, parse_locus, SchemaError  # noqa: E402
 
 STIM = json.load(open(os.path.join(HERE, "stimuli.json")))
 LEVELS = ("high", "low")
@@ -62,6 +62,9 @@ SUBS = [("Crowley Maritime Corporation (Crowley), FEMA's transportation contract
 MARKET = ("regime.market",)
 NULL_THRESHOLD = 1.0 / 7          # one row of seven
 HEDGE_TOKENS = ("UNSURE", "DECLINE")
+# run record (README run protocol). grader_identity = {claimed, verified}: identity is a claim (rollup A4);
+# rows 1 and 13 are the anchors and double as canaries (known answers: regime.custody.state, physical_damage).
+RUN_FIELDS = ("run_id", "cell", "grader", "grader_identity", "model", "version", "date", "order_index", "raw_response", "constructed")
 
 EXTERNAL = ("physical_damage", "regime.urgency")
 INTERNAL_PREFIX = ("regime.custody", "regime.learning")
@@ -121,9 +124,8 @@ def prompt(agent, source, order=None):
          "from the list below (or a mixed(a,b) pair). Code the mechanism, not the motive. SITE is given as a fact and is "
          "not yours to grade. If you cannot decide, write UNSURE. If you will not code a row, write DECLINE.", ""]
     L.append("Codes:")
-    for k, v in LOCUS_DEFINITIONS.items():
-        if not k.startswith("_"):
-            L.append("  %-30s %s" % (k, v))
+    for k, v in prompt_definitions().items():                     # provenance note naming row 9 stripped
+        L.append("  %-30s %s" % (k, v))
     L.append("  Rule: physical_damage only where SITE = damaged.")
     L.append("")
     L.append(STIM["source"][source])
@@ -286,7 +288,7 @@ def selftest():
         other_source = "low" if s_ == "high" else "high"
         d2 = neighbor_diff(path, paths[(a, other_source)])
         assert d2 == [(STIM["source"][s_], STIM["source"][other_source])], (a, s_, d2)
-        assert "the the" not in open(path).read()
+        assert "the the" not in open(path).read() and "row 9" not in open(path).read()
     # row text otherwise identical to maria_verbatim.jsonl: only declared substitutions (SUBS) separate them
     for rid in ROW_IDS:
         assert "{AGENT" in substituted_text(rid) or rid == "13"
