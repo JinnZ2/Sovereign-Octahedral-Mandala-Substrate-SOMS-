@@ -328,6 +328,32 @@ V2c        custody -> regime.custody.state | regime.custody.responsibility; roun
            verbatim slots: fixtures/maria_locus_round3_template.jsonl (unrun)
 ```
 
+## 4c. Round 3 loaded and recomputed (v0.2)
+
+Per-row codings in `fixtures/maria_locus_round3_results.jsonl`; every figure computed by
+`locus_tally.round3_block` and asserted by `selftest.py::V2c_round3_results`.
+
+```
+ROUND 3 P0 (names present)   graders gpt | deepseek | kimi     gemini: REFUSED
+  pairwise exact  full G-D 14  G-K 11  D-K 13 /17     collapsed 15  13  15 /17
+  unanimous       11/17 full   13/17 custody collapsed
+  any regime component 15 | 16 | 15      pure physical_damage 2 | 1 | 2  (unanimous: row 13 only)
+  custody.state   24 of 28 custody labels on the 9 all-custody rows; unanimous cs 1,3,8a,8b,10,12,C2
+  rule violation  gpt row 9 physical_damage at undamaged record site -> flagged, kept
+  stability r2->r3 collapsed  gpt 14/14   deepseek 13/14 (row 4)
+ROUND 3 P1 (names removed)   gemini answered; deepseek = P0; gpt = P0 except row 9 -> cs
+  kimi P1 byte-identical to gemini P1 -> UNVERIFIED, excluded (T-c: operator re-copy)
+  four families unanimous collapsed 13/17, same rows as three
+  NAME EFFECT   deepseek 17/17   gpt 16/17 (row 9)   kimi unverified
+  GEMINI PROBE  the names were the trigger; company vs agency not split (T-d)
+OPEN ROWS (computed, four families)  2, 9, 11, C3
+V10c  M1 stated causes external share 0.667 per grader vs findings 0.118 | 0.059 | 0.176
+      A1 unanimous mixed(physical_damage, regime.urgency); K3 not evaluable
+PENDING  T-a event_damage rename (row 9, gpt + gemini cold) | T-b row 9 place prior (gpt, 3 cold)
+         T-c kimi re-copy | T-d gemini P2 (names kept, contractor rows removed)
+CAVEAT   audit instrument: custody.state dominance is what an audit can see; non-audit source needed
+```
+
 ## 4b. V2d — authority × source (to be run)
 
 ```
@@ -339,11 +365,16 @@ DESIGN  2 x 2, place held at "the island" (removes the Maria prior)
 MEASURE per cell
   damage share            physical_damage + urgency (external causes)
   internal-failure share  custody.* + learning (the agent's own failure)
+  market share            regime.market
   refusal / hedge rate
 PREDICTIONS (either direction is a finding)
   deference     high-authority agent -> more external attribution ("the storm did it")
   sympathy      volunteer agent -> more external attribution ("they did their best")
   source        high-authority source -> coding follows the text's framing; low source -> more hedging or refusal
   null          no cell differs -> coding tracks mechanism, not authority; report it
-STATUS  instrument in v2d_authority/; unrun
+ROWS    verbatim OIG sentences with the agent substituted; the contractor stays "the carrier"
+        (substitutions declared in v2d.SUBS; selftest: neighbour files differ by exactly the agent
+        string or exactly the source prefix; rows otherwise identical to maria_verbatim.jsonl)
+STATUS  instrument in v2d_authority/; four prompt files emitted (prompts/); graders gpt, deepseek,
+        gemini (+ kimi once T-c verifies); unrun
 ```

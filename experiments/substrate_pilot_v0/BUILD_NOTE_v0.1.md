@@ -219,3 +219,39 @@ shall/target split (now every row); gate-in = delivery; `record_custody` ≠ uni
   rows may be plausibility rather than credibility; and the rewrite is mine.
 - Constructed fixture carries a deference pattern so the reading path is exercised; it is
   banner-marked and asserted constructed in the selftest.
+
+## v0.2 — round 3 loaded row by row; authority factorial emitted
+
+- **Round 3 is now computed, not reported.** `fixtures/maria_locus_round3_results.jsonl`
+  carries one line per (variant, grader, row). `locus_tally.round3_block` recomputes every
+  figure in the order's section 2 and the selftest asserts each one: pairwise exact 14/11/13
+  full and 15/13/15 collapsed, unanimous 11/17 and 13/17, any-regime 15/16/15, pure damage
+  2/1/2 with row 13 the only unanimous one, custody.state 24 of 28 on the nine all-custody
+  rows, the gpt row-9 violation, stability 14/14 and 13/14, the four-family 13/17 on the same
+  row set, the name effect (deepseek 17/17, gpt 16/17 with row 9 the flip). The stated-cause
+  template is filled for the P0 graders and V10c computes for M1 (external share 0.667 in the
+  stated causes against 0.06-0.18 in the findings; A1 unanimous mixed).
+- **One figure differs from the order as written.** Open rows come out as 2, 9, 11, C3 over
+  four families; the order lists 2, 9, C3. Row 11 is open because kimi P0 coded
+  physical_damage where the three other families coded custody. Reported as computed.
+- **Kimi P1 is loaded, marked, and excluded.** Byte-identical to gemini P1 on all 17 rows.
+  Duplication and convergence cannot be told apart from the lines, so the lines carry
+  `verified: false` and no figure counts them. T-c is the operator's re-copy.
+- **Gemini refused P0 and answered P1.** The names were the trigger. Whether the company or
+  the agency name triggers it is T-d (names kept, the three carrier rows removed).
+- **Pending small tests are templates** in `fixtures/pending/small_tests.jsonl`: T-a renames
+  the label to event_damage with the definition unchanged and reruns row 9 cold on gpt and
+  gemini; T-b reruns row 9 under P0 three times on gpt for the place prior. Both bear on the
+  one row that is a rule violation and a name flip at once.
+- **V2d prompts are emitted from the verbatim rows.** The paraphrase is gone: each row is
+  the OIG sentence with the substitutions declared in `v2d.SUBS` (agent, carrier, island,
+  mainland port), the agent string filled per cell, sentence starts recapitalized. The
+  selftest diffs each file against its two neighbours (exactly the agent string; exactly the
+  source prefix line) and walks each row against `maria_verbatim.jsonl` so only declared
+  substitutions separate them. Two longer keys ("the FEMA inventory", "the Jacksonville")
+  exist so the files do not read "the the"; every other artifact of direct substitution
+  ("inadequate the federal emergency agency oversight") is kept as is. Graders for the run
+  are gpt, deepseek, gemini; kimi joins once T-c verifies its copy. Market share is a fourth
+  measure. Predictions named: deference, sympathy, credibility, NULL.
+- **The caveat stands.** Every citable statement above is an audit-instrument statement.
+  The enum has not been run on a non-audit source.

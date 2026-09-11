@@ -217,6 +217,106 @@ def round3(template_rows, header, round2_by_row=None):
             "rule_violations": violations, "stability_r2_to_r3_collapsed": stability}
 
 
+# ------------------------------------------------------------------ round 3 full block (WORK ORDER v0.2 section 2)
+def _load_results(path):
+    rows = [json.loads(l) for l in open(path) if l.strip()]
+    hdr, body = rows[0], rows[1:]
+    out = {}
+    for r in body:
+        if r.get("row") is None:
+            continue
+        out.setdefault(r["variant"], {}).setdefault(r["grader"], {})[r["row"]] = r["locus"]
+    unverified = {(r["variant"], r["grader"]) for r in body if r.get("verified") is False}
+    return hdr, out, unverified
+
+
+def round3_block(results_path, round2_by_row=None):
+    hdr, R, unverified = _load_results(results_path)
+    P0, P1 = R["P0"], R["P1"]
+    graders = ["gpt", "deepseek", "kimi"]
+    rows = list(P0["gpt"])
+    P = {g: {r: set(parse_locus(P0[g][r])) for r in rows} for g in graders}
+    C = {g: {r: collapse_custody(P[g][r]) for r in rows} for g in graders}
+
+    def pair(a, b, X):
+        return sum(1 for r in rows if X[a][r] == X[b][r])
+    pairwise_full = {"G-D": pair("gpt", "deepseek", P), "G-K": pair("gpt", "kimi", P), "D-K": pair("deepseek", "kimi", P)}
+    pairwise_coll = {"G-D": pair("gpt", "deepseek", C), "G-K": pair("gpt", "kimi", C), "D-K": pair("deepseek", "kimi", C)}
+    unan_full = [r for r in rows if P["gpt"][r] == P["deepseek"][r] == P["kimi"][r]]
+    unan_coll = [r for r in rows if C["gpt"][r] == C["deepseek"][r] == C["kimi"][r]]
+    any_regime = {g: sum(1 for r in rows if any(p != "physical_damage" for p in P[g][r])) for g in graders}
+    pure_pd = {g: sum(1 for r in rows if P[g][r] == {"physical_damage"}) for g in graders}
+    pure_pd_unanimous_rows = [r for r in rows if all(P[g][r] == {"physical_damage"} for g in graders)]
+    custody_only = {"regime.custody.state", "regime.custody.responsibility"}
+    all_custody_rows = [r for r in rows if all(P[g][r] <= custody_only for g in graders)]
+    labels = [p for r in all_custody_rows for g in graders for p in P[g][r]]
+    cs = labels.count("regime.custody.state")
+    unan_cs_rows = [r for r in rows if all(P[g][r] == {"regime.custody.state"} for g in graders)]
+    site = {}
+    for t in [json.loads(l) for l in open(os.path.join(HERE, "fixtures", "maria_locus_round3_template.jsonl")) if l.strip()][1:]:
+        site[t["row"]] = t.get("site_record")
+    violations = [(r, g) for r in rows for g in graders if "physical_damage" in P[g][r] and site.get(r) != "damaged"]
+    stability = {}
+    if round2_by_row:
+        for g in ("gpt", "deepseek"):
+            same = tot = 0
+            for r in rows:
+                r2 = round2_by_row.get(r)
+                if r2:
+                    tot += 1
+                    same += collapse_custody(set(parse_locus(r2[g]))) == C[g][r]
+            stability[g] = "%d/%d" % (same, tot)
+    gem = {r: collapse_custody(set(parse_locus(P1["gemini"][r]))) for r in rows}
+    unan_4 = [r for r in rows if C["gpt"][r] == C["deepseek"][r] == C["kimi"][r] == gem[r]]
+    name_effect = {}
+    for g in ("gpt", "deepseek", "kimi"):
+        if ("P1", g) in unverified:
+            name_effect[g] = "UNVERIFIED"
+            continue
+        same = sum(1 for r in rows if P0[g][r] == P1[g][r])
+        flips = [r for r in rows if P0[g][r] != P1[g][r]]
+        name_effect[g] = {"identical": "%d/%d" % (same, len(rows)), "flips": {r: (P0[g][r], P1[g][r]) for r in flips}}
+    open_rows = {r: sorted({",".join(sorted(x)) for x in (C["gpt"][r], C["deepseek"][r], C["kimi"][r], gem[r])})
+                 for r in rows if r not in unan_4}
+    return {"computed": True, "rows": len(rows), "pairwise_exact_full": pairwise_full, "pairwise_exact_collapsed": pairwise_coll,
+            "unanimous_full": "%d/%d" % (len(unan_full), len(rows)), "unanimous_collapsed": "%d/%d" % (len(unan_coll), len(rows)),
+            "any_regime_component": any_regime, "pure_physical_damage": pure_pd, "pure_physical_damage_unanimous_rows": pure_pd_unanimous_rows,
+            "custody_split": {"all_custody_rows": all_custody_rows, "custody_labels": len(labels), "custody_state": cs,
+                              "unanimous_custody_state_rows": unan_cs_rows},
+            "rule_violations": violations, "stability_r2_to_r3_collapsed": stability,
+            "four_family_unanimous_collapsed": "%d/%d" % (len(unan_4), len(rows)), "four_family_unanimous_rows": unan_4,
+            "same_set_as_three_family": set(unan_4) == set(unan_coll),
+            "gemini_probe": {"P0": hdr.get("gemini_P0"), "P1": "answered", "read": "names were the trigger; company vs agency not yet split (T-d)"},
+            "name_effect": name_effect, "open_rows": open_rows, "kimi_P1": hdr.get("kimi_P1")}
+
+
+def v10c(results_path, stated_path):
+    """Within-document: per grader, class shares of the document's STATED CAUSES vs its FINDINGS (M1 only computable)."""
+    _, R, _ = _load_results(results_path)
+    P0 = R["P0"]
+    st = [json.loads(l) for l in open(stated_path) if l.strip()][1:]
+    out = {}
+    for g in ("gpt", "deepseek", "kimi"):
+        f_classes = Counter()
+        for r, code in P0[g].items():
+            parts = set(parse_locus(code))
+            ext = any(p in ("physical_damage", "regime.urgency") for p in parts)
+            f_classes["external_any"] += ext
+            f_classes["n"] += 1
+        s_ext = s_n = 0
+        for r in st:
+            if r["doc_id"] == "M1" and r.get("grader_" + g):
+                parts = set(parse_locus(r["grader_" + g]))
+                s_ext += any(p in ("physical_damage", "regime.urgency") for p in parts)
+                s_n += 1
+        out[g] = {"findings_external_share": round(f_classes["external_any"] / f_classes["n"], 3),
+                  "stated_causes_external_share": round(s_ext / s_n, 3) if s_n else None, "stated_causes_n": s_n}
+    a1 = {g: next(r.get("grader_" + g) for r in st if r["id"] == "M1-A1") for g in ("gpt", "deepseek", "kimi")}
+    return {"M1": out, "A1_unanimous": len(set(a1.values())) == 1, "A1": a1,
+            "K3": "NOT EVALUABLE: K3 findings (K3-3, K3-4, K3-6) ungraded",
+            "read": "the audit's summary sentence attributes to damage while its findings code pure damage 1-2/17"}
+
+
 # ------------------------------------------------------------------ V10c: within-document stated-cause vs finding sentences
 def within_document(body):
     """Per document: top-level tally of stated-cause rows vs finding rows on the same enum. Computes only for
@@ -292,6 +392,10 @@ def main(paths):
                     for sub, g in (r.get("graders", {}).get("round2") or {}).items():
                         r2map[sub] = g
                 out[os.path.basename(p)]["round3"] = round3(tr[1:], tr[0], r2map)
+                rp = os.path.join(HERE, "fixtures", "maria_locus_round3_results.jsonl")
+                if os.path.exists(rp):
+                    out[os.path.basename(p)]["round3_block"] = round3_block(rp, r2map)
+                    out[os.path.basename(p)]["v10c"] = v10c(rp, os.path.join(HERE, "fixtures", "stated_causes_grader_template.jsonl"))
     names = list(out)
     print("%-28s" % "" + "".join("%-26s" % n[:25] for n in names))
     for k in ("regime", "mixed", "physical_damage"):
@@ -332,6 +436,19 @@ def main(paths):
                 tag, r3.get("unanimous_full_enum"), r3.get("unanimous_custody_collapsed"), r3.get("pure_physical_damage"),
                 r3.get("custody_state_share") or r3.get("custody_labels"), r3.get("rule_violation") or r3.get("rule_violations"),
                 r3.get("stability_r2_to_r3_collapsed")))
+        rb = out[n].get("round3_block")
+        if rb:
+            print("  ROUND 3 BLOCK (computed): pairwise full %s | collapsed %s | unanimous %s full, %s collapsed | any regime %s | pure pd %s (unanimous rows %s)" % (
+                rb["pairwise_exact_full"], rb["pairwise_exact_collapsed"], rb["unanimous_full"], rb["unanimous_collapsed"], rb["any_regime_component"],
+                rb["pure_physical_damage"], rb["pure_physical_damage_unanimous_rows"]))
+            cs = rb["custody_split"]
+            print("    custody split: %d of %d custody labels on %d all-custody rows are custody.state; unanimous cs rows %s | violations %s | stability %s" % (
+                cs["custody_state"], cs["custody_labels"], len(cs["all_custody_rows"]), cs["unanimous_custody_state_rows"], rb["rule_violations"], rb["stability_r2_to_r3_collapsed"]))
+            print("    4-family unanimous collapsed %s (same set as 3-family: %s) | name effect %s | open rows %s" % (
+                rb["four_family_unanimous_collapsed"], rb["same_set_as_three_family"], rb["name_effect"], rb["open_rows"]))
+        vc = out[n].get("v10c")
+        if vc:
+            print("  V10c M1: %s | A1 unanimous %s %s" % (vc["M1"], vc["A1_unanimous"], vc["A1"]))
         wd = out[n].get("within_document")
         if wd:
             for d, e in wd.items():

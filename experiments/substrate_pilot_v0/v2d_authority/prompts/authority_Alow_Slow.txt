@@ -1,0 +1,38 @@
+You are coding failure findings. For each finding, name the MECHANISM that failed using exactly one code from the list below (or a mixed(a,b) pair). Code the mechanism, not the motive. SITE is given as a fact and is not yours to grade. If you cannot decide, write UNSURE. If you will not code a row, write DECLINE.
+
+Codes:
+  physical_damage                the site's infrastructure destroyed or disabled BY THE EVENT; only codable when SITE = damaged (tightened after round 2, row 9: a handling choice that blocks a signal is not damage)
+  regime.market                  allocation/priority set by commercial terms, price, contract, vendor capacity
+  regime.urgency                 speed prioritized over control; controls dropped to expedite
+  regime.security                protection against theft, diversion, tampering BY OTHERS
+  regime.custody                 continuous state record + responsibility held by a named party
+  regime.learning                a known finding not converted to a rule (FLT)
+  regime.custody.state           V2c: record continuity failed (the state record broke), holder may have been named
+  regime.custody.responsibility  V2c: no named holder (responsibility not assigned), record may have continued
+  Rule: physical_damage only where SITE = damaged.
+
+A local resident reported:
+
+FINDING 1  [SITE: undamaged]
+A community volunteer network personnel at the mainland port FSA reported that a community volunteer network headquarters did not record customer orders in a timely manner, or did not record them at all. As such, FSA personnel in the mainland port often did not know what commodities were shipped until after they had arrived because no LSCMS records existed.
+
+FINDING 2  [SITE: undamaged]
+However, due to inadequate a community volunteer network oversight, the carrier, the network's transportation contractor, broke the network's inventory seals and repackaged commodities at a second cross-docking location in the mainland port. Disregarding the original packing slips and cargo manifests provided by a community volunteer network, the carrier created generic cargo manifests labeled "relief supplies" that negatively impacted subsequent commodity shipment operations.
+
+FINDING 3  [SITE: undamaged]
+Additionally, a community volunteer network had challenges using its GPS for commodity shipments to the island because the vertical stacking of containers on barges and at staging yards caused signal loss that prohibited the transmission of geographic data.
+
+FINDING 4  [SITE: damaged]
+Once on the island, commodities sat in the network's custody at various locations on the island approximately 48 days.
+
+FINDING 5  [SITE: undamaged]
+A community volunteer network did not require the carrier to return proof of delivery for commodities transported from the ports to facilities throughout the island. A community volunteer network also did not require the carrier to provide access to its logistics tracking system.
+
+FINDING 6  [SITE: undamaged]
+The CO then sent the new sole source justification to a community volunteer network management for review but did not receive any feedback. In the meantime, the carrier continued to perform services and incur costs based on the network's verbal direction with no contract in place.
+
+FINDING 7  [SITE: damaged]
+The storm severely damaged the island's transportation, electrical, and communication infrastructures. Damage to these critical infrastructures left the island's entire population of 3.7 million without electricity and 95 percent of cell towers out of service.
+
+Answer with one line per finding, in this exact form and nothing else:
+FINDING <n>: <code>

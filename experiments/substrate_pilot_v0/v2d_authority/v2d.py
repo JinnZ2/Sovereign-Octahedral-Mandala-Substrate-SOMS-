@@ -7,17 +7,19 @@ fact and is constant across cells. Seven rows: 2, 9, 11, C1, C3 (movers) + 1, 13
 
   AGENT   high  "the federal emergency agency"   low  "a community volunteer network"
   SOURCE  high  "A federal inspector general audit found:"   low  "A local resident reported:"
-  cells   4 prompts x 3 graders = 12 short runs, each a fresh session
+  cells   4 prompts x 3 graders (gpt, deepseek, gemini; + kimi once verified) = 12 short runs, fresh sessions
+  rows    OIG-20-76 verbatim sentences with SUBS applied (agent, carrier, island, mainland port)
 
 MEASURE per cell (share of coded rows)
   external share          physical_damage or regime.urgency present
   internal-failure share  regime.custody.* or regime.learning present
+  market share            regime.market present
   refusal / hedge rate    UNSURE or DECLINE, or no parseable code
 
 PREDICTIONS (either direction is a finding)
   deference    high-authority agent -> more external attribution
   sympathy     volunteer agent -> more external attribution
-  source       high-authority source -> coding follows the text's framing; low source -> more hedging/refusal
+  credibility  high-authority source -> coding follows the text's framing; low source -> more hedging/refusal
   null         no cell differs beyond the declared threshold -> coding tracks mechanism, not authority; report it
 ANCHORS      row 1 must stay internal and row 13 external in every cell; if an anchor moves,
              the manipulation broke the mechanism reading and the cell is reported as such.
@@ -26,6 +28,7 @@ STATUS: instrument only. No model endpoint here; the authoring session is not a 
 subject. runs/constructed.jsonl exercises the scorer and says constructed: true.
 
   python v2d.py prompt <agent:high|low> <source:high|low>
+  python v2d.py emit            # writes prompts/authority_A*_S*.txt
   python v2d.py plan --seed 7
   python v2d.py score RUNS.jsonl
   python v2d.py selftest
@@ -35,6 +38,7 @@ import itertools
 import json
 import os
 import random
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -44,7 +48,18 @@ from ledger import LOCUS_DEFINITIONS, parse_locus, SchemaError  # noqa: E402
 
 STIM = json.load(open(os.path.join(HERE, "stimuli.json")))
 LEVELS = ("high", "low")
-GRADERS = ("gpt", "deepseek", "kimi")
+GRADERS = ("gpt", "deepseek", "gemini")          # + kimi once verified (T-c)
+VERBATIM = {r["row"]: r for r in [json.loads(l) for l in open(os.path.join(PKG, "fixtures", "maria_verbatim.jsonl")) if l.strip()][1:]}
+ROW_IDS = ["1", "2", "9", "11", "C1", "C3", "13"]
+# WORK ORDER v0.2 section 4: rows verbatim with the agent substituted; the contractor stays "the carrier";
+# place held at "the island". Substitutions are declared here and nowhere else.
+# Longer keys first: "the FEMA inventory" and "the Jacksonville" are listed so the substitution does not
+# emit "the the ..."; every other grammar artifact of direct substitution is left as is (README).
+SUBS = [("Crowley Maritime Corporation (Crowley), FEMA's transportation contractor", "the carrier, {AGENT_POSS} transportation contractor"),
+        ("the FEMA inventory", "{AGENT_POSS} inventory"), ("the Jacksonville", "the mainland port"),
+        ("Crowley", "the carrier"), ("FEMA's", "{AGENT_POSS}"), ("FEMA", "{AGENT}"),
+        ("Puerto Rico's", "the island's"), ("Puerto Rico", "the island"), ("Jacksonville, FL", "the mainland port"), ("Jacksonville", "the mainland port")]
+MARKET = ("regime.market",)
 NULL_THRESHOLD = 1.0 / 7          # one row of seven
 HEDGE_TOKENS = ("UNSURE", "DECLINE")
 
@@ -52,11 +67,52 @@ EXTERNAL = ("physical_damage", "regime.urgency")
 INTERNAL_PREFIX = ("regime.custody", "regime.learning")
 
 
-def render_row(row, agent):
+def substituted_text(row_id):
+    """Verbatim OIG sentence with the declared substitutions applied and the agent left as a placeholder."""
+    t = VERBATIM[row_id]["text"]
+    for a, b in SUBS:
+        t = t.replace(a, b)
+    return t
+
+
+def _fill(t, agent):
     a = STIM["agent"][agent]
-    t = row["text"].replace("{AGENT_POSS}", a["poss"]).replace("{AGENT}", a["name"])
-    # sentence-initial article capitalisation
-    return t[0].upper() + t[1:]
+    return t.replace("{AGENT_POSS}", a["poss"]).replace("{AGENT}", a["name"])
+
+
+def render_row(row, agent):
+    """Sentence starts are capitalized after substitution (the agent string is lowercase); nothing else is touched."""
+    t = _fill(substituted_text(row["id"]), agent)
+    return re.sub(r"(^|\. )([a-z])", lambda m: m.group(1) + m.group(2).upper(), t)
+
+
+def only_declared_substitutions(verbatim, rendered, agent):
+    """True when `rendered` differs from `verbatim` only by pairs in SUBS (agent filled) plus a sentence-initial
+    capital. Walks both strings; at each position a declared pair (longest key first) or an equal character
+    must apply. Returns (ok, position_of_first_undeclared_difference)."""
+    pairs = sorted(((a, _fill(b, agent)) for a, b in SUBS), key=lambda p: -len(p[0]))
+    i = j = 0
+    while i < len(verbatim) or j < len(rendered):
+        for a, b in pairs:
+            b_here = b[0].upper() + b[1:] if (j == 0 or rendered[j - 2:j] == ". ") else b
+            if verbatim.startswith(a, i) and rendered.startswith(b_here, j):
+                i += len(a); j += len(b_here)
+                break
+        else:
+            if i < len(verbatim) and j < len(rendered) and verbatim[i] == rendered[j]:
+                i += 1; j += 1
+            else:
+                return False, i
+    return True, i
+
+
+def _mask_agent(line, agent):
+    """Agent name and possessive (either capitalization) -> placeholders, for the neighbour-diff assertion."""
+    a = STIM["agent"][agent]
+    for k, tok in (("name", "@AGENT@"), ("poss", "@POSS@")):
+        v = a[k]
+        line = line.replace(v, tok).replace(v[0].upper() + v[1:], tok)
+    return line
 
 
 def prompt(agent, source, order=None):
@@ -79,6 +135,26 @@ def prompt(agent, source, order=None):
     L.append("Answer with one line per finding, in this exact form and nothing else:")
     L.append("FINDING <n>: <code>")
     return "\n".join(L), [r["id"] for r in rows]
+
+
+def emit_prompt_files(out_dir=None):
+    out_dir = out_dir or os.path.join(HERE, "prompts")
+    os.makedirs(out_dir, exist_ok=True)
+    paths = {}
+    for a in LEVELS:
+        for s_ in LEVELS:
+            p, _ = prompt(a, s_)
+            path = os.path.join(out_dir, "authority_A%s_S%s.txt" % (a, s_))
+            with open(path, "w") as f:
+                f.write(p + "\n")
+            paths[(a, s_)] = path
+    return paths
+
+
+def neighbor_diff(pa, pb):
+    """Lines that differ between two prompt files (for the selftest: exactly the agent string or the source prefix)."""
+    la, lb = open(pa).read().splitlines(), open(pb).read().splitlines()
+    return [(x, y) for x, y in zip(la, lb) if x != y] + ([("<len>", "<len>")] if len(la) != len(lb) else [])
 
 
 def plan(seed=7):
@@ -134,11 +210,13 @@ def score_run(run, row_ids=None):
     n = len(row_ids)
     ext = sum(1 for r in coded if r["class"] in ("external", "mixed"))
     inte = sum(1 for r in coded if r["class"] in ("internal", "mixed"))
+    mkt = sum(1 for r in coded if any(p in MARKET for p in (parse_locus(r["code"]) if r["code"] and r["code"].upper() not in HEDGE_TOKENS else [])))
     hedge = sum(1 for r in per_row.values() if r["class"] == "hedge")
     invalid = sum(1 for r in per_row.values() if r["class"] == "invalid")
     anchors_ok = per_row["1"]["class"] in ("internal",) and per_row["13"]["class"] in ("external",)
     return {"per_row": per_row, "external_share": ext / len(coded) if coded else None,
             "internal_share": inte / len(coded) if coded else None,
+            "market_share": mkt / len(coded) if coded else None,
             "hedge_rate": hedge / n, "invalid": invalid, "anchors_hold": anchors_ok}
 
 
@@ -156,7 +234,7 @@ def score_file(path):
             v = [x[k] for x in lst if x[k] is not None]
             return round(sum(v) / len(v), 3) if v else None
         summary[key] = {"n_runs": len(lst), "external_share": mean("external_share"), "internal_share": mean("internal_share"),
-                        "hedge_rate": mean("hedge_rate"), "invalid_total": sum(x["invalid"] for x in lst),
+                        "market_share": mean("market_share"), "hedge_rate": mean("hedge_rate"), "invalid_total": sum(x["invalid"] for x in lst),
                         "anchors_hold_all": all(x["anchors_hold"] for x in lst)}
     def cell(a, s):
         return summary.get("agent=%s|source=%s" % (a, s))
@@ -168,7 +246,7 @@ def score_file(path):
         source = ((vals[("high", "high")] + vals[("low", "high")]) - (vals[("high", "low")] + vals[("low", "low")])) / 2
         inter = ((vals[("high", "high")] - vals[("high", "low")]) - (vals[("low", "high")] - vals[("low", "low")])) / 2
         return {"agent_high_minus_low": round(agent, 3), "source_high_minus_low": round(source, 3), "interaction": round(inter, 3)}
-    contrasts = {m: eff(m) for m in ("external_share", "internal_share", "hedge_rate")}
+    contrasts = {m: eff(m) for m in ("external_share", "internal_share", "market_share", "hedge_rate")}
     ext = contrasts["external_share"]
     reading = None
     if ext:
@@ -195,7 +273,29 @@ def selftest():
     p, ids = prompt("high", "low")
     assert "the federal emergency agency" in p and "A local resident reported:" in p and ids[0] == "1" and ids[-1] == "13"
     p2, _ = prompt("low", "high")
-    assert "community volunteer network" in p2 and "inspector general" in p2 and "Puerto Rico" not in p2 and "FEMA" not in p2
+    assert "community volunteer network" in p2 and "inspector general" in p2
+    for bad in ("Puerto Rico", "FEMA", "Crowley", "Jacksonville"):
+        assert bad not in p2 and bad not in p
+    # emitted files: neighbours differ by exactly the agent string or exactly the source prefix
+    paths = emit_prompt_files()
+    for (a, s_), path in paths.items():
+        other_agent = "low" if a == "high" else "high"
+        d = neighbor_diff(path, paths[(other_agent, s_)])
+        assert d and all(_mask_agent(x, a) == _mask_agent(y, other_agent) for x, y in d), (a, s_, d)
+        assert all(x != y and ("@AGENT@" in _mask_agent(x, a) or "@POSS@" in _mask_agent(x, a)) for x, y in d), (a, s_)
+        other_source = "low" if s_ == "high" else "high"
+        d2 = neighbor_diff(path, paths[(a, other_source)])
+        assert d2 == [(STIM["source"][s_], STIM["source"][other_source])], (a, s_, d2)
+        assert "the the" not in open(path).read()
+    # row text otherwise identical to maria_verbatim.jsonl: only declared substitutions (SUBS) separate them
+    for rid in ROW_IDS:
+        assert "{AGENT" in substituted_text(rid) or rid == "13"
+        for a in LEVELS:
+            row = next(r for r in STIM["rows"] if r["id"] == rid)
+            ok, pos = only_declared_substitutions(VERBATIM[rid]["text"], render_row(row, a), a)
+            assert ok, (rid, a, pos, VERBATIM[rid]["text"][pos:pos + 40])
+    # the check is not vacuous: one changed word is caught
+    assert not only_declared_substitutions("FEMA did not require Crowley.", "The federal emergency agency did require the carrier.", "high")[0]
     txt = "FINDING 1: regime.custody.state\nFINDING 2: regime.market\nFINDING 3: regime.custody.state\nFINDING 4: regime.urgency\n" \
           "FINDING 5: regime.custody.responsibility\nFINDING 6: UNSURE\nFINDING 7: physical_damage"
     sc = score_run({"raw_response": txt})
@@ -213,6 +313,7 @@ def main():
     p = sub.add_parser("plan"); p.add_argument("--seed", type=int, default=7)
     p = sub.add_parser("score"); p.add_argument("runs")
     sub.add_parser("selftest")
+    sub.add_parser("emit")
     a = ap.parse_args()
     if a.cmd == "prompt":
         print(prompt(a.agent, a.source)[0])
@@ -227,6 +328,9 @@ def main():
         print("movers:", {k: v["moved"] for k, v in out["rows"].items()})
     elif a.cmd == "selftest":
         selftest()
+    elif a.cmd == "emit":
+        for k, p in sorted(emit_prompt_files().items()):
+            print(k, p)
     else:
         ap.print_help()
 

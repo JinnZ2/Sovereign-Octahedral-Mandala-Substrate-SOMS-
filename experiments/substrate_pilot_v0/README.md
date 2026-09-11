@@ -25,7 +25,9 @@ only, paper-operable. One failure source: DHS OIG-20-76.
 | `spec_rows.json` | V11: climate of every spec row's baseline |
 | `fixtures/*_locus.jsonl`, `locus_tally.py` | V2/V10 LOCUS-coded findings with three graders and a round-2 re-grade (Maria), Katrina and GAO 2018 partial; tallies and agreement computed from the rows |
 | `fixtures/maria_verbatim.jsonl`, `fixtures/katrina_passages.jsonl` | verbatim source sentences with pages and record sites (public domain); V2c and V10b grader templates draw from them |
-| `v2d_authority/` | V2d authority × source 2×2 on the enum: prompts, plan, scorer, constructed fixture; unrun |
+| `fixtures/maria_locus_round3_results.jsonl` | round 3 per-row codings (P0 gpt/deepseek/kimi, P1 gemini/deepseek/gpt; kimi P1 marked unverified); `locus_tally.round3_block` recomputes every reported figure; the P0/P1 prompt files are referenced by name, not supplied |
+| `fixtures/pending/small_tests.jsonl` | T-a, T-b, T-d templates; T-c operator note; unrun |
+| `v2d_authority/` | V2d authority × source 2×2 on the enum: verbatim rows with declared substitutions, four emitted prompt files, plan, scorer, constructed fixture; unrun |
 | `CLAIM_TABLE.md`, `BUILD_NOTE_v0.1.md` | claim statuses V1–V10 and nulls N-1..N-4; Q-1 answer and resolutions |
 | `forms/` | T-card, gate log, delivery receipt: the physical channel on paper |
 | `onboarding/field_map.json` | SPEC §3 field map (Phase 1 ADAPTER) |

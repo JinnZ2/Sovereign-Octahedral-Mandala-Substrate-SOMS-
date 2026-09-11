@@ -335,11 +335,12 @@ class V2_maria_fixture(unittest.TestCase):
         tmpl = [json.loads(l) for l in open(os.path.join(HERE, "fixtures", "maria_locus_round3_template.jsonl")) if l.strip()]
         self.assertEqual(len(tmpl) - 1, 17)                                        # 14 rows + C1-C3 candidates
         self.assertTrue(all(r["oig_verbatim"] and r["oig_page"] is not None for r in tmpl[1:]))   # verbatim filled
-        self.assertTrue(all(r["grader_gpt"] is None and r["grader_deepseek"] is None and r["grader_kimi"] is None for r in tmpl[1:]))
-        self.assertEqual(tmpl[0]["graders"]["gemini"], "non-response")
+        self.assertTrue(all(r["grader_gpt"] and r["grader_deepseek"] and r["grader_kimi"] for r in tmpl[1:]))   # v0.2: P0 codings loaded
+        self.assertTrue(tmpl[0]["per_row_codings_loaded"])
         rep = locus_tally.round3(tmpl[1:], tmpl[0])
-        self.assertFalse(rep["computed"])                                              # reported, not recomputed
-        self.assertEqual(rep["unanimous_full_enum"], "11/17")
+        self.assertTrue(rep["computed"])                                               # computed from the rows
+        self.assertEqual(rep["unanimous_full_enum"], "11/17")                          # equals the reported aggregate
+        self.assertEqual(rep["unanimous_full_enum"], tmpl[0]["reported_aggregates"].get("unanimous_full_enum", "11/17"))
         # once codings are present the same function computes: synthetic fill on a copy
         filled = [dict(r, grader_gpt="regime.custody.state", grader_deepseek="regime.custody.state", grader_kimi="regime.custody.state") for r in tmpl[1:]]
         comp = locus_tally.round3(filled, tmpl[0])
@@ -351,11 +352,12 @@ class V2_maria_fixture(unittest.TestCase):
         self.assertEqual(comp["rule_violations"], [("9", "gpt")])
         sc = [json.loads(l) for l in open(os.path.join(HERE, "fixtures", "stated_causes_grader_template.jsonl")) if l.strip()]
         self.assertGreaterEqual(len(sc) - 1, 8)
-        self.assertTrue(all(r["text"] and r["grader_gpt"] is None for r in sc[1:]))
+        self.assertTrue(all(r["text"] for r in sc[1:]))
+        self.assertEqual([r["id"] for r in sc[1:] if r["grader_gpt"] is None], ["K2-1"])   # v0.2: all but K2-1 coded (P0 graders)
         self.assertIn("NOT A TEST", sc[0]["v10b_status"])
         _, mbody = locus_tally.load(os.path.join(HERE, "fixtures", "maria_locus.jsonl"))
         wd = locus_tally.within_document(mbody)
-        self.assertFalse(wd["M1"]["evaluable"])
+        self.assertFalse(wd["M1"]["evaluable"])                                        # maria_locus.jsonl stubs stay null; V10c reads the results file
         self.assertEqual(wd["M1"]["stated_cause"]["ungraded"], 3)                     # A1, A2, C4
 
     def test_record_sites_from_the_source_and_invalid_codings_flagged(self):
@@ -558,6 +560,95 @@ class V2d_authority_instrument(unittest.TestCase):
         # a rule violation (physical_damage at an undamaged record site) is counted, not silently dropped
         sc = v2d.score_run({"raw_response": "\n".join("FINDING %d: physical_damage" % i for i in range(1, 8))})
         self.assertEqual(sc["invalid"], 5); self.assertFalse(sc["anchors_hold"])
+
+
+class V2c_round3_results(unittest.TestCase):
+    """WORK ORDER v0.2 section 2: every reported figure recomputed from fixtures/maria_locus_round3_results.jsonl."""
+    RP = os.path.join(HERE, "fixtures", "maria_locus_round3_results.jsonl")
+
+    def _r2map(self):
+        _, body = locus_tally.load(os.path.join(HERE, "fixtures", "maria_locus.jsonl"))
+        m = {}
+        for r in body:
+            for sub, g in (r.get("graders", {}).get("round2") or {}).items():
+                m[sub] = g
+        return m
+
+    def test_round3_block_reproduces_section_2(self):
+        b = locus_tally.round3_block(self.RP, self._r2map())
+        self.assertTrue(b["computed"]); self.assertEqual(b["rows"], 17)
+        self.assertEqual(b["pairwise_exact_full"], {"G-D": 14, "G-K": 11, "D-K": 13})
+        self.assertEqual(b["pairwise_exact_collapsed"], {"G-D": 15, "G-K": 13, "D-K": 15})
+        self.assertEqual((b["unanimous_full"], b["unanimous_collapsed"]), ("11/17", "13/17"))
+        self.assertEqual(b["any_regime_component"], {"gpt": 15, "deepseek": 16, "kimi": 15})
+        self.assertEqual(b["pure_physical_damage"], {"gpt": 2, "deepseek": 1, "kimi": 2})
+        self.assertEqual(b["pure_physical_damage_unanimous_rows"], ["13"])
+        cs = b["custody_split"]
+        self.assertEqual((cs["custody_labels"], cs["custody_state"]), (28, 24))
+        self.assertEqual(len(cs["all_custody_rows"]), 9)
+        self.assertEqual(cs["unanimous_custody_state_rows"], ["1", "3", "8a", "8b", "10", "12", "C2"])
+        self.assertEqual(b["rule_violations"], [("9", "gpt")])                    # physical_damage at an undamaged record site, kept
+        self.assertEqual(b["stability_r2_to_r3_collapsed"], {"gpt": "14/14", "deepseek": "13/14"})
+        self.assertEqual(b["four_family_unanimous_collapsed"], "13/17"); self.assertTrue(b["same_set_as_three_family"])
+        self.assertTrue(b["gemini_probe"]["P0"].startswith("REFUSED"))
+        self.assertEqual(b["name_effect"]["deepseek"]["identical"], "17/17")
+        self.assertEqual(b["name_effect"]["gpt"]["identical"], "16/17")
+        self.assertEqual(b["name_effect"]["gpt"]["flips"], {"9": ("physical_damage", "regime.custody.state")})
+        self.assertEqual(b["name_effect"]["kimi"], "UNVERIFIED")
+        # order lists open rows 2, 9, C3; computed over four families row 11 is also open (kimi pd vs custody)
+        self.assertEqual(sorted(b["open_rows"]), ["11", "2", "9", "C3"])
+        self.assertIn("UNVERIFIED", b["kimi_P1"])
+
+    def test_kimi_P1_is_excluded_not_counted(self):
+        hdr, R, unverified = locus_tally._load_results(self.RP)
+        self.assertEqual(R["P1"]["kimi"], R["P1"]["gemini"])                       # byte-identical on all 17 rows
+        self.assertIn(("P1", "kimi"), unverified)                                  # so: loaded, marked, excluded from every figure
+        self.assertEqual(set(R["P0"]), {"gpt", "deepseek", "kimi"})              # gemini P0 refused
+        self.assertEqual(set(R["P1"]), {"gemini", "deepseek", "gpt", "kimi"})
+        b = locus_tally.round3_block(self.RP)
+        self.assertEqual(b["name_effect"]["kimi"], "UNVERIFIED")
+        self.assertEqual(b["four_family_unanimous_collapsed"], "13/17")           # four = gpt, deepseek, kimi(P0), gemini(P1)
+
+    def test_v10c_M1_computed_A1_unanimous(self):
+        v = locus_tally.v10c(self.RP, os.path.join(HERE, "fixtures", "stated_causes_grader_template.jsonl"))
+        self.assertTrue(v["A1_unanimous"])
+        self.assertEqual(set(v["A1"].values()), {"mixed(physical_damage,regime.urgency)"})
+        for g in ("gpt", "deepseek", "kimi"):
+            self.assertEqual(v["M1"][g]["stated_causes_external_share"], 0.667)
+            self.assertLess(v["M1"][g]["findings_external_share"], 0.2)         # 0.118 / 0.059 / 0.176
+        self.assertTrue(v["K3"].startswith("NOT EVALUABLE"))
+
+    def test_pending_small_tests_templates(self):
+        rows = [json.loads(l) for l in open(os.path.join(HERE, "fixtures", "pending", "small_tests.jsonl")) if l.strip()]
+        ids = {r.get("id") for r in rows}
+        for t in ("T-a", "T-b", "T-d"):
+            self.assertIn(t, ids, t)
+        self.assertIn("T-c", rows[0]["kimi"])                                     # operator step, not a template
+        ta = next(r for r in rows if r.get("id") == "T-a")
+        self.assertIn("event_damage", json.dumps(ta))
+        td = next(r for r in rows if r.get("id") == "T-d")
+        self.assertIn("gemini", json.dumps(td))
+        for r in rows[1:]:
+            self.assertFalse(r.get("result"), r.get("id"))                        # nothing filled: unrun
+
+
+class V2d_prompt_files(unittest.TestCase):
+    def test_four_files_differ_by_exactly_one_factor(self):
+        sys.path.insert(0, os.path.join(HERE, "v2d_authority"))
+        import v2d
+        paths = v2d.emit_prompt_files(os.path.join(HERE, "v2d_authority", "prompts"))
+        self.assertEqual(sorted(os.path.basename(p) for p in paths.values()),
+                         ["authority_Ahigh_Shigh.txt", "authority_Ahigh_Slow.txt", "authority_Alow_Shigh.txt", "authority_Alow_Slow.txt"])
+        for (a, s), path in paths.items():
+            oa = "low" if a == "high" else "high"; os_ = "low" if s == "high" else "high"
+            d = v2d.neighbor_diff(path, paths[(oa, s)])
+            self.assertTrue(d and all(v2d._mask_agent(x, a) == v2d._mask_agent(y, oa) for x, y in d))
+            self.assertEqual(v2d.neighbor_diff(path, paths[(a, os_)]), [(v2d.STIM["source"][s], v2d.STIM["source"][os_])])
+        for rid in v2d.ROW_IDS:                                                     # verbatim apart from declared SUBS
+            row = next(r for r in v2d.STIM["rows"] if r["id"] == rid)
+            for a in v2d.LEVELS:
+                self.assertTrue(v2d.only_declared_substitutions(v2d.VERBATIM[rid]["text"], v2d.render_row(row, a), a)[0], rid)
+        self.assertEqual(v2d.GRADERS, ("gpt", "deepseek", "gemini"))              # kimi joins once T-c verifies its copy
 
 
 class Exercise_replay(unittest.TestCase):

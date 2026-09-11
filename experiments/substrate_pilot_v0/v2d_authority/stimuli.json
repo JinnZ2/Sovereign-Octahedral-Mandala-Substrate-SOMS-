@@ -1,30 +1,99 @@
 {
-  "_note": "V2d authority x source 2x2. Seven OIG-20-76 sentences (fixtures/maria_verbatim.jsonl) rewritten by the executor with the place held at 'the island', the agent held as {AGENT}/{AGENT_POSS}, the contractor as 'the transportation contractor', the mainland port as 'the mainland port'. The rewrite is a paraphrase and is checkable against the verbatim row it names. SITE is the record fact and does not vary across cells. Rows 1 and 13 are anchors (expected invariant: pure internal, pure external); 2, 9, 11, C1, C3 are the movers.",
-  "place": "the island",
-  "agent": {"high": {"name": "the federal emergency agency", "poss": "the agency's", "short": "the agency"},
-            "low":  {"name": "a community volunteer network", "poss": "the network's", "short": "the network"}},
-  "source": {"high": "A federal inspector general audit found:", "low": "A local resident reported:"},
-  "rows": [
-    {"id": "1", "verbatim_row": "1", "site_record": "undamaged", "role": "anchor_internal",
-     "text": "Personnel at {AGENT_POSS} mainland staging facility reported that {AGENT_POSS} headquarters did not record customer orders in a timely manner, or did not record them at all. As such, staging personnel often did not know what commodities were shipped until after they had arrived because no records existed.",
-     "source_plausibility": {"high": "fits", "low": "strained: a resident would not see headquarters records"}},
-    {"id": "2", "verbatim_row": "2", "site_record": "undamaged", "role": "mover",
-     "text": "Due to inadequate oversight by {AGENT}, the transportation contractor broke {AGENT_POSS} inventory seals and repackaged commodities at a second cross-docking location at the mainland port. Disregarding the original packing slips and cargo manifests, the contractor created generic cargo manifests labeled \"relief supplies\". The contractor said it broke the seals to cross-dock and maximize shipping space to balance commercial and relief requirements.",
-     "source_plausibility": {"high": "fits", "low": "strained"}},
-    {"id": "9", "verbatim_row": "9", "site_record": "undamaged", "role": "mover",
-     "text": "{AGENT} had challenges using its GPS for commodity shipments to the island because the vertical stacking of containers on barges and at staging yards caused signal loss that prohibited the transmission of geographic data.",
-     "source_plausibility": {"high": "fits", "low": "fits (a dock worker could see it)"}},
-    {"id": "11", "verbatim_row": "11", "site_record": "damaged", "role": "mover",
-     "text": "Once on the island, commodities sat in {AGENT_POSS} custody at various locations on the island for approximately 48 days.",
-     "source_plausibility": {"high": "fits", "low": "fits"}},
-    {"id": "C1", "verbatim_row": "C1", "site_record": "undamaged", "role": "mover",
-     "text": "{AGENT} did not require the transportation contractor to return proof of delivery for commodities transported from the ports to facilities throughout the island. {AGENT} also did not require the contractor to provide access to its logistics tracking system.",
-     "source_plausibility": {"high": "fits", "low": "strained: contract terms"}},
-    {"id": "C3", "verbatim_row": "C3", "site_record": "undamaged", "role": "mover",
-     "text": "The contracting officer sent a new sole-source justification to {AGENT_POSS} management for review but did not receive any feedback. In the meantime, the transportation contractor continued to perform services and incur costs based on {AGENT_POSS} verbal direction with no contract in place.",
-     "source_plausibility": {"high": "fits", "low": "strained: contracting file"}},
-    {"id": "13", "verbatim_row": "13", "site_record": "damaged", "role": "anchor_external",
-     "text": "The storm severely damaged the island's transportation, electrical, and communication infrastructures. Damage to these critical infrastructures left the island's entire population without electricity and 95 percent of cell towers out of service.",
-     "source_plausibility": {"high": "fits", "low": "fits"}}
-  ]
+ "_note": "V2d authority x source 2x2 (WORK ORDER v0.2 section 4). Rows are the VERBATIM OIG-20-76 sentences from fixtures/maria_verbatim.jsonl with the substitutions declared in v2d.SUBS (FEMA -> agent; Crowley -> the carrier; Puerto Rico -> the island; Jacksonville -> the mainland port). SITE is the record fact and does not vary across cells. Rows 1 and 13 are anchors; 2, 9, 11, C1, C3 are the movers. Grammar artifacts of direct substitution ('a community volunteer network personnel') are accepted, not smoothed.",
+ "place": "the island",
+ "agent": {
+  "high": {
+   "name": "the federal emergency agency",
+   "poss": "the agency's",
+   "short": "the agency"
+  },
+  "low": {
+   "name": "a community volunteer network",
+   "poss": "the network's",
+   "short": "the network"
+  }
+ },
+ "source": {
+  "high": "A federal inspector general audit found:",
+  "low": "A local resident reported:"
+ },
+ "rows": [
+  {
+   "id": "1",
+   "verbatim_row": "1",
+   "site_record": "undamaged",
+   "role": "anchor_internal",
+   "source_plausibility": {
+    "high": "fits",
+    "low": "strained: a resident would not see headquarters records"
+   },
+   "text_source": "fixtures/maria_verbatim.jsonl row 1"
+  },
+  {
+   "id": "2",
+   "verbatim_row": "2",
+   "site_record": "undamaged",
+   "role": "mover",
+   "source_plausibility": {
+    "high": "fits",
+    "low": "strained"
+   },
+   "text_source": "fixtures/maria_verbatim.jsonl row 2"
+  },
+  {
+   "id": "9",
+   "verbatim_row": "9",
+   "site_record": "undamaged",
+   "role": "mover",
+   "source_plausibility": {
+    "high": "fits",
+    "low": "fits (a dock worker could see it)"
+   },
+   "text_source": "fixtures/maria_verbatim.jsonl row 9"
+  },
+  {
+   "id": "11",
+   "verbatim_row": "11",
+   "site_record": "damaged",
+   "role": "mover",
+   "source_plausibility": {
+    "high": "fits",
+    "low": "fits"
+   },
+   "text_source": "fixtures/maria_verbatim.jsonl row 11"
+  },
+  {
+   "id": "C1",
+   "verbatim_row": "C1",
+   "site_record": "undamaged",
+   "role": "mover",
+   "source_plausibility": {
+    "high": "fits",
+    "low": "strained: contract terms"
+   },
+   "text_source": "fixtures/maria_verbatim.jsonl row C1"
+  },
+  {
+   "id": "C3",
+   "verbatim_row": "C3",
+   "site_record": "undamaged",
+   "role": "mover",
+   "source_plausibility": {
+    "high": "fits",
+    "low": "strained: contracting file"
+   },
+   "text_source": "fixtures/maria_verbatim.jsonl row C3"
+  },
+  {
+   "id": "13",
+   "verbatim_row": "13",
+   "site_record": "damaged",
+   "role": "anchor_external",
+   "source_plausibility": {
+    "high": "fits",
+    "low": "fits"
+   },
+   "text_source": "fixtures/maria_verbatim.jsonl row 13"
+  }
+ ]
 }
