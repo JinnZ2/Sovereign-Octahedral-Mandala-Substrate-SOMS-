@@ -1,0 +1,24 @@
+{
+ "_note": "Morphology profiles are supplied per platform, never derived from an observation. contact_pressure is kPa: platform mass distributed over the contacts in stance at the moment of loading. The same observation returns different bearing results for these profiles, which is the point (P3).",
+ "high_pressure_small_contact": {
+  "platform_id": "high_pressure_small_contact",
+  "contact_area": 0.0015, "contact_pressure": 98.0, "n_contacts": 4,
+  "swing_profile": "LOW_SWEEP", "joint_exposure": ["ankle", "knee"], "ankle_to_foot_ratio": 0.35,
+  "recovery_from_entanglement": "ACTIVE",
+  "note": "point foot, 30 kg over two loaded contacts of 15 cm2"
+ },
+ "low_pressure_broad_contact": {
+  "platform_id": "low_pressure_broad_contact",
+  "contact_area": 0.060, "contact_pressure": 4.0, "n_contacts": 4,
+  "swing_profile": "HIGH_STEP", "joint_exposure": [], "ankle_to_foot_ratio": 0.9,
+  "recovery_from_entanglement": "ACTIVE",
+  "note": "broad pad, 24 kg over two loaded contacts of 600 cm2"
+ },
+ "mid_pressure_exposed_joints": {
+  "platform_id": "mid_pressure_exposed_joints",
+  "contact_area": 0.008, "contact_pressure": 35.0, "n_contacts": 6,
+  "swing_profile": "LOW_SWEEP", "joint_exposure": ["ankle", "knee", "hip"], "ankle_to_foot_ratio": 0.2,
+  "recovery_from_entanglement": "NONE",
+  "note": "narrow foot on a thin ankle, no entanglement recovery: the geometry vegetation binds"
+ }
+}
