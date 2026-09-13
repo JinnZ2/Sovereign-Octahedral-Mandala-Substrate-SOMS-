@@ -13,9 +13,9 @@ NON-GOALS
   - not a code of ethics
   - scope is DURABILITY and RECONSTRUCTABILITY only: can the deployed object still be identified, re-produced, load-rated and inspected at t + N years, by someone who is not the original author and does not hold the tacit stack
 
-entries 27 (rated 25, unrated parts 2) | projected 25.9% of a 35% cap | detection gap 20 entries
-reconstruction  NO 9  NOT_APPLICABLE 3  PARTIAL 15
-citations  verified this session 24 | from memory, unverified 22
+entries 29 (rated 27, unrated parts 2) | projected 24.1% of a 35% cap | detection gap 22 entries
+reconstruction  NO 10  NOT_APPLICABLE 3  PARTIAL 16
+citations  verified this session 28 | from memory, unverified 22
 ```
 
 FIDELITY and CUSTODY are separate axes. FIDELITY (is the reported result true of the object produced) and CUSTODY (can the object be identified and re-produced later, by someone else) are separate axes and are not combined in any field. Custody is unmeasured in current practice, which is being read as adequate; an unmeasured variable is not absent, it is set to zero, which is a positive claim nobody licensed.
@@ -405,6 +405,44 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - citation [FROM_MEMORY_UNVERIFIED]: bridge inspection intervals, named as a transport source in the work order section 3B
 - citation [VERIFIED_2026-09-13]: EU AI Act post-market monitoring and Article 12 logging (https://artificialintelligenceact.eu/article/12/)
 
+### DUR-006  no batch record: the run's deviations from its own procedure are unrecorded
+
+- mechanism: The intended procedure is recorded (configuration, code, hyperparameters) and the ACTUAL RUN is not. Real runs deviate: a restart from an intermediate checkpoint, a shard that failed to load, a batch skipped after a numerical fault, a node swapped mid-run, a data snapshot that moved under the job. Each deviation changes the object produced, none is part of the configuration, and nothing requires any of them to be written down. The record therefore describes a run that did not happen.
+- load condition: training or fine-tuning runs long enough to be interrupted, which is all runs at scale; plus a logging system whose retention is set by operational need rather than by the object's service life
+- onset: immediate | evidence: TRANSPORTED | reconstruction: PARTIAL
+- detection channel: the run's own logs and job history, WHERE THEY ARE STILL RETAINED. Log retention is typically set in weeks or months while the object stays in service for years, so the channel closes on a schedule nobody connected to the object. NONE after the retention window.
+- detection latency: bounded by log retention, then UNBOUNDED: after the window there is no signal that a deviation ever occurred
+- attribution: the engineer who cannot explain a discrepancy between the documented procedure and the object's behaviour, read as not knowing their own system
+- consequence: a rebuild from the documented procedure produces a different object than the one bearing load, and the difference cannot be attributed to any recorded cause, so it is attributed to variance (D-101) and closed
+- existing control: PARTIAL. Experiment trackers record configuration and metrics, and some record restarts; none requires a deviation to be dispositioned, and none is retained on the object's schedule.
+- validity range: runs that can be interrupted or that read data from a mutable location; does not apply to a short deterministic fit over a frozen local dataset
+- transported from pharmaceutical manufacturing (the batch record): a batch record documents what was ACTUALLY done to this batch, not what the master formula specified, and every deviation from the master formula is recorded and given a written disposition before the batch can be released
+- why it carries: the abstract structure is a record of the INTENT standing in for a record of the EXECUTION, where the two are known to differ and the differences change the object. Nothing in that depends on chemistry. The deviation-with-disposition discipline is the part that carries and the part entirely absent here.
+- reconstruction note: the configuration is usually recoverable and the execution history is not, which is exactly the gap that makes a rebuild approximate rather than identifying
+- minimum artifact that would close it: a batch record per run, retained with the object rather than on the logging system's rotation: restarts, checkpoint lineage, data snapshot identifier, failed or skipped steps, hardware substitutions, and a written disposition for each deviation.
+- cross-reference (not re-derived): D-101 (variance: the explanation that absorbs every unrecorded deviation); D-102 (the stack: what was available, as against what this run actually did); DUR-001 (identity: a probe record fixes WHICH object, and says nothing about how it came to be that object)
+- citation [VERIFIED_2026-09-13]: pharmaceutical batch records and custody chain, named as a transport source in the work order section 3B and not previously covered by any entry
+- citation [VERIFIED_2026-09-13]: run-to-run variance anchors at D-101: variance is the bucket an unrecorded deviation gets attributed to
+
+### DUR-007  load rating lost: the rating existed, its record is gone, the component stays in service
+
+- mechanism: A rating was established at some point and the record of it has since gone: the team dispersed, the evaluation harness rotted, the wiki page was deleted, the numbers live in a slide nobody kept. The component remains in service and is still treated as rated, because the memory that it was once evaluated outlives the evidence of what the evaluation said.
+- load condition: a component whose evaluation predates the current team, or whose evaluation artifacts were held somewhere with a shorter life than the deployment
+- onset: drift | evidence: TRANSPORTED | reconstruction: NO
+- detection channel: ask for the rating: the input distribution it was established on, the consequence range, the date, and the artifact that produced it. Absent one of those, the component is unrated. The channel is cheap and is not walked, because nothing schedules the asking.
+- detection latency: immediate on request; UNBOUNDED otherwise, and the belief that a rating exists is stable indefinitely without it
+- attribution: the current owner, who is asked to justify a number they did not produce and cannot locate
+- consequence: load continues on a component whose rating cannot be produced, while every report and inventory describes it as evaluated. This is distinct from a rating that never existed: the belief is well-founded and the evidence is not there.
+- existing control: NONE. No practice treats the loss of an evaluation record as an event, and no default restricts use until a rating is re-established.
+- validity range: components in service longer than the life of the team or system that evaluated them; does not apply where the evaluation artifact is deposited with the object
+- transported from structural / civil engineering (bridges in service with missing as-built plans): the obligation to hold a rating does not lapse when the documentation does. Federal practice directs that a load rating be established for EVERY structure in the inventory even where plans are missing, by field measurement with era-appropriate conservative assumptions, by load testing, or by documented engineering judgement. A structure is re-rated or posted at a reduced limit; it is not left in service unrated.
+- why it carries: the abstract structure is a rating whose evidence has been lost while the object stays under load, and a practice that responds by RE-ESTABLISHING the rating conservatively rather than by carrying the belief forward. That response is a procedure over records, not over steel.
+- reconstruction note: the object may be intact and identifiable while its rating is not recoverable at all; this entry is about the loss of the rating record, not of the object (contrast DUR-003)
+- minimum artifact that would close it: treat the loss of an evaluation record as an event: a component whose rating cannot be produced on request is UNRATED, and either re-rated against a held reference or restricted to a conservative posted envelope until it is. The bridge practice is the template: re-rate or post, never carry the belief forward.
+- cross-reference (not re-derived): DUR-002 (the rating exists and does not travel with the object: the other half of the load-rating pair); DUR-003 (attrition of the OBJECT across hops; this is attrition of its RATING); D-208 (inspection interval: a re-rating cadence is what would have caught the loss)
+- citation [VERIFIED_2026-09-13]: FHWA-directed practice that a load rating be established for every structure in the inventory even where as-built plans are missing, using field measurement with conservative era-appropriate assumptions, load testing, or documented engineering judgement (state load-rating manuals and VTRC / NTL reports on rating bridges with limited or missing as-built plans). Read from state manuals and research summaries located this session; the federal directive itself was not fetched. (https://vdot.virginia.gov/vtrc/main/online_reports/pdf/20-r27.pdf)
+- citation [VERIFIED_2026-09-13]: structural load rating lost, named as a transport mechanism in the work order section 3B and not previously covered by any entry
+
 ## 3C PROJECTED and UNRATED PARTS
 
 ### D-301  the reconstruction path runs through a single commercial entity
@@ -506,6 +544,7 @@ Modes with no existing control, and the minimum artifact that would close each:
 - **DUR-003 migration attrition: the object is not lost at any hop and is gone after N of them** -> a hop log per object recording, per migration event, what was carried, what was DROPPED, and by whose decision; plus a retention horizon stated in hops rather than in years.
 - **DUR-004 stranded under load: artifact present, demand maximal, comprehension absent** -> instrument the three signals that already exist: bus-factor count per deployed component, time-to-first-successful-modification by an engineer who did not build it, and a record of failed replacement attempts. This is the only entry in the register whose detection channel needs measuring rather than inventing.
 - **D-205 latent fault dormant until an unusual load combination** -> state the validation envelope's instance count and sequence structure, and mark any operating geometry absent from it as ABSENT rather than safe. The check exists in this repository already.
+- **DUR-007 load rating lost: the rating existed, its record is gone, the component stays in service** -> treat the loss of an evaluation record as an event: a component whose rating cannot be produced on request is UNRATED, and either re-rated against a held reference or restricted to a conservative posted envelope until it is. The bridge practice is the template: re-rate or post, never carry the belief forward.
 - **D-301 the reconstruction path runs through a single commercial entity** -> an escrow deposit outside the vendor, or an explicit recorded acceptance that reconstruction is NO. The second is cheap and is currently made by silence rather than by decision.
 - **D-302 what was excluded from the training data is not recorded** -> retain the exclusion filters as executable artifacts with the corpus pointer, so the same corpus plus the same filters is a reproducible input.
 - **D-304 the inspection reference stops being held-out** -> custody rules for the reference set: sealed, dated, never in a training or selection path, with a replacement schedule and a record of each use.
@@ -524,6 +563,7 @@ Modes with a partial control, where the mechanism exists and nothing attaches it
 - **D-206 custody breaks at every handoff and no handoff is documented** -> a signed handover record at every boundary: named holder before, named holder after, date, and what was transferred (weights, environment, data pointer, rating envelope, reference sample).
 - **D-207 format obsolescence: the object survives and the reader does not** -> store the deposit in a reader-independent representation where one exists, and schedule a load test plus migration decision on an interval shorter than the framework's support horizon.
 - **D-208 no inspection interval and no action threshold** -> an inspection interval, a held reference set that the component was never fitted on, a re-measurement procedure, and an action threshold stated before the first inspection.
+- **DUR-006 no batch record: the run's deviations from its own procedure are unrecorded** -> a batch record per run, retained with the object rather than on the logging system's rotation: restarts, checkpoint lineage, data snapshot identifier, failed or skipped steps, hardware substitutions, and a written disposition for each deviation.
 - **D-303 the deployed object is the pipeline, and only the model is versioned** -> version the assembly, not the model: one identifier covering weights, preprocessing, retrieval state, prompt and post-processing, recorded per decision batch.
 
 ## Null set (step 7): modes checked and found already controlled
@@ -568,5 +608,5 @@ SHOCK RE-CUT (6B-3)
 
 ## Headline
 
-Of the 24 entries that make a reconstruction claim, PARTIAL is modal (15) and NOT ONE scores YES. PARTIAL means enough of the record exists to rebuild something approximate and not enough to identify the object, which looks like adequacy from inside and is the class most likely to be under-reported. 3 further entries govern use or a control rather than rebuild and are scored NOT_APPLICABLE with a stated reason.
+Of the 26 entries that make a reconstruction claim, PARTIAL is modal (16) and NOT ONE scores YES. PARTIAL means enough of the record exists to rebuild something approximate and not enough to identify the object, which looks like adequacy from inside and is the class most likely to be under-reported. 3 further entries govern use or a control rather than rebuild and are scored NOT_APPLICABLE with a stated reason.
 

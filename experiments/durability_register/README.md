@@ -19,22 +19,52 @@ python experiments/durability_register/failure_register.py validate    # schema,
 python experiments/durability_register/failure_register.py report      # reconstruction distribution, detection gap, requirement set, null set
 python experiments/durability_register/failure_register.py falsifiers  # F_A..F_H, each with its status
 python experiments/durability_register/failure_register.py audit       # F_C: random 20%, rejection rate
+python experiments/durability_register/failure_register.py coverage    # order section -> artifact, GAP if nothing carries it
 python experiments/durability_register/failure_register.py emit        # REGISTER.md + outsider_test.md
 python experiments/durability_register/failure_register.py selftest
 ```
 
-## What came out (rev 3)
+## What came out (rev 4)
 
 ```
-entries 27     rated 25     unrated parts 2      (short by design; a long register is a warning sign)
-sections       0: 1   3A MEASURED: 6   3B-W WORKED: 8   3B TRANSPORTED: 6   3C PROJECTED: 6
-reconstruction PARTIAL 15   NO 9   NOT_APPLICABLE 3   YES 0
-detection gap  20 of 27 entries: channel begins NONE, or latency is unbounded
-projection     25.9% against a stated 35% cap  (33.3% rev 1 -> 29.2% rev 2 -> 25.9% rev 3)
-citations      24 verified this session   22 named from memory and NOT verified
-requirements   12 modes with no control at all   11 where the mechanism exists and nothing attaches it
+entries 29     rated 27     unrated parts 2      (short by design; a long register is a warning sign)
+sections       0: 1   3A MEASURED: 6   3B-W WORKED: 8   3B TRANSPORTED: 8   3C PROJECTED: 6
+reconstruction PARTIAL 16   NO 10   NOT_APPLICABLE 3   YES 0
+detection gap  22 of 29 entries: channel begins NONE, or latency is unbounded
+projection     24.1% against a stated 35% cap  (33.3 -> 29.2 -> 25.9 -> 24.1 across revisions)
+citations      28 verified this session   22 named from memory and NOT verified
+requirements   13 modes with no control at all   14 where the mechanism exists and nothing attaches it
 null set       4 modes checked and found already controlled
+coverage audit 43 rows, 0 gaps, 1 entry not mapped to an order section (D-105, derived from D-102)
 ```
+
+### Rev 4: the order arrived unchanged, so the work was verification
+
+The re-issued work order is byte-identical to the one rev 3 was built from. Rebuilding would have produced nothing,
+and asserting "already done" would have been a claim with no check behind it. So rev 4 adds the check: `coverage`
+maps every section of the order to the entry, header key or code hook that implements it, and reports a GAP for any
+named mechanism that no artifact carries. 43 rows. It found two gaps, both in the order's own 3B domain list, both
+mechanisms I had silently skipped:
+
+- **DUR-006, no batch record.** The order names "batch records" under pharmaceutical alongside the retained sample,
+  and nothing in the register covered it. The mechanism is a record of INTENT standing in for a record of
+  EXECUTION: configuration and code are recorded, and the run's restarts, failed shards, skipped batches, node
+  substitutions and moved data snapshots are not. In pharma every deviation from the master formula is recorded and
+  dispositioned before release; here nothing requires any of it. The detection channel is the run's own logs, whose
+  retention is set in weeks while the object serves for years, so the channel closes on a schedule nobody connected
+  to the object. When a rebuild then differs, the difference gets attributed to variance (D-101) and closed.
+- **DUR-007, load rating lost.** The order names "load rating lost" under structural, and the register only had the
+  case where a rating exists and fails to travel (DUR-002). This is the other one: the rating was established, its
+  record is gone, and the component stays in service being described as evaluated, because the memory that it was
+  once evaluated outlives the evidence of what the evaluation said. The transport is sharp because the home domain
+  has a procedure rather than a lament: federal practice directs that a load rating be established for every
+  structure in the inventory even where as-built plans are missing, by field measurement with conservative
+  era-appropriate assumptions, by load testing, or by documented engineering judgement. Re-rate or post. Never carry
+  the belief forward. That is the requirement, transported intact.
+
+One entry, D-105 (readiness is not outcome), maps to no order section. It is derived from D-102 rather than from the
+order, and `coverage` reports it rather than hiding it, because a register holding content its order did not ask for
+should say so.
 
 ### Rev 3: what the new sections forced
 
@@ -111,11 +141,11 @@ percent of MMLU samples flagged in the LLaMA-2 report; over 90 percent of QuAC, 
 GPT-3 study; 13-gram and 50-character overlap thresholds), plus the finding that rephrased samples evade n-gram
 decontamination. The survey is a SECONDARY source for each underlying report and the citation says so.
 
-**Nothing scored YES on reconstruction.** Not one of the 24 entries that make a reconstruction claim. The expected-yield note in the work order said PARTIAL
+**Nothing scored YES on reconstruction.** Not one of the 26 entries that make a reconstruction claim. The expected-yield note in the work order said PARTIAL
 would dominate, and it does, but the absence of a single YES is the sharper result: for this deployment class
 there is no failure mode in the register whose retained record is sufficient to identify the object.
 
-**Twenty of twenty-seven entries have no detection channel or an unbounded latency.** That is the work order's
+**Twenty-two of twenty-nine entries have no detection channel or an unbounded latency.** That is the work order's
 Entry 0 reproducing itself through the body of the register. These are the modes that cannot generate the
 evidence that would make fixing them mandatory, which is the mechanism by which the enumeration does not get
 written.
@@ -150,11 +180,11 @@ F_A  transport valid       PASS. 8 transported entries, all stating an abstract 
                            mandatory at home, neither exists here.
 F_B  prior art             CHECKED, not redundant, scoped to the residual (above).
 F_C  unbounded scope       AUDITED, and the sample is reported against the whole register because the mandated 20%
-                           sample (5 of 27, seed 13) happened to contain NEITHER rejectable entry and reads 0.0.
-                           Whole-register rate: 2 of 27 (7.4%), both already filed as UNRATED PARTS rather than
+                           sample (6 of 29, seed 13) happened to contain NEITHER rejectable entry and reads 0.0.
+                           Whole-register rate: 2 of 29 (6.9%), both already filed as UNRATED PARTS rather than
                            discarded. A 0% sampled rate reported alone would have been the register's own
                            detection gap reproduced in its audit. Author-run, which is the weak case F_G fixes.
-F_D  projection inflation  25.9% against a 35% cap, falling across revisions (33.3 -> 29.2 -> 25.9) because every
+F_D  projection inflation  24.1% against a 35% cap, falling across revisions (33.3 -> 29.2 -> 25.9 -> 24.1) because every
                            entry the operator has added is anchored: rev 3 adds two TRANSPORTED, one MEASURED and
                            one TRANSPORTED. Stated in the header.
 F_E  not the mechanism     STATED, and the honest answer is mostly nothing. Two real forcing functions exist and
@@ -224,4 +254,5 @@ register.jsonl        the store: header (deployment class, non-goals, event defi
 failure_register.py   validate / audit / report / falsifiers / emit / selftest
 REGISTER.md           build product, human emission
 outsider_test.md      build product, the F_G test sheet, unrun
+coverage              not a file: `failure_register.py coverage` audits the order against the register, 43 rows
 ```

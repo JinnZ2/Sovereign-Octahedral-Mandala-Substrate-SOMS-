@@ -31,3 +31,13 @@ def test_falsifiers_report_status_including_not_run():
     assert f["F_A_bridge_transport_valid"]["status"] == "PASS"
     assert f["F_G_reader_precondition_blindness"]["status"] == "NOT RUN"
     assert "changes nothing on its own" in f["F_E_the_enumeration_is_not_the_mechanism"]["what_would_make_this_binding"]
+
+
+def test_coverage_audit_has_no_gaps():
+    """The work order was re-issued unchanged; this is the check that it is fully implemented."""
+    import failure_register as fr
+    c = fr.coverage()
+    assert c["n_gaps"] == 0, c["gaps"]
+    assert c["n_rows"] >= 40
+    ids = {r_id for r in c["rows"] for r_id in r["entries"]}
+    assert {"DUR-006", "DUR-007"} <= ids                      # the two gaps the audit found, now closed

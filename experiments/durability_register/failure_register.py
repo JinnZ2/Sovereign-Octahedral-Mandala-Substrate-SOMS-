@@ -14,6 +14,8 @@ infrastructure (WORK ORDER FAILURE-MODE ENUMERATION FOR ML-AS-INFRASTRUCTURE, 20
   python failure_register.py audit         F_C: random 20% audited against the mandatory fields, rejection rate
   python failure_register.py report        reconstruction distribution, detection gap, requirement set, null set
   python failure_register.py falsifiers    F_A..F_H, each with its status and what it rests on
+  python failure_register.py coverage      map every section of the work order to the artifact implementing it,
+                                          and report any named mechanism with no entry as a GAP
   python failure_register.py emit          write REGISTER.md and outsider_test.md
   python failure_register.py selftest
 """
@@ -324,6 +326,95 @@ def falsifiers(path=STORE):
     }
 
 
+# ---- coverage audit: the work order mapped to artifacts, with GAP detection ------------------------
+# Each row: (section, what the order asks for, entry ids that carry it, header keys that carry it, code hooks).
+# A row is a GAP when it names no artifact, or names one that is not in the store.
+COVERAGE = [
+    ("0 non-goals", "state the non-goals and the durability-only scope", [], ["non_goals", "deployment_class"], []),
+    ("1 entry 0", "the detection gap itself, and a detection_channel field permitted to be NONE", ["D-000"],
+     ["detection_none_or_unbounded", "detection_gap_definition"], ["has_detection_gap"]),
+    ("2 schema", "the 13 fields; a missing field is an UNRATED PART, filed not discarded", ["D-401", "D-402"],
+     ["unrated_parts"], ["FIELDS", "MANDATORY", "validate"]),
+    ("2 projection cap", "PROJECTED may not exceed a stated fraction", [], ["projected_fraction", "projected_cap"],
+     ["validate"]),
+    ("3A variance", "run-to-run variance: a reported number does not identify the object", ["D-101"], [], []),
+    ("3A versions", "software and dependency versions unstated, so re-execution is impossible in principle", ["D-102"], [], []),
+    ("3A leakage", "data leakage across fields, corrected results erasing claimed superiority", ["D-103"], [], []),
+    ("3A significance", "no agreed significance measure, so point estimates ship without a distribution", ["D-104"], [], []),
+    ("3A compounding", "the defect is not visible from reading the report", ["D-106"], [], []),
+    ("3B structural", "as-built drift and undocumented field modification", ["D-203"], [], []),
+    ("3B structural", "load rating LOST", ["DUR-007"], [], []),
+    ("3B structural", "inspection interval unset", ["D-208"], [], []),
+    ("3B aviation", "configuration control and part traceability", ["D-204"], [], []),
+    ("3B aviation", "latent fault dormant until an unusual load combination", ["D-205"], [], []),
+    ("3B pressure vessel", "stamped validity envelope and certified test conditions", ["DUR-002", "DUR-002-N1"], [], []),
+    ("3B pressure vessel", "material provenance, including what was excluded", ["D-302"], [], []),
+    ("3B pharmaceutical", "retained reference sample", ["DUR-001", "DUR-001-N1", "DUR-001-N2"], [], []),
+    ("3B pharmaceutical", "batch records: what was actually done, with deviations dispositioned", ["DUR-006"], [], []),
+    ("3B pharmaceutical", "custody chain", ["D-206"], [], []),
+    ("3B nuclear transport", "continuous custody, documented handoff at every stop", ["D-206"], [], []),
+    ("3B archive", "format obsolescence, dependency on a reader that no longer exists", ["D-207"], [], []),
+    ("3B transport rule", "every transported entry states why the mechanism carries; analogy is rejected", [],
+     [], ["validate", "falsifiers:F_A"]),
+    ("3B-W DUR-001", "worked entry, schema filled, with its proposed control", ["DUR-001"], [], []),
+    ("3B-W DUR-002", "worked entry, schema filled, with its return contract", ["DUR-002"], [], []),
+    ("3B-W DUR-003", "migration attrition", ["DUR-003"], [], []),
+    ("3B-W DUR-004", "stranded under load", ["DUR-004"], [], []),
+    ("3B-W composition", "DUR-001 and DUR-002 registered as a coupled pair", ["DUR-001", "DUR-002"],
+     ["composition_rule"], ["validate"]),
+    ("3B-W control failures", "the controls' own failure modes as entries, not footnotes",
+     ["DUR-001-N1", "DUR-001-N2", "DUR-002-N1"], [], ["validate"]),
+    ("3C near-miss", "walk reconstruction backwards; everything found is PROJECTED unless a transport anchors it",
+     ["D-301", "D-302", "D-303", "D-304"], [], []),
+    ("5 load rating", "as-built, material provenance, load rating, inspection interval, as-built drift",
+     ["D-102", "D-302", "DUR-002", "D-208", "D-203"], [], []),
+    ("5 silent substitution", "cross-reference the existing marker rather than re-derive", ["D-203", "DUR-001"], [], []),
+    ("6 custody axis", "fidelity and custody never collapsed", [], ["fidelity_vs_custody"], []),
+    ("6 proprietary boundary", "a path through one commercial entity is UNBOUNDED and NO by default", ["D-301"], [], []),
+    ("6B hop budget", "account in hops, not years", [], ["hop_budget"], ["emit"]),
+    ("6B-1 volume", "the expected-count form, with the system and operator levels kept apart", ["DUR-003"],
+     ["volume_accounting"], []),
+    ("6B-2 correlation", "objects share hops; correlation needs its own entry", ["DUR-005"],
+     ["independence_correction"], ["falsifiers:F_I"]),
+    ("6B-2 register rule", "redundancy as a control must state what the copies do not share", ["DUR-005"],
+     ["independence_correction"], ["REDUNDANCY_WORDS", "validate"]),
+    ("6B-3 shock re-cut", "carrier low; substrate and dependency high and scheduled", ["D-207"], ["shock_recut"], []),
+    ("6B-3 substrate", "the bits do not rot, the reader is gone; intact and unreadable reads as retained", ["D-207"], [], []),
+    ("7 F_A..F_I", "every falsifier answered with a status", [], [], ["falsifiers"]),
+    ("Step 5", "reconstruction distribution as a headline", [], [], ["report"]),
+    ("Step 6", "requirement set for every entry with no control", [], [], ["report"]),
+    ("Step 7", "the null set: modes checked and found already controlled", [], ["null_set"], []),
+]
+
+
+def coverage(path=STORE):
+    hdr, entries = load(path)
+    ids = {e["id"] for e in entries}
+    rows, gaps = [], []
+    src = open(os.path.abspath(__file__)).read()
+    for section, ask, eids, hkeys, hooks in COVERAGE:
+        missing_e = [i for i in eids if i not in ids]
+        missing_h = [k for k in hkeys if k not in hdr]
+        missing_c = [c for c in hooks if c.split(":")[-1] not in src]
+        status = "COVERED"
+        if not (eids or hkeys or hooks):
+            status = "GAP: nothing in the register carries this"
+        elif missing_e or missing_h or missing_c:
+            status = "GAP: missing %s" % ", ".join(missing_e + missing_h + missing_c)
+        rows.append({"section": section, "asks_for": ask, "entries": eids, "header_keys": hkeys,
+                     "code": hooks, "status": status})
+        if status != "COVERED":
+            gaps.append(rows[-1])
+    # every entry should be reachable from some coverage row, or the register has content the order did not ask for
+    claimed = {i for _, _, eids, _, _ in COVERAGE for i in eids}
+    unmapped = sorted(ids - claimed)
+    return {"rows": rows, "gaps": gaps, "n_rows": len(rows), "n_gaps": len(gaps),
+            "entries_not_mapped_to_any_order_section": unmapped,
+            "reads": "a GAP is a named mechanism with no entry. Entries not mapped to an order section are either "
+                     "supporting entries derived from one (D-105 readiness, D-403+ if any) or scope this register "
+                     "added on its own, and either way they should be justified rather than assumed."}
+
+
 def emit(path=STORE):
     hdr, entries = load(path)
     rep = report(path)
@@ -572,6 +663,19 @@ def selftest():
     # F_I: volume and correlation appear together or neither
     assert f["F_I_independence"]["status"] == "PASS"
     assert hdr["volume_accounting"]["no_values"] and hdr["hop_budget"]["estimate_owner"]
+    # rev 4: the coverage audit runs clean, and the two gaps it found are closed
+    c = coverage()
+    assert c["n_gaps"] == 0, c["gaps"]
+    assert "DUR-006" in by_id and "DUR-007" in by_id
+    # DUR-006 is the batch record: execution, not intent, with deviations dispositioned
+    assert "deviation" in by_id["DUR-006"]["requirement"] and "batch record" in by_id["DUR-006"]["requirement"]
+    assert "retention" in by_id["DUR-006"]["detection_channel"] or "retained" in by_id["DUR-006"]["detection_channel"]
+    # DUR-007 is the rating lost, not the object lost, and its requirement is re-rate or restrict
+    assert by_id["DUR-007"]["reconstruction"] == "NO" and "rating record" in by_id["DUR-007"]["reconstruction_note"]
+    assert "UNRATED" in by_id["DUR-007"]["requirement"] and "restrict" in by_id["DUR-007"]["requirement"]
+    assert by_id["DUR-007"]["transport"]["rests_on_analogy"] is False
+    # the unmapped set is small and known: coverage is an audit, not a rubber stamp
+    assert len(c["entries_not_mapped_to_any_order_section"]) <= 4, c["entries_not_mapped_to_any_order_section"]
     # citations carry a status and the unverified ones are visible
     assert rep["citations"]["verified_this_session"] >= 6 and rep["citations"]["from_memory_unverified"] >= 6
     # emissions are generated, not hand-written
@@ -600,6 +704,15 @@ def main(argv):
         print(json.dumps(report(), indent=1)); return 0
     if cmd == "falsifiers":
         print(json.dumps(falsifiers(), indent=1)); return 0
+    if cmd == "coverage":
+        c = coverage()
+        for r in c["rows"]:
+            print("%-24s %-8s %s" % (r["section"], "OK" if r["status"] == "COVERED" else "GAP",
+                                     r["asks_for"] if r["status"] == "COVERED" else r["status"] + " | " + r["asks_for"]))
+        print("\n%d rows, %d gaps" % (c["n_rows"], c["n_gaps"]))
+        if c["entries_not_mapped_to_any_order_section"]:
+            print("entries not mapped to an order section: %s" % ", ".join(c["entries_not_mapped_to_any_order_section"]))
+        return 1 if c["n_gaps"] else 0
     if cmd == "emit":
         for p in emit():
             print(p)
