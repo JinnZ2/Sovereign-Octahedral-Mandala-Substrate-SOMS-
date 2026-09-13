@@ -111,7 +111,14 @@ def validate(path=STORE):
         if e.get("section") == "6C" and e.get("evidence_class") != "PROJECTED" and not e.get("current_instance"):
             errs.append((i, "6C entry not PROJECTED and citing no current instance (F_J): a strong structural "
                            "argument may not be scored as measured"))
-        if DEMAND_AS_CONTROL.search(str(e.get("existing_control") or "")):
+        ctrl_txt = str(e.get("existing_control") or "")
+        for ob in hdr.get("obligations_not_in_application", []):
+            for nm in ob.get("names", []):
+                if nm.lower() in ctrl_txt.lower() and "not in application" not in ctrl_txt.lower():
+                    errs.append((i, "cites %r as an existing_control: that obligation is NOT IN APPLICATION until %s. "
+                                    "A scheduled control whose date moves behaves exactly like no control "
+                                    "(register_corrections R-01)" % (nm, ob.get("until"))))
+        if DEMAND_AS_CONTROL.search(ctrl_txt):
             errs.append((i, "cites demand or popularity as an existing_control (F2): V9 is at maximum here and does "
                            "not protect, because V10 replacement velocity outruns documentation. 'It is widely used, "
                            "it will be fine' is not a control."))
@@ -289,6 +296,8 @@ def report(path=STORE):
             "loss_variable_map": hdr["loss_variable_map"],
             "still_open_9_1": hdr["still_open_9_1"],
             "amendments": sorted(k for k in hdr["corrections"] if k.startswith("A-")),
+            "register_corrections": sorted(k for k in hdr["register_corrections"] if k.startswith("R-")),
+            "forcing_functions": hdr["forcing_functions"],
             "length_watch": hdr["length_watch"],
             "volume_and_correlation": {"volume": hdr["volume_accounting"], "correlation": hdr["independence_correction"]},
             "shock_exposure": hdr["shock_recut"],
@@ -357,13 +366,14 @@ def falsifiers(path=STORE):
                      "one instead."},
         "F_E_the_enumeration_is_not_the_mechanism": {
             "status": "STATED, AND THE HONEST ANSWER IS MOSTLY NOTHING",
-            "forcing_functions_that_exist": [
-                "EU AI Act Article 12 (automatic logging over the system lifetime) and Article 26 (deployer retention "
-                "of logs, minimum six months), plus Annex IV technical documentation. Real, binding, and scoped to the "
-                "Act's high-risk categories. The six-month floor is shorter than every reconstruction question here.",
-                "FDA Predetermined Change Control Plan, final guidance 2024-12-03: a pre-authorised modification "
-                "protocol with an impact assessment. This is as-built drift control with teeth, for AI-enabled "
-                "medical device software functions only."],
+            "forcing_functions": hdr.get("forcing_functions"),
+            "count_in_application": (hdr.get("forcing_functions") or {}).get("count_in_application"),
+            "corrected_at": "register_corrections R-01: the EU AI Act duties were named here as a real forcing "
+                            "function and are NOT IN APPLICATION. Two became one.",
+            "the_order_was_right": "section 9-1 states that the register has no forcing function and that this is the "
+                                  "finding rather than an omission. The earlier answer here softened that by naming "
+                                  "two levers; one of them is not in application, and the other is medical device "
+                                  "software. The order's statement stands.",
             "what_would_make_this_binding": "attributable, expensive failure. Neither exists for the fixed deployment "
                                             "class, because entry D-000 removes attribution and distributes the cost. "
                                             "Publishing the register changes nothing on its own, and this deliverable "
@@ -565,6 +575,8 @@ COVERAGE = [
     ("1B-1 F3", "the protective set is thin and entirely document-side", [], ["loss_variable_map"], []),
     ("9 amendment record", "A-01 to A-11 with the superseded statement retained in each", [], ["corrections"], []),
     ("9-1 still open", "reconciled against what this register holds, item by item", [], ["still_open_9_1"], []),
+    ("F_E forcing function", "what is actually in application, and a rule against citing what is not", [],
+     ["forcing_functions", "obligations_not_in_application", "register_corrections"], ["validate", "falsifiers:F_E"]),
     ("7 F_A..F_M", "every falsifier answered with a status", [], [], ["falsifiers"]),
     ("Step 5", "reconstruction distribution as a headline", [], [], ["report"]),
     ("Step 6", "requirement set for every entry with no control", [], [], ["report"]),
@@ -775,7 +787,8 @@ def selftest():
     # F_E does not claim publishing is sufficient
     fe = f["F_E_the_enumeration_is_not_the_mechanism"]
     assert "changes nothing on its own" in fe["what_would_make_this_binding"]
-    assert len(fe["forcing_functions_that_exist"]) == 2
+    assert fe["count_in_application"] == 1            # was 2 until R-01 withdrew the deferred one
+    assert len(fe["forcing_functions"]["levers"]) == 2
     # step 7 null set is non-empty: a register that finds everything broken is advocating
     assert len(hdr["null_set"]) >= 3
     for n in hdr["null_set"]:
@@ -1028,7 +1041,40 @@ def selftest():
     assert sum(1 for x in so if x["status"] == "CLOSED HERE") == 2
     assert any("PARTLY CLOSED" in x["status"] for x in so)
     fe = [x for x in so if "forcing function" in x["item"]][0]
-    assert "OPEN for the general case" in fe["status"] and "order's statement stands" in fe["entry"]
+    assert "the order was right" in fe["status"] and "Nothing in general scope forces" in fe["entry"]
+    # rev 9: the forcing-function correction, verified, with the superseded claim retained
+    ff = hdr["forcing_functions"]
+    assert ff["count_in_application"] == 1
+    eu = [l for l in ff["levers"] if "EU AI Act" in l["lever"]][0]
+    assert eu["status"] == "NOT IN APPLICATION" and "2027" in eu["why"] and "2028" in eu["why"]
+    assert "at least six months" in eu["retention_text"] and "FLOOR, not a ceiling" in eu["retention_text"]
+    assert "NO MEASURAND ATTACHED" in eu["measurand_finding"] and "DUR-002" in eu["measurand_finding"]
+    fda = [l for l in ff["levers"] if "FDA" in l["lever"]][0]
+    assert fda["status"] == "IN APPLICATION"
+    r1 = hdr["register_corrections"]["R-01"]
+    assert r1["superseded"].startswith("F_E named the EU AI Act") and "Enacted and applicable are different states" \
+        in r1["how_the_error_happened"].replace("enacted and applicable", "Enacted and applicable")
+    assert len(r1["consequence"]) == 4
+    n04 = [n for n in hdr["null_set"] if n["id"] == "N-04"][0]
+    assert n04["control_status"].startswith("NOT IN APPLICATION") and n04["why_controlled"].startswith("WITHDRAWN")
+    assert n04["superseded_2026_09_13"]                                     # the withdrawn claim stays visible
+    assert f["F_E_the_enumeration_is_not_the_mechanism"]["count_in_application"] == 1
+    assert "order's statement stands" in f["F_E_the_enumeration_is_not_the_mechanism"]["the_order_was_right"]
+    fe91 = [x for x in hdr["still_open_9_1"]["items"] if "forcing function" in x["item"]][0]
+    assert "the order was right" in fe91["status"]
+    # the rule bites: an entry citing a deferred obligation as a control is refused
+    import copy, tempfile
+    bad5 = copy.deepcopy(by_id["D-000"]); bad5["id"] = "SYNTH-6"
+    bad5["existing_control"] = "PARTIAL: EU AI Act Article 12 requires logging over the lifetime"
+    with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as tf5:
+        tf5.write(json.dumps(hdr) + "\n")
+        for x in entries + [bad5]:
+            tf5.write(json.dumps(x) + "\n")
+    ve5 = validate(tf5.name)
+    assert any(i == "SYNTH-6" and "NOT IN APPLICATION" in m for i, m in ve5), ve5
+    os.unlink(tf5.name)
+    # and the register's own entries do not trip it
+    assert not any("NOT IN APPLICATION" in m for _, m in validate())
     # citations carry a status and the unverified ones are visible
     assert rep["citations"]["verified_this_session"] >= 6 and rep["citations"]["from_memory_unverified"] >= 6
     # emissions are generated, not hand-written

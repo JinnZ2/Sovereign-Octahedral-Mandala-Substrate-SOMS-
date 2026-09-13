@@ -33,7 +33,7 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - detection latency: UNBOUNDED
 - attribution: the last hop: whoever was holding the output when a decision went wrong
 - consequence: the register is incomplete by construction, and the incompleteness is invisible from inside it. Every mode below with detection_channel NONE cannot generate the evidence that would make fixing it mandatory.
-- existing control: NONE for the general case. Narrow exceptions exist where a regulator mandates logging (EU AI Act Article 12) or a post-market surveillance duty attaches.
+- existing control: NONE for the general case. The narrow exception previously cited here - a regulator mandating logging under EU AI Act Article 12 - is NOT IN APPLICATION: those Chapter III duties are deferred to 2027-12-02 and 2028-08-02 (see forcing_functions and register_corrections R-01). A post-market surveillance duty attaches in some sectors and does not require the record this entry needs.
 - validity range: deployments without an independent later-arriving ground-truth channel
 - minimum artifact that would close it: a detection channel is a deliverable, not an assumption: for each deployed component, name the signal that would reveal degradation and its latency, or record NONE. NONE is a rateable answer; an empty field is not.
 - citation [VERIFIED_2026-09-13]: EU AI Act Article 12 (record-keeping) and Article 26 (deployer log retention, at least 6 months) (https://artificialintelligenceact.eu/article/12/)
@@ -479,7 +479,7 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - detection latency: UNBOUNDED
 - attribution: the operator who eventually reports worse outcomes, without a baseline to compare against
 - consequence: degradation accumulates with no point at which anyone is obliged to look
-- existing control: PARTIAL: production ML monitoring is common in mature organisations; a mandated interval with a pre-committed action threshold is not standard, and EU AI Act post-market monitoring is the nearest requirement in the sectors it covers
+- existing control: PARTIAL: production ML monitoring is common in mature organisations; a mandated interval with a pre-committed action threshold is not standard. The nearest regulatory requirement, EU AI Act post-market monitoring, is NOT IN APPLICATION (Chapter III deferred; see R-01), so nothing mandates an interval anywhere in this register's scope today.
 - validity range: components in sustained service; not applicable to a one-shot analysis
 - transported from structural inspection regimes (bridge inspection intervals): a mandated interval, a defined inspection, a rating, and an action threshold tied to the rating
 - why it carries: the abstract structure is: a component under sustained load with no scheduled re-measurement and no pre-committed action threshold. The load is decisions rather than traffic; the scheduling gap is identical.
@@ -759,8 +759,8 @@ Modes with a partial control, where the mechanism exists and nothing attaches it
     - OCI image digests are content-addressed and are produced automatically by the build; pinning by digest rather than tag is a one-line practice (CONTROLLED, mechanism available and cheap)
     - residual: retention of the image past the deployment window is not covered by the digest
 - **N-04** recording that a use of a high-risk system occurred, in the sectors the EU AI Act covers
-    - Article 12 mandates automatic logging over the system's lifetime and Article 26 obliges deployers to retain logs; this is an actual forcing function, not a recommendation (CONTROLLED BY REGULATION, within scope only)
-    - residual: the minimum deployer retention is six months, which is shorter than any reconstruction question this register asks, and the scope is the Act's high-risk categories rather than deployed ML generally
+    - WITHDRAWN. Article 12 mandates logging and Article 26(6) obliges deployer retention, and both are Chapter III high-risk obligations deferred by the Digital Omnibus on AI to 2 December 2027 (Annex III standalone) and 2 August 2028 (Annex I embedded). As of 2026-09-13 this mode is NOT controlled by regulation anywhere. (NOT IN APPLICATION: scheduled, deferred)
+    - residual: the earlier entry in this register claimed it as CONTROLLED BY REGULATION, which was wrong in the reassuring direction: it put a not-yet-applicable obligation in the null set, which is the list of things already handled. Corrected at R-01. When the duties do apply, the deployer floor is six months against reconstruction questions measured in years, and the appropriate-to-purpose clause above it carries no measurand.
 
 ## Timeframe and volume accounting (section 6B)
 

@@ -71,12 +71,41 @@ CARRIER-SIDE DETECTION       OPEN, as stated  DUR-005-B records it; F_M excludes
 NO FORCING FUNCTION          OPEN in general  two sector-scoped exceptions recorded, neither general
 ```
 
-On the last one I disagree with the order in a narrow way and the register says so rather than smoothing it. F_E here
-names EU AI Act Article 12 with Article 26 retention and Annex IV, plus the FDA Predetermined Change Control Plan
-final guidance of December 2024. Both are real forcing functions and both are sector-scoped, and Article 26's
-six-month retention floor is shorter than every reconstruction question in this register. So the order's statement
-stands for the general case: nothing currently would make this binding. Procurement is the one lever that needs no
-regulator, because the three cheapest requirements are artifacts rather than behaviours.
+**Rev 9 withdrew that disagreement. I was wrong and the order was right.**
+
+I had named the EU AI Act record-keeping and deployer-retention duties as one of two real forcing functions. They are
+**not in application.** The Digital Omnibus on AI defers the Chapter III high-risk obligations, where both articles
+sit: political agreement 7 May 2026, in force 27 July 2026, Annex III standalone moved to **2 December 2027** and
+Annex I embedded to **2 August 2028**. Article 50 transparency stayed live on 2 August 2026; these duties did not.
+Verified independently this session against the Omnibus summaries, dates consistent across every source located.
+
+```
+forcing functions in application, as of 2026-09-13:   1
+  EU AI Act Art. 12 / Art. 26(6) / Annex IV     NOT IN APPLICATION until 2027-12-02 / 2028-08-02
+  FDA Predetermined Change Control Plan          IN APPLICATION, US medical device software only
+```
+
+So section 9-1's statement stands unqualified: the register has no forcing function, and that is the finding.
+Procurement remains the only lever needing no regulator.
+
+Three consequences, all recorded rather than quietly edited:
+
+- **Null-set entry N-04 is withdrawn.** It scored use-logging as CONTROLLED BY REGULATION. That put a not-yet-
+  applicable obligation in the list of things already handled, which is an error in the reassuring direction, in the
+  one section whose whole job is to stop the register from claiming everything is broken.
+- **A new validate rule**, and it immediately caught two stale claims in this register's own entries. An obligation
+  that is not in application may not be cited as an existing_control, because a scheduled control whose date moves
+  behaves exactly like no control, which is the same shape as the unbudgeted scheduled shock in 6B-3. D-000 and D-208
+  both leaned on the deferred duties and both now say so, with the superseded text kept on the entry.
+- **Article 26(6) is carried with the operator's finding, which strengthens the register.** The text requires logs be
+  kept for "a period appropriate to the intended purpose of the high-risk AI system, of at least six months". The
+  qualifying clause is unquantified, so the only binding number is six months. That is an envelope requirement with no
+  measurand attached: DUR-002's exact defect appearing inside the instrument meant to force record-keeping.
+
+Register-side corrections are numbered R-nn so the operator's A-series stays unambiguous. R-01 records how the error
+happened: the claim was built from sources describing the articles as enacted, without checking whether the
+obligations were in application. Enacted and applicable are different states, and this register of all things should
+not have conflated them.
 
 ```
 entries 37     rated 35     unrated parts 2      (rev 7 figures below)
