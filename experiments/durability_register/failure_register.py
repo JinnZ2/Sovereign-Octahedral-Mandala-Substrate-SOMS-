@@ -138,6 +138,29 @@ def validate(path=STORE):
                 errs.append((i, "transport rests on analogy: rejected at review (step 3 transport rule)"))
         if e["status"] == "RATED" and control_is(e, "NONE") and not e.get("requirement"):
             errs.append((i, "existing_control NONE with no requirement stated (step 6)"))
+    # F_M: a carrier-side condition enters the ACTIVE set only with a named producing mechanism AND a measurable
+    # production rate; the DUR-005-C screen has no null result (PRODUCED or FLAGGED, never clean).
+    ca = hdr.get("carrier_ambient") or {}
+    for c in ca.get("capacities", []):
+        if c.get("screen") not in ("PRODUCED", "FLAGGED"):
+            errs.append(("<header>", "carrier capacity %r scored %r: the DUR-005-C screen has no null result, every "
+                                     "capacity is PRODUCED or FLAGGED" % (c.get("capacity", "")[:40], c.get("screen"))))
+        if c.get("screen") == "PRODUCED" and not c.get("producing_mechanism"):
+            errs.append(("<header>", "carrier capacity %r scored PRODUCED with no producing mechanism named (F_M a)"
+                         % c.get("capacity", "")[:40]))
+        active = str(c.get("F_M", "")).startswith("ACTIVE")
+        if active and not c.get("measurable_production_rate"):
+            errs.append(("<header>", "carrier capacity %r admitted to the active set with no measurable production "
+                                     "rate (F_M b)" % c.get("capacity", "")[:40]))
+        if not active and c.get("measurable_production_rate") and "UNINSTRUMENTED" in str(c.get("F_M", "")):
+            errs.append(("<header>", "carrier capacity %r has a measurable rate and is recorded UNINSTRUMENTED"
+                         % c.get("capacity", "")[:40]))
+    # the axes must not be merged: a with-control or moving score lives in its own field, never in `reconstruction`
+    for e in entries:
+        note = str(e.get("reconstruction_note") or "")
+        if ("with the control" in note.lower() or "with control" in note.lower()) and not e.get("reconstruction_with_control"):
+            errs.append((e.get("id", "?"), "declares a with-control reconstruction reading in prose and carries no "
+                                           "reconstruction_with_control field: the axes may not be merged"))
     # F_K: every ambient condition carries a horizon judgement, and out-of-horizon ones are excluded not admitted
     amb = hdr.get("ambient_enumeration") or {}
     if amb:
@@ -204,6 +227,8 @@ def report(path=STORE):
     for e in entries:
         dist[e["reconstruction"]] = dist.get(e["reconstruction"], 0) + 1
     claiming = [e for e in entries if e["reconstruction"] != "NOT_APPLICABLE"]
+    with_control = {e["id"]: e["reconstruction_with_control"] for e in entries if e.get("reconstruction_with_control")}
+    trajectories = {e["id"]: e["reconstruction_trajectory"] for e in entries if e.get("reconstruction_trajectory")}
     by_section = {}
     for e in entries:
         by_section.setdefault(e["section"], []).append(e["id"])
@@ -214,7 +239,15 @@ def report(path=STORE):
                     for e in R if control_is(e, "PARTIAL") and e.get("requirement")]
     cites = [(c.get("status"), c.get("ref")) for e in entries for c in e.get("citations", [])]
     return {"entries": len(entries), "rated": len(R), "unrated_parts": len(entries) - len(R),
+            "reconstruction_distribution_AS_IS": dist,
             "reconstruction_distribution": dist,
+            "reconstruction_axes": {
+                "as_is": "the distribution above: what the retained record supports today, no proposed control in place",
+                "with_control": with_control,
+                "trajectory": trajectories,
+                "not_merged": "no distribution mixing these is published. Merging an as-is score, a with-control score "
+                              "and a moving score puts a control state and a date in one column. The rule and the "
+                              "sibling instrument that found the defect are in the header's reconstruction_axis_rule."},
             "reconstruction_headline": (
                 "Of the %d entries that make a reconstruction claim, PARTIAL %d and NO %d, and NOT ONE scores YES. %s "
                 "PARTIAL means enough of the record exists to rebuild something approximate and not enough to identify "
@@ -292,7 +325,14 @@ def falsifiers(path=STORE):
                                                "reconstructability, carrying a detection channel (permitted to be "
                                                "NONE) and a reconstruction score, for a fixed deployment class.",
             "caveat": "the prior-art check was four targeted searches on one day. It establishes that the major "
-                      "catalogues are harm-scoped; it does not establish that no durability catalogue exists anywhere."},
+                      "catalogues are harm-scoped; it does not establish that no durability catalogue exists anywhere.",
+            "prior_art_found_INSIDE_the_ecosystem_2026_09_13": hdr.get("prior_art_in_ecosystem"),
+            "F_B_status_correction": "F_B was answered against public catalogues and is now also answered against the "
+                                     "ecosystem: a sibling implementation of this same order exists at "
+                                     "JinnZ2/Simulators failure-mode-register/. It is a conformance instrument over "
+                                     "the order rather than a populated register, so this is not a second copy of the "
+                                     "same list, but two registers for one order is itself a durability hazard and the "
+                                     "consolidation recommendation is recorded rather than left implicit."},
         "F_C_unbounded_scope": {"status": "AUDITED", "sampled_rejection_rate": a["rejection_rate"],
                                 "sample": a["sampled"], "rejected_in_sample": a["rejected"],
                                 "whole_register_rejection_rate": a["whole_register_rejection_rate"],
@@ -338,6 +378,18 @@ def falsifiers(path=STORE):
             "substrate_correction": "D-207 no longer reads as decay. The bits do not rot; the READER is gone. Intact "
                                     "and unreadable is a distinct state from decayed and it is worse, because it "
                                     "reads as retained."},
+        "F_M_carrier_side_unfalsifiable": {
+            "status": "BOUNDED, and mostly UNINSTRUMENTED",
+            "rule": "a carrier-side condition enters the ACTIVE set only with (a) a named producing mechanism and (b) a "
+                    "currently measurable production rate. Failing (b) it is recorded as UNINSTRUMENTED and excluded "
+                    "from the active set rather than carried as a claim.",
+            "result": (hdr.get("carrier_ambient") or {}).get("F_M_result"),
+            "screen": "DUR-005-C has no null result: every capacity scores PRODUCED or FLAGGED, nothing scores clean. "
+                      "validate enforces both that and the F_M bar.",
+            "reads": "four of five candidate carrier-side conditions have no production-rate measure and are excluded "
+                     "as UNINSTRUMENTED. The one admitted is admitted because DUR-004 already measures its local form. "
+                     "The class is real and the instrument for four fifths of it does not exist, which is what the "
+                     "register records instead of asserting an unbounded hazard."},
         "F_J_recursive_case_speculation": {
             "status": "ENFORCED",
             "rule": "every 6C entry is evidence_class PROJECTED unless it cites a current instance; validate refuses "
@@ -481,7 +533,19 @@ COVERAGE = [
      [], ["compounding_6C"], ["falsifiers:F_E"]),
     ("6C-7 minimal arrest", "a frozen interchange layer, frozen outside the generating system; the format is in the set",
      ["DUR-008", "DUR-008-N1"], ["compounding_6C"], []),
-    ("7 F_A..F_L", "every falsifier answered with a status", [], [], ["falsifiers"]),
+    ("patch 2026-09-13 h1", "carrier-side ambient as a second class, not reachable by the artifact-side question",
+     ["DUR-005-B", "DUR-005"], ["carrier_ambient"], []),
+    ("patch 2026-09-13 h1", "DUR-005-C intrinsic-vs-produced screen, no null result", ["DUR-005-B"],
+     ["carrier_ambient"], ["validate"]),
+    ("patch 2026-09-13 h2", "F_M: a carrier-side condition needs a producing mechanism and a measurable rate",
+     ["DUR-005-B"], ["carrier_ambient"], ["falsifiers:F_M", "validate"]),
+    ("patch 2026-09-13 h3", "correction A-11: the rev-6 ambient set was artifact-side only", [],
+     ["corrections", "ambient_enumeration"], []),
+    ("patch 2026-09-13 h4", "still open: the screen has no detection channel and is run by the population it tests",
+     ["DUR-005-B"], ["still_open"], []),
+    ("sibling instrument", "the control-state axis: as-is, with-control and moving scores never merged",
+     ["DUR-001", "DUR-003"], ["reconstruction_axis_rule", "prior_art_in_ecosystem"], ["report", "validate"]),
+    ("7 F_A..F_M", "every falsifier answered with a status", [], [], ["falsifiers"]),
     ("Step 5", "reconstruction distribution as a headline", [], [], ["report"]),
     ("Step 6", "requirement set for every entry with no control", [], [], ["report"]),
     ("Step 7", "the null set: modes checked and found already controlled", [], ["null_set"], []),
@@ -657,7 +721,7 @@ def selftest():
     # length is reported with its growth accounting rather than silently accommodated.
     assert len(entries) <= 40, len(entries)
     lw = hdr["length_watch"]
-    assert lw["entries"] == len(entries) and lw["growth"]["rev 6"] == len(entries)
+    assert lw["entries"] == len(entries) and lw["growth"]["rev 7"] == len(entries)
     assert "no longer short" in lw["status"] and "tripwire" in lw["status"]
     assert "own durability failure" in lw["status"]          # the register's length is itself a durability risk
     assert "No entry was self-generated" in lw["accounting"]
@@ -706,6 +770,7 @@ def selftest():
     assert "wrong in the direction of optimism" in rep["reconstruction_headline"]
     assert d.get("NOT_APPLICABLE", 0) == 4
     assert "6C" in {e.get("section") for e in entries}
+    assert rep["reconstruction_distribution_AS_IS"] == d
     assert len(rep["entries_with_a_real_detection_channel"]) >= 1                  # DUR-004 at minimum
     # every RATED entry with no control states a requirement (step 6)
     for e in rated(entries):
@@ -863,6 +928,47 @@ def selftest():
     assert "6C-2" in json.dumps(by_id["DUR-008"]["citations"]) and "now supplied" in json.dumps(by_id["DUR-008"]["citations"])
     assert f["F_K_ambient_set_unbounded"]["status"] == "BOUNDED"
     assert f["F_L_conjunction_arithmetic"]["status"] == "NO NUMBER PUT ON IT"
+    # rev 7: the carrier-side class, the screen with no null result, and F_M's bar
+    assert "DUR-005-B" in by_id
+    b5 = by_id["DUR-005-B"]
+    assert b5["detection_channel"].startswith("NONE") and "run by the same population" in b5["detection_channel"]
+    assert "UPSTREAM OF EVERY TRANSMISSION VARIABLE" in b5["mechanism"]
+    assert "LOSS DOES NOT SCALE WITH THE SIZE OF THE CAUSE" in b5["consequence"]
+    assert b5["evidence_class"] == "PROJECTED" and "NOT NAMED" in b5["evidence_note"]
+    ca = hdr["carrier_ambient"]
+    assert len(ca["capacities"]) == 5
+    assert all(c["screen"] in ("PRODUCED", "FLAGGED") for c in ca["capacities"])      # no null result
+    assert ca["F_M_result"]["active"] == 1 and ca["F_M_result"]["uninstrumented_excluded"] == 4
+    assert "DUR-004" in [c.get("candidate_measure", "") for c in ca["capacities"]][4]
+    assert f["F_M_carrier_side_unfalsifiable"]["status"].startswith("BOUNDED")
+    assert hdr["corrections"]["A-11"]["superseded"].startswith("DUR-005")
+    assert "A-01 to A-10 were never supplied" in hdr["corrections"]["note"]
+    # the patch was not applied as a patch, and the entry says why
+    assert "does not exist in this repository" in json.dumps(b5["citations"])
+    assert "NOT applied as a patch" in json.dumps(b5["citations"])
+    # the axes are split, never merged, and the defect's source is credited
+    ax = rep["reconstruction_axes"]
+    assert ax["with_control"] == {"DUR-001": "PARTIAL"} and set(ax["trajectory"]) == {"DUR-003"}
+    assert "control state and a date in one column" in ax["not_merged"]
+    assert "Simulators" in hdr["reconstruction_axis_rule"]["found_by"]
+    # a with-control reading declared only in prose is refused
+    import copy, tempfile
+    bad3 = copy.deepcopy(by_id["DUR-002"]); bad3["id"] = "SYNTH-4"
+    bad3["reconstruction_note"] = "NO as deployed, PARTIAL with the control"
+    bad3.pop("reconstruction_with_control", None)
+    with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as tf3:
+        tf3.write(json.dumps(hdr) + "\n")
+        for x in entries + [bad3]:
+            tf3.write(json.dumps(x) + "\n")
+    ve3 = validate(tf3.name)
+    assert any(i == "SYNTH-4" and "axes may not be merged" in m for i, m in ve3), ve3
+    os.unlink(tf3.name)
+    # F_B now also answers against the ecosystem, and names what the sibling does better
+    pa = hdr["prior_art_in_ecosystem"]
+    assert "CONFORMANCE instrument" in pa["what_it_is"] and pa["revision_it_holds"].startswith("rev 3")
+    assert any("retyped" in x for x in pa["what_it_does_better"])
+    assert "push access" in pa["recommendation"]
+    assert "F_B_status_correction" in f["F_B_prior_art"]
     # citations carry a status and the unverified ones are visible
     assert rep["citations"]["verified_this_session"] >= 6 and rep["citations"]["from_memory_unverified"] >= 6
     # emissions are generated, not hand-written

@@ -24,19 +24,101 @@ python experiments/durability_register/failure_register.py emit        # REGISTE
 python experiments/durability_register/failure_register.py selftest
 ```
 
-## What came out (rev 6)
+## What came out (rev 7)
 
 ```
-entries 36     rated 34     unrated parts 2      LENGTH WATCH: tripwire moved 35 -> 40, see below
-sections       0: 1   3A: 6   3B-W WORKED: 10   3B: 8   3C: 8   6C COMPOUNDING: 3
-reconstruction PARTIAL 16   NO 16   NOT_APPLICABLE 4   YES 0     <- section 8's prediction no longer holds
-detection gap  28 of 36 entries: channel begins NONE, or latency is unbounded
-projection     30.6% against a stated 35% cap  (33.3 -> 29.2 -> 25.9 -> 24.1 -> 25.8 -> 30.6)
-citations      35 verified this session   23 named from memory and NOT verified
-requirements   20 modes with no control at all   14 where the mechanism exists and nothing attaches it
-null set       4 modes checked and found already controlled
-coverage audit 57 rows, 0 gaps, 1 entry not mapped to an order section (D-105, derived from D-102)
+entries 37     rated 35     unrated parts 2      LENGTH WATCH: 37 of a 40 tripwire
+sections       0: 1   3A: 6   3B-W WORKED: 11   3B: 8   3C: 8   6C COMPOUNDING: 3
+reconstruction AS-IS: NO 17   PARTIAL 16   NOT_APPLICABLE 4   YES 0
+               axes NOT merged: with-control {DUR-001: PARTIAL} · trajectory {DUR-003: PARTIAL -> NO}
+detection gap  29 of 37 entries: channel begins NONE, or latency is unbounded
+projection     32.4% against a stated 35% cap  (33.3 -> 29.2 -> 25.9 -> 24.1 -> 25.8 -> 30.6 -> 32.4)
+citations      36 verified this session   23 named from memory and NOT verified
+coverage audit 63 rows, 0 gaps, 1 entry not mapped to an order section (D-105, derived from D-102)
 ```
+
+### The patch was NOT applied, per its own instruction
+
+The patch targets `WORKORDER_failure_mode_enumeration.md` and says to stop and report if an anchor is not found
+exactly once. That file exists in neither repository, and **none of the four anchors was found anywhere**, including
+in JinnZ2/Simulators at head b2b1232:
+
+```
+target WORKORDER_failure_mode_enumeration.md   ABSENT from SOMS, GlyphAI and Simulators
+hunk 1 "...ECONOMICS AND INSTITUTIONS presented as"   0 matches (the text exists only inside this
+                                                      register's header as a JSON value, not as a line)
+hunk 2 "F_K  AMBIENT SET IS UNBOUNDED."               0 matches
+hunk 3 the A-10 block, before "### 9-1  STILL OPEN"   0 matches; no A-series log and no section 9-1 anywhere
+hunk 4 the PROVENANCE REGRESS bullet in 9-1           0 matches
+```
+
+The patch's target is a third artifact: an operator working copy further ahead than either repository, carrying an
+A-numbered correction log to A-10 and a section 9-1. Nothing was guessed. The patch CONTENT is implemented in the
+register instead, which is where the previous six revisions landed, and the entry citation records that the patch was
+not applied as a patch and why.
+
+### DUR-005-B carrier-side ambient
+
+```
+ARTIFACT-SIDE   conditions the OBJECT needs to exist and be read        DUR-005
+CARRIER-SIDE    conditions the CARRIER needs to be able to PERFORM      DUR-005-B   (new)
+                not reachable by the artifact-side question: a carrier-side condition does not make
+                the record unreadable, it makes the method unrunnable while the record stays legible
+```
+
+The mechanism is that a reliably produced capacity reads as an intrinsic property of a population rather than as an
+output of conditions, so the dependency is never stated, and the precondition that fails sits upstream of every
+transmission variable. The transmission chain can be intact throughout. **Loss does not scale with the size of the
+cause.**
+
+The DUR-005-C screen has no null result: every capacity scores PRODUCED or FLAGGED, nothing scores clean, and
+`validate` enforces that. Then F_M bounds it, and the result is the finding:
+
+```
+capacity                                                    screen    F_M
+working memory sufficient to audit a representation         PRODUCED  UNINSTRUMENTED, excluded
+ability to read low-level implementation                    PRODUCED  UNINSTRUMENTED, excluded
+training pipelines producing these at replacement rate      PRODUCED  UNINSTRUMENTED, excluded
+working conditions permitting sustained single-task attention PRODUCED UNINSTRUMENTED, excluded
+willingness to do maintenance work with no attribution      PRODUCED  ACTIVE - DUR-004 already measures it
+```
+
+Four of five have no production-rate measure and are excluded as UNINSTRUMENTED rather than carried as claims. The
+one admitted is admitted because DUR-004's bus-factor and time-to-first-modification signals already measure its
+local form. The class is real and the instrument for four fifths of it does not exist, which is what the register
+records instead of asserting a hazard it cannot bound.
+
+The entry is PROJECTED, not MEASURED. The operator states a documented historical form and does not name the case;
+naming it is the cheapest available upgrade to this entry.
+
+### A sibling register exists, and it found a defect in this one
+
+Checking Simulators for the patch target turned up `failure-mode-register/` (WORK_ORDER.md, entries.py, register.py,
+test_register.py, CLAIM_TABLE.md) at rev 3 of the order. It is a **conformance instrument over the order, not a
+populated register**: it parses the order at call time, reports filing state, vocabulary conformance and step status
+over the order's own four ENTRY blocks, and authors nothing. Four entries, projected fraction 0.0.
+
+It does three things better than this register, by this register's own criteria:
+
+- **It derives instead of transcribing.** The order is delivered verbatim in-repo and parsed at call time, nothing
+  retyped. This register transcribes entry text into `register.jsonl`, which is a custody weakness of exactly the
+  kind DUR-010 describes.
+- **It imports `effective-redundancy-audit::n_eff` as code**, where DUR-009 only cross-references that instrument by
+  name.
+- **It refuses to merge the reconstruction axes**, and that is a real defect it caught here. This register published
+  one distribution over cells carrying different axes: an as-is score, a with-control score and a moving score.
+  Merging them puts a control state and a date in one column. Fixed: the stored value is the as-is score,
+  `reconstruction_with_control` and `reconstruction_trajectory` hold the others, the report publishes the as-is
+  distribution labelled as such plus the two other axes separately, and `validate` refuses an entry that declares a
+  with-control reading in prose without the field.
+
+What this register has that it lacks: its Step 0 is BLOCKED because its egress refuses the catalogue hosts, so its
+F_B is unresolved and it says it is not cleared to ship. The prior-art map here supplies that. Its Step 1 is NOT_RUN
+with no deployment class declared. And it holds none of rev 4 to rev 7.
+
+**Recommendation: consolidate into the Simulators copy.** It derives rather than transcribes, it sits beside the
+instruments it needs to import, and it already has a conformance layer this register lacks. That requires push access
+to JinnZ2/Simulators, which this session does not have: the clone here is read-only. Recorded in `still_open`.
 
 **The expected yield inverted.** Section 8 predicted PARTIAL would dominate and NO would be rare. After rev 6 the
 two are tied at 16, and every entry the operator added in this revision scores NO: ambient precondition, custodian
@@ -313,13 +395,17 @@ F_A  transport valid       PASS. 8 transported entries, all stating an abstract 
                            to rebuild the object) rather than a resemblance. The two highest-value transports are
                            the retained reference sample and the stamped validity envelope: both cheap, both
                            mandatory at home, neither exists here.
-F_B  prior art             CHECKED, not redundant, scoped to the residual (above).
+F_B  prior art             CHECKED against public catalogues AND, as of rev 7, against the ecosystem: a sibling
+                           implementation exists at JinnZ2/Simulators failure-mode-register/. Not a second copy of
+                           the same list (conformance instrument vs populated register), but two registers for one
+                           order is itself a durability hazard, so the consolidation recommendation is recorded.
 F_C  unbounded scope       AUDITED, and the sample is reported against the whole register because the mandated 20%
                            sample (7 of 36, seed 13) happened to contain NEITHER rejectable entry and reads 0.0.
                            Whole-register rate: 2 of 36 (5.6%), both already filed as UNRATED PARTS rather than
                            discarded. A 0% sampled rate reported alone would have been the register's own
                            detection gap reproduced in its audit. Author-run, which is the weak case F_G fixes.
-F_D  projection inflation  30.6% against a 35% cap (33.3 -> 29.2 -> 25.9 -> 24.1 -> 25.8 -> 30.6). Rev 6 rose
+F_D  projection inflation  32.4% against a 35% cap, and now close enough that the next unanchored entry must
+                           displace one rather than be added. Rev 6 rose
                            because F_J forces all three compounding entries to PROJECTED. That is the falsifier
                            working: the fraction is the price of not scoring a structural argument as measured. because every
                            entry the operator has added is anchored: rev 3 adds two TRANSPORTED, one MEASURED and
@@ -346,6 +432,8 @@ F_J  recursive speculation ENFORCED. Every 6C entry is PROJECTED unless it cites
                            refuses otherwise, and the selftest proves it with a synthetic MEASURED 6C entry.
 F_K  ambient set bounded   BOUNDED. Horizon declared, seven conditions admitted with a horizon judgement each,
                            three out-of-horizon candidates recorded as excluded. validate refuses an unbounded set.
+F_M  carrier-side bounded  BOUNDED, and mostly UNINSTRUMENTED: 1 of 5 conditions admitted to the active set, 4
+                           excluded for having no production-rate measure. The screen has no null result.
 F_L  conjunction arithmetic NO NUMBER PUT ON IT. validate scans the conjunction for any probability or percentage
                            and fails if one appears. The conclusion rests on the inability to ensure each term.
 F_H  event definition      DEFINED BEFORE ANY COUNT. An event is a bounded change in the reconstruction state of
