@@ -32,7 +32,9 @@ FIELDS = ("id", "mechanism", "load_condition", "onset", "detection_channel", "de
 MANDATORY = ("mechanism", "detection_channel", "consequence")
 ONSETS = ("immediate", "drift", "dormant-until-triggered")
 EVIDENCE = ("MEASURED", "TRANSPORTED", "PROJECTED")
-RECONSTRUCTION = ("YES", "PARTIAL", "NO")
+RECONSTRUCTION = ("YES", "PARTIAL", "NO", "NOT_APPLICABLE")
+# NOT_APPLICABLE is for an entry that governs USE or a CONTROL rather than rebuild (section 3B-W, DUR-002).
+# It requires a reconstruction_note saying which, so it can never be read as a missing score.
 CITATION_STATUS = ("VERIFIED_2026-09-13", "FROM_MEMORY_UNVERIFIED")
 
 
@@ -42,7 +44,10 @@ def load(path=STORE):
 
 
 def has_detection_gap(e):
-    return e.get("detection_channel") == "NONE" or "UNBOUNDED" in str(e.get("detection_latency") or "")
+    """A detection channel that BEGINS with NONE is a gap even when the field goes on to propose a control:
+    'NONE under current practice. PROPOSED: ...' is a gap today and a closure only once the control exists."""
+    return str(e.get("detection_channel") or "").strip().upper().startswith("NONE") \
+        or "UNBOUNDED" in str(e.get("detection_latency") or "")
 
 
 def rated(entries):
@@ -81,6 +86,21 @@ def validate(path=STORE):
             errs.append((i, "evidence_class not in %s" % (EVIDENCE,)))
         if e.get("reconstruction") not in RECONSTRUCTION:
             errs.append((i, "reconstruction not in %s" % (RECONSTRUCTION,)))
+        if e.get("reconstruction") == "NOT_APPLICABLE" and not e.get("reconstruction_note"):
+            errs.append((i, "reconstruction NOT_APPLICABLE without a note saying what the entry governs instead"))
+        for other in e.get("coupled_with", []):
+            back = [x for x in entries if x["id"] == other]
+            if not back:
+                errs.append((i, "coupled_with names a missing entry %r" % other))
+            elif i not in back[0].get("coupled_with", []):
+                errs.append((i, "coupling to %s is not symmetric: the pair must be registered from both sides "
+                               "(section 3B-W composition rule)" % other))
+        if e.get("proposed_control") and not e.get("control_preconditions"):
+            errs.append((i, "a proposed control with no stated preconditions: the control's own failure modes are "
+                           "entries, not footnotes (section 3B-W)"))
+        for pre in e.get("control_preconditions", []):
+            if pre.get("entry") and not [x for x in entries if x["id"] == pre["entry"]]:
+                errs.append((i, "control precondition names a missing entry %r" % pre["entry"]))
         for c in e.get("citations", []):
             if c.get("status") not in CITATION_STATUS:
                 errs.append((i, "citation without a legal status: %r" % c.get("ref", "")[:40]))
@@ -118,8 +138,14 @@ def audit(path=STORE, frac=0.2, seed=13):
         empty = [f for f in MANDATORY if not str(e.get(f) or "").strip()]
         if empty:
             rejected.append({"id": e["id"], "empty": empty, "filed_as": e["status"]})
+    full = [e["id"] for e in entries if [f for f in MANDATORY if not str(e.get(f) or "").strip()]]
     return {"sampled": [e["id"] for e in sample], "n_sampled": k, "of": len(entries), "seed": seed,
             "rejected": rejected, "rejection_rate": round(len(rejected) / k, 3),
+            "whole_register_rejected": full, "whole_register_rejection_rate": round(len(full) / len(entries), 3),
+            "sample_caveat": ("the 20 percent sample missed %d of the %d rejectable entries, so the sampled rate "
+                              "understates the register: read the whole-register rate beside it"
+                              % (len(full) - len(rejected), len(full))) if len(rejected) < len(full) else
+                             "the sample contains every rejectable entry in the register",
             "caveat": "the audit was run by the register's author against the author's own field definitions. "
                       "F_G is the test that would make it evidence, and F_G is NOT RUN."}
 
@@ -130,6 +156,7 @@ def report(path=STORE):
     dist = {}
     for e in entries:
         dist[e["reconstruction"]] = dist.get(e["reconstruction"], 0) + 1
+    claiming = [e for e in entries if e["reconstruction"] != "NOT_APPLICABLE"]
     by_section = {}
     for e in entries:
         by_section.setdefault(e["section"], []).append(e["id"])
@@ -141,10 +168,17 @@ def report(path=STORE):
     cites = [(c.get("status"), c.get("ref")) for e in entries for c in e.get("citations", [])]
     return {"entries": len(entries), "rated": len(R), "unrated_parts": len(entries) - len(R),
             "reconstruction_distribution": dist,
-            "reconstruction_headline": "PARTIAL is the modal score (%d of %d): enough of the record exists to rebuild "
-                                       "something approximate, not enough to identify the object. PARTIAL looks like "
-                                       "adequacy from inside, which is why it is the class most likely to be "
-                                       "under-reported." % (dist.get("PARTIAL", 0), len(entries)),
+            "reconstruction_headline": "Of the %d entries that make a reconstruction claim, PARTIAL is modal (%d) and "
+                                       "NOT ONE scores YES. PARTIAL means enough of the record exists to rebuild "
+                                       "something approximate and not enough to identify the object, which looks like "
+                                       "adequacy from inside and is the class most likely to be under-reported. "
+                                       "%d further entries govern use or a control rather than rebuild and are scored "
+                                       "NOT_APPLICABLE with a stated reason."
+                                       % (len(claiming), dist.get("PARTIAL", 0), dist.get("NOT_APPLICABLE", 0)),
+            "coupled_pairs": sorted({tuple(sorted((e["id"], o))) for e in entries for o in e.get("coupled_with", [])}),
+            "proposed_controls": [{"id": e["id"], "proposed": e["proposed_control"],
+                                   "preconditions": [p.get("entry") or p.get("note") for p in e.get("control_preconditions", [])]}
+                                  for e in entries if e.get("proposed_control")],
             "by_section": by_section, "detection_gap_entries": gap,
             "detection_gap_note": "these are the high-priority set: they cannot generate the evidence that would make "
                                   "fixing them mandatory",
@@ -195,8 +229,11 @@ def falsifiers(path=STORE):
                                                "NONE) and a reconstruction score, for a fixed deployment class.",
             "caveat": "the prior-art check was four targeted searches on one day. It establishes that the major "
                       "catalogues are harm-scoped; it does not establish that no durability catalogue exists anywhere."},
-        "F_C_unbounded_scope": {"status": "AUDITED", "rejection_rate": a["rejection_rate"],
-                                "sample": a["sampled"], "rejected": a["rejected"], "caveat": a["caveat"]},
+        "F_C_unbounded_scope": {"status": "AUDITED", "sampled_rejection_rate": a["rejection_rate"],
+                                "sample": a["sampled"], "rejected_in_sample": a["rejected"],
+                                "whole_register_rejection_rate": a["whole_register_rejection_rate"],
+                                "whole_register_rejected": a["whole_register_rejected"],
+                                "sample_caveat": a["sample_caveat"], "caveat": a["caveat"]},
         "F_D_projection_inflation": {
             "status": "UNDER CAP, NARROWLY",
             "projected_fraction": hdr["projected_fraction"], "cap": hdr["projected_cap"],
@@ -265,9 +302,10 @@ def emit(path=STORE):
           % (rep["citations"]["verified_this_session"], rep["citations"]["from_memory_unverified"]), "```", "",
           "FIDELITY and CUSTODY are separate axes. " + hdr["fidelity_vs_custody"], "",
           "EVENT DEFINITION (F_H). " + hdr["event_definition_F_H"], ""]
-    sec_names = {"0": "Entry 0 - the detection gap itself", "3A": "3A MEASURED", "3B": "3B TRANSPORTED",
-                 "3C": "3C PROJECTED and UNRATED PARTS"}
-    for sec in ("0", "3A", "3B", "3C"):
+    sec_names = {"0": "Entry 0 - the detection gap itself", "3A": "3A MEASURED",
+                 "3B-W": "3B-W WORKED ENTRIES - the two priority transports and the failure modes of their controls",
+                 "3B": "3B TRANSPORTED", "3C": "3C PROJECTED and UNRATED PARTS"}
+    for sec in ("0", "3A", "3B-W", "3B", "3C"):
         L += ["## %s" % sec_names[sec], ""]
         for e in [x for x in entries if x["section"] == sec]:
             L.append("### %s  %s%s" % (e["id"], e["title"], "  [UNRATED PART]" if e["status"] == "UNRATED_PART" else ""))
@@ -285,6 +323,17 @@ def emit(path=STORE):
                 t = e["transport"]
                 L.append("- transported from %s: %s" % (t["source_domain"], t["home_practice"]))
                 L.append("- why it carries: %s" % t["why_it_carries"])
+            if e.get("reconstruction_note"):
+                L.append("- reconstruction note: %s" % e["reconstruction_note"])
+            if e.get("proposed_control"):
+                L.append("- PROPOSED control: %s" % e["proposed_control"])
+            for p in e.get("control_preconditions", []):
+                L.append("- control precondition: %s%s" % (p.get("note", ""),
+                                                           " (entry %s)" % p["entry"] if p.get("entry") else ""))
+            if e.get("coupled_with"):
+                L.append("- coupled with: %s (neither control works alone)" % ", ".join(e["coupled_with"]))
+            if e.get("supersedes"):
+                L.append("- supersedes: %s (operator-supplied worked entry, section 3B-W)" % e["supersedes"])
             if e.get("requirement"):
                 L.append("- minimum artifact that would close it: %s" % e["requirement"])
             if e.get("cross_reference"):
@@ -353,7 +402,7 @@ def selftest():
     assert entries[0]["id"] == "D-000" and entries[0]["detection_channel"] == "NONE"
     # every section is populated and measured entries exist to set the floor
     secs = {e["section"] for e in entries}
-    assert secs == {"0", "3A", "3B", "3C"}
+    assert secs == {"0", "3A", "3B-W", "3B", "3C"}
     assert sum(1 for e in entries if e["evidence_class"] == "MEASURED") >= 5
     # projection cap holds and is reported
     assert hdr["projected_fraction"] <= hdr["projected_cap"]
@@ -364,11 +413,16 @@ def selftest():
                for e in entries if e["evidence_class"] == "TRANSPORTED")
     # F_C audit: the two UNRATED PARTS are the only rejectable entries, and the rate is computed not asserted
     a = audit(frac=1.0)
+    assert set(a["whole_register_rejected"]) == {"D-401", "D-402"}
     assert {r["id"] for r in a["rejected"]} == {"D-401", "D-402"}
     assert all(r["filed_as"] == "UNRATED_PART" for r in a["rejected"])            # filed, not discarded
     assert a["rejection_rate"] == round(2 / len(entries), 3)
     # F_G is NOT RUN and says so
     assert f["F_G_reader_precondition_blindness"]["status"] == "NOT RUN"
+    # the 20 percent sample can miss the rejectable entries; the whole-register rate is reported beside it
+    a20 = audit()
+    assert a20["whole_register_rejection_rate"] >= a20["rejection_rate"] or a20["sample_caveat"]
+    assert "sample_caveat" in f["F_C_unbounded_scope"]
     # F_H: no failure count anywhere; only entry, citation and distribution counts
     assert "EVENT" in hdr["event_definition_F_H"] and "fidelity" in hdr["event_definition_F_H"]
     # F_E does not claim publishing is sufficient
@@ -382,16 +436,44 @@ def selftest():
     # step 5 headline: PARTIAL is modal
     rep = report()
     d = rep["reconstruction_distribution"]
-    assert d.get("PARTIAL", 0) == max(d.values()) and "YES" not in d
+    assert "YES" not in d and d["PARTIAL"] == max(v for k, v in d.items() if k != "NOT_APPLICABLE")
+    assert d.get("NOT_APPLICABLE", 0) == 3
     # every RATED entry with no control states a requirement (step 6)
     for e in rated(entries):
         if control_is(e, "NONE"):
             assert e.get("requirement")
     assert len(rep["requirements_where_no_control_exists"]) >= 6          # the prefix match, not equality
-    assert {"D-000", "D-104", "D-201", "D-205", "D-301", "D-304"} <= {r["id"] for r in rep["requirements_where_no_control_exists"]}
+    assert {"D-000", "D-104", "D-205", "D-301", "D-304", "DUR-001", "DUR-001-N2", "DUR-002-N1"} \
+        <= {r["id"] for r in rep["requirements_where_no_control_exists"]}
     # custody entries whose path runs through one firm are NO / UNBOUNDED by the section 6 rule
     d301 = [e for e in entries if e["id"] == "D-301"][0]
     assert d301["reconstruction"] == "NO" and "UNBOUNDED" in d301["detection_latency"]
+    # section 3B-W: the two priority transports, their coupling, and the three control-failure entries
+    by_id = {e["id"]: e for e in entries}
+    for i in ("DUR-001", "DUR-002", "DUR-001-N1", "DUR-001-N2", "DUR-002-N1"):
+        assert i in by_id, i
+    assert by_id["DUR-001"]["supersedes"] == "D-201" and by_id["DUR-002"]["supersedes"] == "D-202"
+    assert "D-201" not in by_id and "D-202" not in by_id                         # superseded, not duplicated
+    # composition: the pair is registered from both sides
+    assert by_id["DUR-001"]["coupled_with"] == ["DUR-002"] and by_id["DUR-002"]["coupled_with"] == ["DUR-001"]
+    assert ("DUR-001", "DUR-002") in rep["coupled_pairs"]
+    # DUR-002 governs use, not rebuild, and says so instead of scoring a rebuild it does not measure
+    assert by_id["DUR-002"]["reconstruction"] == "NOT_APPLICABLE" and "load rating" in by_id["DUR-002"]["reconstruction_note"]
+    # the sharp carried disciplines, each asserted in the entry text rather than in prose here
+    assert "UNRATED" in by_id["DUR-002"]["consequence"] or "unrated" in by_id["DUR-002"]["consequence"]
+    assert "OUT_OF_ENVELOPE" in by_id["DUR-002"]["detection_channel"] and "confidence" in by_id["DUR-002"]["detection_channel"]
+    assert "distinct" in by_id["DUR-002-N1"]["requirement"]                      # blank is not wide
+    assert "IDENTITY" in by_id["DUR-001"]["reconstruction_note"] and "DUR-001-N2" in by_id["DUR-001"]["reconstruction_note"]
+    # a proposed control carries its own failure modes as entries, not footnotes
+    for i in ("DUR-001", "DUR-002"):
+        assert by_id[i]["proposed_control"] and by_id[i]["control_preconditions"]
+        assert any(p.get("entry") for p in by_id[i]["control_preconditions"])
+    # DUR-002's control is PARTIAL, not NONE: the null-set discipline applied inside an entry
+    assert control_is(by_id["DUR-002"], "PARTIAL") and not control_is(by_id["DUR-002"], "NONE")
+    # DUR-001-N2 keeps identity and procedure reproducibility separate and points at their anchors
+    n2 = by_id["DUR-001-N2"]
+    assert "D-101" in json.dumps(n2["cross_reference"]) and "D-102" in json.dumps(n2["cross_reference"])
+    assert "never summed" in n2["requirement"] or "not summed" in n2["requirement"]
     # citations carry a status and the unverified ones are visible
     assert rep["citations"]["verified_this_session"] >= 6 and rep["citations"]["from_memory_unverified"] >= 6
     # emissions are generated, not hand-written

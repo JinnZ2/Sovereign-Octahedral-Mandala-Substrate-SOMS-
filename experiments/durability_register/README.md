@@ -23,20 +23,56 @@ python experiments/durability_register/failure_register.py emit        # REGISTE
 python experiments/durability_register/failure_register.py selftest
 ```
 
-## What came out
+## What came out (rev 2, with section 3B-W integrated)
 
 ```
-entries 21     rated 19     unrated parts 2      (short by design; a long register is a warning sign)
-sections       0: 1   3A MEASURED: 6   3B TRANSPORTED: 8   3C PROJECTED: 6
-reconstruction PARTIAL 14   NO 7   YES 0
-detection gap  16 of 21 entries have detection_channel NONE or detection_latency UNBOUNDED
-projection     33.3% against a stated 35% cap
-citations      12 verified this session   22 named from memory and NOT verified
-requirements   8 modes with no control at all   11 where the mechanism exists and nothing attaches it
+entries 24     rated 22     unrated parts 2      (short by design; a long register is a warning sign)
+sections       0: 1   3A MEASURED: 6   3B-W WORKED: 5   3B TRANSPORTED: 6   3C PROJECTED: 6
+reconstruction PARTIAL 14   NO 7   NOT_APPLICABLE 3   YES 0
+detection gap  18 of 24 entries have a detection channel beginning NONE, or an unbounded latency
+projection     29.2% against a stated 35% cap
+citations      19 verified this session   21 named from memory and NOT verified
+requirements   10 modes with no control at all   11 where the mechanism exists and nothing attaches it
 null set       4 modes checked and found already controlled
 ```
 
-**Nothing scored YES on reconstruction.** Not one entry. The expected-yield note in the work order said PARTIAL
+### Section 3B-W: the operator's worked entries supersede mine
+
+The re-issued work order supplies DUR-001 and DUR-002 filled to schema. They are the authoritative versions of
+the two priority transports and they REPLACE the versions this register had built (D-201 retained reference
+sample, D-202 stamped validity envelope). The supersession is recorded in the header's `id_map_superseded` and on
+each entry's `supersedes` field; the earlier text is in git history, not duplicated in the store, because a second
+copy of the same mode is the thing Step 0 forbids.
+
+What the operator's versions add that mine did not have:
+
+- **A proposed detection channel, not just an absent one.** DUR-001 proposes a sealed probe-response record held by
+  a party that is not the operator, third-party checkable without re-manufacture. DUR-002 proposes a machine-readable
+  envelope attached to the serving interface plus a RETURN CONTRACT in which `OUT_OF_ENVELOPE` is a distinct return
+  state rather than a low confidence score. Both fields now read "NONE under current practice. PROPOSED: ...", and
+  the gap predicate counts them as gaps today, which is why the detection-gap count went up rather than down.
+- **Confidence scores explicitly ruled out.** A confident output inside a distribution the object was never
+  characterised on is the failure, not a warning of it.
+- **The controls' own failure modes as entries.** DUR-001-N1 (probe leakage), DUR-001-N2 (instance is not
+  procedure), DUR-002-N1 (blank envelope read as wide) are entries with mechanisms, detection channels and
+  requirements, and they are wired as `control_preconditions` on the entry whose control they threaten. `validate`
+  refuses a proposed control that has no stated preconditions.
+- **The coupling.** DUR-001 and DUR-002 are a registered pair and `validate` requires the coupling from both
+  sides. An envelope without a sample states conditions that cannot later be checked; a sample without an envelope
+  is data, not a rating.
+- **A fourth reconstruction value.** DUR-002 governs USE, not rebuild, so it scores NOT_APPLICABLE with a stated
+  reason rather than a rebuild score it does not measure. Three entries score it and are excluded from the
+  headline's denominator, which is now 21 entries rather than 24.
+- **PARTIAL where I would have written NONE.** DUR-002's existing control is scored PARTIAL because model cards
+  exist, even though they are filed alongside rather than attached. That is the step 7 null-set discipline applied
+  inside an entry.
+
+One new measured anchor came out of integrating N1: contamination figures as reported by a 2026 survey (over 16
+percent of MMLU samples flagged in the LLaMA-2 report; over 90 percent of QuAC, SQuADv2 and DROP examples in the
+GPT-3 study; 13-gram and 50-character overlap thresholds), plus the finding that rephrased samples evade n-gram
+decontamination. The survey is a SECONDARY source for each underlying report and the citation says so.
+
+**Nothing scored YES on reconstruction.** Not one of the 21 entries that make a reconstruction claim. The expected-yield note in the work order said PARTIAL
 would dominate, and it does, but the absence of a single YES is the sharper result: for this deployment class
 there is no failure mode in the register whose retained record is sufficient to identify the object.
 
@@ -74,11 +110,15 @@ F_A  transport valid       PASS. 8 transported entries, all stating an abstract 
                            the retained reference sample and the stamped validity envelope: both cheap, both
                            mandatory at home, neither exists here.
 F_B  prior art             CHECKED, not redundant, scoped to the residual (above).
-F_C  unbounded scope       AUDITED. Full-register audit against the mandatory fields rejects 2 of 21 (9.5%), both
-                           already filed as UNRATED PARTS rather than discarded. Author-run, which is the weak
-                           case F_G exists to fix.
-F_D  projection inflation  33.3% against a 35% cap. Stated in the header. Close enough to the cap that the next
-                           projected entry should displace one rather than be added.
+F_C  unbounded scope       AUDITED, and the sample is reported against the whole register because the mandated 20%
+                           sample (5 of 24, seed 13) happened to contain NEITHER rejectable entry and reads 0.0.
+                           Whole-register rate: 2 of 24 (8.3%), both already filed as UNRATED PARTS rather than
+                           discarded. A 0% sampled rate reported alone would have been the register's own
+                           detection gap reproduced in its audit. Author-run, which is the weak case F_G fixes.
+F_D  projection inflation  29.2% against a 35% cap, down from 33.3% in rev 1: the five new 3B-W entries are two
+                           TRANSPORTED (both with justifications that state an abstract structure), two MEASURED
+                           (contamination figures; variance anchors inherited from D-101) and one TRANSPORTED.
+                           Stated in the header.
 F_E  not the mechanism     STATED, and the honest answer is mostly nothing. Two real forcing functions exist and
                            both are narrow: EU AI Act Article 12 logging with Article 26 deployer retention of at
                            least six months plus Annex IV documentation, in the Act's high-risk categories; and
@@ -120,6 +160,12 @@ NONE: NONE is a finding, empty is an unfinished entry, and the emission prints t
 
 Three entries point at instruments already in this repository instead of restating their mechanisms:
 
+- **DUR-001 identity** points at the canary rows in `experiments/substrate_pilot_v0/grading_prompt.py`: a probe
+  set with recorded answers, held separately, whose failure marks a run SUSPECT. That is the same construction as
+  the sealed probe-response record, one scale down, already built and tested in this repository.
+- **DUR-002 envelope** points at `experiments/terrain_prior/`, which already implements the UNRATED-not-degraded
+  discipline: a prior outside its stated scope is returned with the mismatch flagged, never suppressed and never
+  silently re-rated.
 - **D-203 as-built drift** points at the canary mechanism in `experiments/substrate_pilot_v0/grading_prompt.py`
   (known-answer rows, `check_run` returning PASS / FAIL / SUSPECT, `grader_identity {claimed, verified}`) and at
   the paste duplication caught in the round-3 fixtures, plus `gap_register` GR-0007.
@@ -131,7 +177,8 @@ Three entries point at instruments already in this repository instead of restati
 ## Files
 
 ```
-register.jsonl        the store: header (deployment class, non-goals, event definition, null set, counts) + 21 entries
+register.jsonl        the store: header (deployment class, non-goals, event definition, composition rule,
+                      supersession map, null set, counts) + 24 entries
 failure_register.py   validate / audit / report / falsifiers / emit / selftest
 REGISTER.md           build product, human emission
 outsider_test.md      build product, the F_G test sheet, unrun

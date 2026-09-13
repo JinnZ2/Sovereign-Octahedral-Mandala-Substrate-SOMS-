@@ -31,16 +31,6 @@ consequence: the object cannot be reproduced, so it cannot be re-rated, re-inspe
 
 onset: ______  detection channel: ______  reconstruction: ______  evidence class: ______
 
-### D-202
-
-mechanism: The input distribution and the decision-consequence range within which performance was established are not recorded on the object. Downstream the component is used outside that range, and the reported performance travels with it as though it still applied. There is no marking that says where the rating stops.
-
-load condition: the component is reachable by inputs outside the distribution it was measured on, which is the normal case for anything deployed
-
-consequence: a component with no applicable rating carries load while being reported as rated. The failure is not that performance degraded; it is that no performance was ever claimed for this condition.
-
-onset: ______  detection channel: ______  reconstruction: ______  evidence class: ______
-
 ### D-203
 
 mechanism: Updates, patches, fine-tunes, prompt changes, retrievals, and silent substitution of a served model move the deployed object away from the documented one, with no record that a change occurred. The documentation continues to describe an object that is no longer in the load path.

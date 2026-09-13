@@ -13,9 +13,9 @@ NON-GOALS
   - not a code of ethics
   - scope is DURABILITY and RECONSTRUCTABILITY only: can the deployed object still be identified, re-produced, load-rated and inspected at t + N years, by someone who is not the original author and does not hold the tacit stack
 
-entries 21 (rated 19, unrated parts 2) | projected 33.3% of a 35% cap | detection gap 16 entries
-reconstruction  NO 7  PARTIAL 14
-citations  verified this session 12 | from memory, unverified 22
+entries 24 (rated 22, unrated parts 2) | projected 29.2% of a 35% cap | detection gap 18 entries
+reconstruction  NO 7  NOT_APPLICABLE 3  PARTIAL 14
+citations  verified this session 19 | from memory, unverified 21
 ```
 
 FIDELITY and CUSTODY are separate axes. FIDELITY (is the reported result true of the object produced) and CUSTODY (can the object be identified and re-produced later, by someone else) are separate axes and are not combined in any field. Custody is unmeasured in current practice, which is being read as adequate; an unmeasured variable is not absent, it is set to zero, which is a positive claim nobody licensed.
@@ -133,40 +133,109 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - citation [VERIFIED_2026-09-13]: the compounding claim of the seed set in the work order, section 3A, final item
 - citation [FROM_MEMORY_UNVERIFIED]: Model Cards (Mitchell et al. 2019), Datasheets for Datasets (Gebru et al.), Data Statements (Bender and Friedman 2018), FactSheets (Arnold et al. 2019): documentation templates that add some of the missing fields and are not mandatory anywhere
 
-## 3B TRANSPORTED
+## 3B-W WORKED ENTRIES - the two priority transports and the failure modes of their controls
 
-### D-201  no retained reference sample
+### DUR-001  the deployed object cannot be distinguished from another produced by the same nominal procedure
 
-- mechanism: Nothing is kept that the deployed object can later be tested against. When behaviour is questioned at t+N, there is no preserved specimen of the object as deployed and no preserved specimen of the inputs it was rated on, so the question cannot be answered even in principle.
-- load condition: any deployment expected to be answerable for its past behaviour
+- mechanism: Deployed object cannot be distinguished from any other object produced by the same nominal procedure. Run-to-run variance under identical configuration is large enough that the reported number does not identify which object was produced; after deployment, substitution, patching or drift leaves no trace distinguishing the current object from the documented one.
+- load condition: Any deployment where the object is updated, re-served, migrated or supplied by a party other than the evaluator.
 - onset: dormant-until-triggered | evidence: TRANSPORTED | reconstruction: NO
-- detection channel: ask for the reference sample. The absence is immediately visible ONCE ASKED, which makes this one of the few modes with a cheap detection channel.
-- detection latency: immediate on request; UNBOUNDED if nobody requests it
-- attribution: the operator at the time of the question, who cannot produce what was never kept
-- consequence: no re-test, no before-and-after comparison, no way to separate a change in the object from a change in the world
-- existing control: NONE as a requirement. Model registries can hold artifacts; retention past the product's commercial life is not required anywhere.
-- validity range: deployments whose behaviour may be questioned after the deploying team has moved on
-- transported from pharmaceutical manufacturing: a retained reference sample of each batch is kept for a defined period so the batch can be re-tested after release
-- why it carries: the abstract structure is: an object was released on the strength of a test, and the object itself is not retained, so the test cannot be repeated on the thing that was released. That structure is about the record and the specimen, not about chemistry. It holds identically for weights plus input sample.
-- minimum artifact that would close it: a retained reference sample: the exact deployed weights plus a frozen input sample and its outputs, deposited with a stated retention period that exceeds the deployment's expected life.
-- citation [FROM_MEMORY_UNVERIFIED]: pharmaceutical retained-sample practice, named as a transport source in the work order section 3B
+- detection channel: NONE under current practice. PROPOSED: sealed probe-response record - a probe set fixed at deploy, the deployed object's responses to it, hashed, held by a party that is not the operator. Third-party checkable without re-manufacture.
+- detection latency: UNBOUNDED without the control. With the control: one probe cycle.
+- attribution: Last hop. Lands on whoever was holding the output when the behaviour changed.
+- consequence: Any later claim about the deployed object is unverifiable. Silent substitution, undeclared update and as-built drift are all indistinguishable from normal operation.
+- existing control: NONE.
+- validity range: Holds where the object is served through an interface that can be queried. Does not hold for objects embedded such that probe queries are indistinguishable from production load, or where probe cost is not small relative to serving cost.
+- transported from pharmaceutical manufacturing (retained reference sample): a small physical referent of each batch is retained before any problem is known, cheap relative to the batch, and testable by a third party without re-manufacture
+- why it carries: the abstract structure is a record insufficient to identify the object it describes, closed by retaining a small referent taken BEFORE any problem is known, cheap relative to the batch, and testable by a third party without re-manufacture. All three properties carry to a probe-response record. This is not resemblance between industries; it is the same insufficiency and the same closure.
+- reconstruction note: NO as deployed. PARTIAL with the control - the control establishes IDENTITY, not reproducibility (see DUR-001-N2).
+- PROPOSED control: sealed probe-response record: probe set fixed at deploy, responses hashed, custody with a party that is not the operator, checkable by a third party without re-manufacture
+- control precondition: probe leakage: the probe set must rotate, or be generated per deployment from a seed held by the third party (entry DUR-001-N1)
+- control precondition: identity is not procedure reproducibility: this control closes identity only (entry DUR-001-N2)
+- coupled with: DUR-002 (neither control works alone)
+- supersedes: D-201 (operator-supplied worked entry, section 3B-W)
+- minimum artifact that would close it: a sealed probe-response record at deploy: probe set, responses, hash, deposited with a party that is not the operator, with a stated retention period and a rotation rule.
+- cross-reference (not re-derived): D-101, D-102 (the measured insufficiency this transport closes); D-203 (as-built drift: the change record; DUR-001 is the identity referent, and neither substitutes for the other); experiments/substrate_pilot_v0/grading_prompt.py (canary rows held with recorded answers: the same construction at grader scale, already built in this repository)
+- citation [VERIFIED_2026-09-13]: operator work order section 3B-W, entry DUR-001, filled to schema by the operator
+- citation [VERIFIED_2026-09-13]: insufficiency anchored by D-101 (run-to-run variance) and D-102 (unstated stack)
 
-### D-202  no stamped validity envelope: outside the range the component is UNRATED, not degraded
+### DUR-001-N1  probe leakage: the identity control is trained against and stops measuring identity
 
-- mechanism: The input distribution and the decision-consequence range within which performance was established are not recorded on the object. Downstream the component is used outside that range, and the reported performance travels with it as though it still applied. There is no marking that says where the rating stops.
-- load condition: the component is reachable by inputs outside the distribution it was measured on, which is the normal case for anything deployed
-- onset: immediate | evidence: TRANSPORTED | reconstruction: PARTIAL
-- detection channel: compare live input statistics against the recorded rating envelope. Requires the envelope to exist; where it does not, the channel is NONE.
-- detection latency: immediate where an envelope exists and inputs are monitored; UNBOUNDED otherwise
-- attribution: the operator whose inputs drifted, described as using the tool wrong
-- consequence: a component with no applicable rating carries load while being reported as rated. The failure is not that performance degraded; it is that no performance was ever claimed for this condition.
-- existing control: PARTIAL: model cards have an intended-use section, unenforced and usually prose. Drift monitoring exists in mature deployments and is compared against training data, not against a stated rating envelope.
-- validity range: all deployed components with an input surface
-- transported from pressure vessel certification: the vessel carries a stamped plate: certified pressure, temperature, medium. Outside the stamped envelope the certification does not apply and the vessel is uncertified, not merely weaker.
-- why it carries: the abstract structure is: a test established a claim under stated conditions, and the claim is transported outside those conditions because the conditions were not attached to the object. Nothing in that depends on steel. The UNRATED/degraded distinction is the part that carries and the part currently missing.
-- minimum artifact that would close it: a stamped envelope on the object: input distribution, decision-consequence range, and the date the rating was established. Outside it, the component returns UNRATED rather than a number.
-- citation [FROM_MEMORY_UNVERIFIED]: pressure-vessel stamped envelope, named as a transport source in the work order section 3B
-- citation [FROM_MEMORY_UNVERIFIED]: Model Cards for Model Reporting (Mitchell et al., FAT* 2019): intended use and out-of-scope sections
+- mechanism: A probe set that becomes public, or is reused across deployments, gets trained against. The probe record then measures probe performance rather than object identity, and continues to return matches while no longer discriminating. Sealing and hashing handle single-deployment identity; they do not handle reuse across deployments.
+- load condition: the probe set is reused across deployments, or is reachable by the training pipeline of any object it will later identify
+- onset: drift | evidence: MEASURED | reconstruction: NOT_APPLICABLE
+- detection channel: overlap testing between the probe set and the training corpus (n-gram or character overlap, as used in decontamination practice) where the corpus is available; NONE where it is not, which is the normal case for a vendor-trained object
+- detection latency: one overlap test where the corpus is available; UNBOUNDED otherwise, and the loss of discriminative power is silent either way
+- attribution: the third party holding the probe record, whose control is reported as working
+- consequence: the identity control fails silently, and every DUR-001 claim resting on it becomes unverifiable without any signal that this happened
+- existing control: PARTIAL. Decontamination practice exists in evaluation: the GPT-3 report defines a 13-gram overlap and the GPT-4 report a 50-character overlap as contamination. Nothing applies it to a probe set used for identity.
+- validity range: probe sets that persist across deployments or are publishable; does not apply to a probe set generated per deployment from a seed that never leaves the third party
+- reconstruction note: governs the DUR-001 control rather than the object's record; scoring a rebuild here would misattribute the control's failure to the deposit
+- minimum artifact that would close it: rotation, or per-deployment probe generation from a seed held by the third party, stated as a precondition of the DUR-001 control rather than as a caveat on it.
+- cross-reference (not re-derived): D-304 (the inspection reference stops being held-out: the same mechanism attacking the inspection instrument rather than the identity control)
+- citation [VERIFIED_2026-09-13]: A Survey on Data Contamination for Large Language Models (arXiv 2502.14425): reports that over 16 percent of MMLU samples were flagged as contaminated in the LLaMA-2 report, and over 90 percent of examples in QuAC, SQuADv2 and DROP in the GPT-3 study; contamination thresholds are 13-gram overlap (GPT-3) and 50-character overlap (GPT-4). Figures read from the survey, which is a SECONDARY source for each underlying report. (https://arxiv.org/html/2502.14425v2)
+- citation [VERIFIED_2026-09-13]: Rethinking Benchmark and Contamination for Language Models with Rephrased Samples (arXiv 2311.04850): rephrased test samples evade n-gram decontamination (https://arxiv.org/pdf/2311.04850)
+
+### DUR-001-N2  instance identity is not procedure reproducibility, and the two must not be summed
+
+- mechanism: Given run-to-run variance, a probe response identifies the DEPLOYED INSTANCE. It does not establish that the training procedure reproduces that instance. Treating the identity control as reconstruction coverage lets a deployment claim a rebuild capability it does not have, because the two claims are about different objects: this one, and any one the procedure would produce.
+- load condition: an identity control exists (DUR-001) and is reported as satisfying a reconstruction requirement
+- onset: immediate | evidence: MEASURED | reconstruction: PARTIAL
+- detection channel: re-run the procedure and probe the new instance against the sealed record. A mismatch is the EXPECTED result and is evidence about the procedure, not evidence of substitution; reading it as substitution is the second half of this failure.
+- detection latency: one training budget, and only where the procedure is complete enough to re-run at all (D-102)
+- attribution: nobody: the two claims are reported together and the gap between them is not a finding anywhere
+- consequence: reconstruction is scored on identity evidence, so the register's own headline distribution would read better than the deployment warrants
+- existing control: NONE. No practice separates an identity rating from a procedure-reproducibility rating.
+- validity range: stochastic training procedures, which is where DUR-001 is needed in the first place
+- reconstruction note: identity is closable by DUR-001; procedure reproducibility is carried by D-101 and D-102 and remains open
+- minimum artifact that would close it: two separate ratings recorded separately and never summed into one reconstruction score: IDENTITY (closed by DUR-001) and PROCEDURE REPRODUCIBILITY (carried by D-101 and D-102, open).
+- cross-reference (not re-derived): D-101 (run-to-run variance: the measured reason instance and procedure come apart); D-102 (unstated stack: the reason the procedure often cannot be re-run at all)
+- citation [VERIFIED_2026-09-13]: operator work order section 3B-W, DUR-001-N2, which states that procedure reproducibility needs its own entry
+- citation [FROM_MEMORY_UNVERIFIED]: run-to-run variance anchors inherited from D-101 (Bouthillier et al. 2021; Henderson et al. 2018; Dodge et al. 2019; Reimers and Gurevych 2017), unverified as recorded there
+
+### DUR-002  the object is used outside the conditions its rating was established on, with no signal
+
+- mechanism: Object is applied outside the conditions under which its reported performance was established, with no signal that this has occurred. The stated conditions, where they exist at all, are filed in a document elsewhere rather than attached to the object at point of use, so the operator applying load cannot read the rating.
+- load condition: Any deployment where input distribution or decision consequence can vary after evaluation. In practice: all of them.
+- onset: drift | evidence: TRANSPORTED | reconstruction: NOT_APPLICABLE
+- detection channel: NONE under current practice. Confidence scores do not serve - a confident output inside a distribution the object was never characterised on is the failure, not a warning of it. PROPOSED: stamped validity envelope attached to the serving interface, machine-readable, carrying characterised input distribution, decision consequence range, date, and seed/variance basis. Plus a RETURN CONTRACT: the interface returns value AND rating status, where OUT_OF_ENVELOPE is a distinct return state, not a low score on a continuous confidence axis.
+- detection latency: UNBOUNDED without the control. With it: immediate at call time.
+- attribution: Last hop, again - the operator who acted on the out-of-envelope output.
+- consequence: The system continues returning values while UNRATED. Under load, with no record that the envelope was exceeded or that a criterion was selected in the absence of one.
+- existing control: PARTIAL. Model cards and documentation exist, but are filed alongside rather than attached, are not machine-readable at call time, and carry no return contract. Scored PARTIAL, not NONE, under the null-set discipline of step 7.
+- validity range: Requires the input distribution to be characterisable. Where it is not, the honest envelope is empty, and an empty envelope is itself the rating.
+- transported from pressure vessel certification (stamped plate): the vessel carries its certified conditions on the object; outside the stamped envelope the vessel is UNRATED, not degraded and not derated
+- why it carries: the mechanism is a rating that exists but does not travel with the object, so it is unreadable at the point where load is applied. Structurally identical. The carried discipline is the sharp one: OUTSIDE THE ENVELOPE THE VESSEL IS UNRATED - not degraded, not derated, unrated.
+- reconstruction note: Not applicable directly; DUR-002 governs USE, not rebuild. It is the load rating, not the as-built.
+- PROPOSED control: stamped validity envelope attached to the serving interface (machine-readable: input distribution, consequence range, date, seed/variance basis) plus a return contract whose OUT_OF_ENVELOPE is a distinct return state
+- control precondition: an empty envelope must not read as a broad one: blank is a distinct value from wide, and an empty envelope is itself the rating (entry DUR-002-N1)
+- control precondition: an envelope without a retained sample states conditions that cannot later be checked against what was actually deployed (entry DUR-001)
+- coupled with: DUR-001 (neither control works alone)
+- supersedes: D-202 (operator-supplied worked entry, section 3B-W)
+- minimum artifact that would close it: a machine-readable envelope attached to the serving interface, and a return contract in which OUT_OF_ENVELOPE is a distinct return state rather than a low confidence score.
+- cross-reference (not re-derived): D-208 (inspection interval: the envelope says where the rating applies, the interval says when it is re-established); experiments/terrain_prior/ (the same UNRATED-not-degraded discipline: a prior outside its stated scope is returned with the scope mismatch flagged, never suppressed and never silently re-rated)
+- citation [VERIFIED_2026-09-13]: operator work order section 3B-W, entry DUR-002, filled to schema by the operator
+- citation [FROM_MEMORY_UNVERIFIED]: Model Cards for Model Reporting (Mitchell et al., FAT* 2019): intended-use and out-of-scope sections, filed alongside and not machine-readable at call time
+
+### DUR-002-N1  an empty envelope reads as a broad envelope
+
+- mechanism: An object with no characterised distribution and an object characterised as broadly applicable are indistinguishable when the envelope field is left blank. The blank is read as permission rather than as an absence, so the least-rated objects present as the most widely applicable ones.
+- load condition: the envelope field is permitted to be empty in the schema that carries it
+- onset: immediate | evidence: TRANSPORTED | reconstruction: NOT_APPLICABLE
+- detection channel: a schema that forbids blank: the envelope must carry either a characterised distribution or the literal EMPTY, and EMPTY is itself a rating. Detection is immediate at read time once the schema distinguishes them, and NONE for as long as blank is permitted.
+- detection latency: immediate under a schema that distinguishes blank from wide; UNBOUNDED under one that does not
+- attribution: the operator who applied load inside an envelope that was never characterised
+- consequence: the rating system inverts: absence of characterisation presents as breadth of characterisation, under load, with no record that anything was missing
+- existing control: NONE. Intended-use fields in current documentation templates are free text and may be empty, and an empty one is not read as a finding.
+- validity range: any schema carrying a rating envelope; the stronger the schema's other fields, the more likely a blank envelope is read as deliberate
+- transported from pressure vessel certification: an unstamped vessel is not a vessel rated for all conditions; the absence of a stamp is itself disqualifying rather than permissive
+- why it carries: the abstract structure is a record in which an absent value and a permissive value occupy the same field, so absence is read as permission. That is a property of the record format, not of steel, and it is the same defect the register applies to itself by filing an UNRATED PART rather than discarding it.
+- reconstruction note: governs the DUR-002 rating field rather than the object's record
+- minimum artifact that would close it: blank must be a distinct value from wide: the envelope field takes a characterised distribution or the literal EMPTY, and EMPTY is the rating.
+- cross-reference (not re-derived): D-106 (the defect is not visible from reading the report: the same structure one level up); this register's own UNRATED PART rule, where an empty field is printed as EMPTY and is distinct from a field whose value is NONE
+- citation [VERIFIED_2026-09-13]: operator work order section 3B-W, DUR-002-N1
+
+## 3B TRANSPORTED
 
 ### D-203  as-built drift: the deployed object diverges from the documented one
 
@@ -364,7 +433,9 @@ Modes with no existing control, and the minimum artifact that would close each:
 - **D-000 the detection gap itself** -> a detection channel is a deliverable, not an assumption: for each deployed component, name the signal that would reveal degradation and its latency, or record NONE. NONE is a rateable answer; an empty field is not.
 - **D-104 no agreed significance measure, so point estimates ship without a distribution** -> state the distribution and the comparison procedure with the selection decision, or record the selection as UNRATED.
 - **D-106 the defect is not visible from reading the report** -> add the fields, then treat an empty field as a finding. The register's own schema rule (an entry missing a field is an UNRATED PART, filed as such) is the same mechanism applied to itself.
-- **D-201 no retained reference sample** -> a retained reference sample: the exact deployed weights plus a frozen input sample and its outputs, deposited with a stated retention period that exceeds the deployment's expected life.
+- **DUR-001 the deployed object cannot be distinguished from another produced by the same nominal procedure** -> a sealed probe-response record at deploy: probe set, responses, hash, deposited with a party that is not the operator, with a stated retention period and a rotation rule.
+- **DUR-001-N2 instance identity is not procedure reproducibility, and the two must not be summed** -> two separate ratings recorded separately and never summed into one reconstruction score: IDENTITY (closed by DUR-001) and PROCEDURE REPRODUCIBILITY (carried by D-101 and D-102, open).
+- **DUR-002-N1 an empty envelope reads as a broad envelope** -> blank must be a distinct value from wide: the envelope field takes a characterised distribution or the literal EMPTY, and EMPTY is the rating.
 - **D-205 latent fault dormant until an unusual load combination** -> state the validation envelope's instance count and sequence structure, and mark any operating geometry absent from it as ABSENT rather than safe. The check exists in this repository already.
 - **D-301 the reconstruction path runs through a single commercial entity** -> an escrow deposit outside the vendor, or an explicit recorded acceptance that reconstruction is NO. The second is cheap and is currently made by silence rather than by decision.
 - **D-302 what was excluded from the training data is not recorded** -> retain the exclusion filters as executable artifacts with the corpus pointer, so the same corpus plus the same filters is a reproducible input.
@@ -376,7 +447,8 @@ Modes with a partial control, where the mechanism exists and nothing attaches it
 - **D-102 the software stack is not stated, so exact re-execution is impossible in principle** -> deposit the environment, not a description of it: a content-addressed image digest or lockfile set, stored where it outlives the depositing entity.
 - **D-103 data leakage propagates across fields and survives peer review** -> record the split construction as a reproducible artifact (the exact partition, or the code and seed that generate it) alongside the number it produced.
 - **D-105 readiness is not outcome: a complete-looking record still does not execute** -> schedule a rebuild attempt as an inspection, on a cadence, from the deposit only. A checklist is not evidence of reconstructability; a successful cold rebuild is.
-- **D-202 no stamped validity envelope: outside the range the component is UNRATED, not degraded** -> a stamped envelope on the object: input distribution, decision-consequence range, and the date the rating was established. Outside it, the component returns UNRATED rather than a number.
+- **DUR-001-N1 probe leakage: the identity control is trained against and stops measuring identity** -> rotation, or per-deployment probe generation from a seed held by the third party, stated as a precondition of the DUR-001 control rather than as a caveat on it.
+- **DUR-002 the object is used outside the conditions its rating was established on, with no signal** -> a machine-readable envelope attached to the serving interface, and a return contract in which OUT_OF_ENVELOPE is a distinct return state rather than a low confidence score.
 - **D-203 as-built drift: the deployed object diverges from the documented one** -> a change record per served object plus a canary set with recorded answers and a probe cadence. The canary mechanism already exists in this repository; adopt it rather than re-deriving it.
 - **D-204 no configuration control and no part traceability for the stack** -> a bill of materials for the assembly, content-addressed per part, recorded at deploy time, with the non-code parts (index, prompt, preprocessing, tokeniser) in scope.
 - **D-206 custody breaks at every handoff and no handoff is documented** -> a signed handover record at every boundary: named holder before, named holder after, date, and what was transferred (weights, environment, data pointer, rating envelope, reference sample).
@@ -401,5 +473,5 @@ Modes with a partial control, where the mechanism exists and nothing attaches it
 
 ## Headline
 
-PARTIAL is the modal score (14 of 21): enough of the record exists to rebuild something approximate, not enough to identify the object. PARTIAL looks like adequacy from inside, which is why it is the class most likely to be under-reported.
+Of the 21 entries that make a reconstruction claim, PARTIAL is modal (14) and NOT ONE scores YES. PARTIAL means enough of the record exists to rebuild something approximate and not enough to identify the object, which looks like adequacy from inside and is the class most likely to be under-reported. 3 further entries govern use or a control rather than rebuild and are scored NOT_APPLICABLE with a stated reason.
 
