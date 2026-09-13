@@ -1,0 +1,16 @@
+{"run_id": "c-rt-00-A", "model": "CONSTRUCTED", "arm": "A", "stim_id": "rt-00", "raw_response": "1 DIFFERENT\n2 DIFFERENT\n3 SAME", "constructed": true}
+{"run_id": "c-rt-00-B", "model": "CONSTRUCTED", "arm": "B", "stim_id": "rt-00", "raw_response": "1 DIFFERENT\n2 SAME\n3 DIFFERENT", "constructed": true}
+{"run_id": "c-rt-00-C", "model": "CONSTRUCTED", "arm": "C", "stim_id": "rt-00", "raw_response": "1 DIFFERENT\n2 SAME\n3 DIFFERENT", "constructed": true}
+{"run_id": "c-rt-00-D", "model": "CONSTRUCTED", "arm": "D", "stim_id": "rt-00", "raw_response": "1 DIFFERENT\n2 DIFFERENT\n3 SAME", "constructed": true}
+{"run_id": "c-rt-01-A", "model": "CONSTRUCTED", "arm": "A", "stim_id": "rt-01", "raw_response": "1 SAME\n2 DIFFERENT\n3 DIFFERENT", "constructed": true}
+{"run_id": "c-rt-01-B", "model": "CONSTRUCTED", "arm": "B", "stim_id": "rt-01", "raw_response": "1 DIFFERENT\n2 DIFFERENT\n3 SAME", "constructed": true}
+{"run_id": "c-rt-01-C", "model": "CONSTRUCTED", "arm": "C", "stim_id": "rt-01", "raw_response": "1 DIFFERENT\n2 DIFFERENT\n3 SAME", "constructed": true}
+{"run_id": "c-rt-01-D", "model": "CONSTRUCTED", "arm": "D", "stim_id": "rt-01", "raw_response": "1 SAME\n2 DIFFERENT\n3 DIFFERENT", "constructed": true}
+{"run_id": "c-rt-02-A", "model": "CONSTRUCTED", "arm": "A", "stim_id": "rt-02", "raw_response": "1 DIFFERENT\n2 SAME\n3 DIFFERENT", "constructed": true}
+{"run_id": "c-rt-02-B", "model": "CONSTRUCTED", "arm": "B", "stim_id": "rt-02", "raw_response": "1 DIFFERENT\n2 DIFFERENT\n3 SAME", "constructed": true}
+{"run_id": "c-rt-02-C", "model": "CONSTRUCTED", "arm": "C", "stim_id": "rt-02", "raw_response": "1 DIFFERENT\n2 DIFFERENT\n3 SAME", "constructed": true}
+{"run_id": "c-rt-02-D", "model": "CONSTRUCTED", "arm": "D", "stim_id": "rt-02", "raw_response": "1 DIFFERENT\n2 SAME\n3 DIFFERENT", "constructed": true}
+{"run_id": "c-rt-03-A", "model": "CONSTRUCTED", "arm": "A", "stim_id": "rt-03", "raw_response": "1 DIFFERENT\n2 SAME\n3 DIFFERENT", "constructed": true}
+{"run_id": "c-rt-03-B", "model": "CONSTRUCTED", "arm": "B", "stim_id": "rt-03", "raw_response": "1 SAME\n2 DIFFERENT\n3 DIFFERENT", "constructed": true}
+{"run_id": "c-rt-03-C", "model": "CONSTRUCTED", "arm": "C", "stim_id": "rt-03", "raw_response": "1 SAME\n2 DIFFERENT\n3 DIFFERENT", "constructed": true}
+{"run_id": "c-rt-03-D", "model": "CONSTRUCTED", "arm": "D", "stim_id": "rt-03", "raw_response": "1 DIFFERENT\n2 SAME\n3 DIFFERENT", "constructed": true}

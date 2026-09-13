@@ -1,0 +1,11 @@
+# controlled field list (Addendum A, S2). One field per line; append, never rename. '#' comments.
+# field = the domain/discipline in which an entry is evaluated.
+mediation_practice
+mediation_certification
+negotiation_research
+veterinary_medicine
+human_medical_coding
+human_procedure_coding
+insurance_adjudication
+language_model_evaluation
+substrate_pilot

@@ -1,0 +1,12 @@
+{
+  "_note": "SPEC section 3 field map, generic. Adapt per legacy system: each row maps one legacy export column to a substrate channel and form. Phase 1 ADAPTER reads legacy exports through this map; the substrate writes nothing to legacy.",
+  "rows": [
+    {"legacy": "item / SKU / qty on hand", "channel": "C1", "substrate": ["unit_id", "declared_unit", "qty", "condition", "expiry_ts", "custody", "location"]},
+    {"legacy": "pounds received / distributed", "channel": "C1/C2", "substrate": ["qty (reporting only)"], "note": "decisions use declared nutrition units (FT-07); pounds kept for donor/grant reports"},
+    {"legacy": "agency order / request", "channel": "C2", "substrate": ["need_id", "node_id", "declared_unit", "qty", "by_ts", "edges"]},
+    {"legacy": "delivery ticket / bill of lading", "channel": "C3", "substrate": ["commit_id", "receipt (receiver mark)"], "note": "FT-05"},
+    {"legacy": "allocation policy / formula", "channel": "C4", "substrate": ["rule_id", "kind", "params", "override_committee"]},
+    {"legacy": "volunteer roster / shifts", "channel": "C1/C3", "substrate": ["node capability by person + setting", "commit kept/broken"]},
+    {"legacy": "invoice / grant draw", "channel": "BND", "substrate": ["MONEY_TERM record"], "note": "blocked without C3 receipt (FT-11)"}
+  ]
+}

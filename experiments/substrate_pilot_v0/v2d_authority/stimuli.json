@@ -1,0 +1,99 @@
+{
+ "_note": "V2d authority x source 2x2 (WORK ORDER v0.2 section 4). Rows are the VERBATIM OIG-20-76 sentences from fixtures/maria_verbatim.jsonl with the substitutions declared in v2d.SUBS (FEMA -> agent; Crowley -> the carrier; Puerto Rico -> the island; Jacksonville -> the mainland port). SITE is the record fact and does not vary across cells. Rows 1 and 13 are anchors; 2, 9, 11, C1, C3 are the movers. Grammar artifacts of direct substitution ('a community volunteer network personnel') are accepted, not smoothed.",
+ "place": "the island",
+ "agent": {
+  "high": {
+   "name": "the federal emergency agency",
+   "poss": "the agency's",
+   "short": "the agency"
+  },
+  "low": {
+   "name": "a community volunteer network",
+   "poss": "the network's",
+   "short": "the network"
+  }
+ },
+ "source": {
+  "high": "A federal inspector general audit found:",
+  "low": "A local resident reported:"
+ },
+ "rows": [
+  {
+   "id": "1",
+   "verbatim_row": "1",
+   "site_record": "undamaged",
+   "role": "anchor_internal",
+   "source_plausibility": {
+    "high": "fits",
+    "low": "strained: a resident would not see headquarters records"
+   },
+   "text_source": "fixtures/maria_verbatim.jsonl row 1"
+  },
+  {
+   "id": "2",
+   "verbatim_row": "2",
+   "site_record": "undamaged",
+   "role": "mover",
+   "source_plausibility": {
+    "high": "fits",
+    "low": "strained"
+   },
+   "text_source": "fixtures/maria_verbatim.jsonl row 2"
+  },
+  {
+   "id": "9",
+   "verbatim_row": "9",
+   "site_record": "undamaged",
+   "role": "mover",
+   "source_plausibility": {
+    "high": "fits",
+    "low": "fits (a dock worker could see it)"
+   },
+   "text_source": "fixtures/maria_verbatim.jsonl row 9"
+  },
+  {
+   "id": "11",
+   "verbatim_row": "11",
+   "site_record": "damaged",
+   "role": "mover",
+   "source_plausibility": {
+    "high": "fits",
+    "low": "fits"
+   },
+   "text_source": "fixtures/maria_verbatim.jsonl row 11"
+  },
+  {
+   "id": "C1",
+   "verbatim_row": "C1",
+   "site_record": "undamaged",
+   "role": "mover",
+   "source_plausibility": {
+    "high": "fits",
+    "low": "strained: contract terms"
+   },
+   "text_source": "fixtures/maria_verbatim.jsonl row C1"
+  },
+  {
+   "id": "C3",
+   "verbatim_row": "C3",
+   "site_record": "undamaged",
+   "role": "mover",
+   "source_plausibility": {
+    "high": "fits",
+    "low": "strained: contracting file"
+   },
+   "text_source": "fixtures/maria_verbatim.jsonl row C3"
+  },
+  {
+   "id": "13",
+   "verbatim_row": "13",
+   "site_record": "damaged",
+   "role": "anchor_external",
+   "source_plausibility": {
+    "high": "fits",
+    "low": "fits"
+   },
+   "text_source": "fixtures/maria_verbatim.jsonl row 13"
+  }
+ ]
+}

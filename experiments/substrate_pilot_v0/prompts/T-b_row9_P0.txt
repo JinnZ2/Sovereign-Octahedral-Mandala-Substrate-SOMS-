@@ -1,0 +1,26 @@
+You are coding failure findings. For each finding, name the MECHANISM that failed using exactly one code from the list below (or a mixed(a,b) pair). Code the mechanism, not the motive. SITE is given as a fact and is not yours to grade. If you cannot decide, write UNSURE. If you will not code a row, write DECLINE.
+
+Codes:
+  physical_damage                the site's infrastructure destroyed or disabled BY THE EVENT; only codable when SITE = damaged
+  regime.market                  allocation/priority set by commercial terms, price, contract, vendor capacity
+  regime.urgency                 speed prioritized over control; controls dropped to expedite
+  regime.security                protection against theft, diversion, tampering BY OTHERS
+  regime.custody                 continuous state record + responsibility held by a named party
+  regime.learning                a known finding not converted to a rule (FLT)
+  regime.custody.state           V2c: record continuity failed (the state record broke), holder may have been named
+  regime.custody.responsibility  V2c: no named holder (responsibility not assigned), record may have continued
+  Rule: physical_damage only where SITE = damaged.
+
+The findings are from a federal audit of a hurricane commodity supply chain.
+
+FINDING 9  [SITE: undamaged]
+Additionally, FEMA had challenges using its GPS for commodity shipments to Puerto Rico because the vertical stacking of containers on barges and at staging yards caused signal loss that prohibited the transmission of geographic data.
+
+FINDING 13  [SITE: damaged]
+The storm severely damaged Puerto Rico's transportation, electrical, and communication infrastructures. Damage to these critical infrastructures left Puerto Rico's entire population of 3.7 million without electricity and 95 percent of cell towers out of service.
+
+FINDING 5  [SITE: pre-event]
+As reported by the Government Accountability Office (GAO) and in FEMA's own after-action report, FEMA acknowledged it inadequately planned when stating the agency could have better leveraged open-source information and preparedness data, such as capability assessments and exercise findings, for Puerto Rico and the U.S. Virgin Islands. For example, a 2011 exercise after-action report for Puerto Rico indicated the territory would require extensive Federal support in moving commodities from the mainland to the island and throughout to distribution points.
+
+Answer with one line per finding, in this exact form and nothing else:
+FINDING <id>: <code>

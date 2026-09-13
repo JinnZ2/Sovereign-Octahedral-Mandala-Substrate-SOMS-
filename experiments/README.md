@@ -14,6 +14,16 @@ validate specific physical mechanisms that the architecture is built on.
 | `validate_annealer.py` | Core SOMS claims: stochasticity, 1/r^6 coupling, no optimality guarantee, Phi threshold is arbitrary, **T/J scale (random-walk detector)** | Ready (numpy/scipy) |
 | `benchmark_sat.py` | MAX-SAT: SOMS vs vanilla SA, with and without the clauses in the energy | Ready (numpy/scipy) |
 | `run_symmetry_identifiability.py` | E07a: label-isometry groups, collision classes, L_R = L_sym + L_excess, cross-geometry recovery, negative controls, BranchSet out | Ready (numpy); writes `docs/experiment_07_*` |
+| `t1_perturbation_mechanism.py` | T1: are the G1/G6 genuine collisions tie degeneracy, additive coincidence, or readout coarseness? 3 readouts × 3 perturbations | Ready (numpy, ~75 s); writes `docs/experiment_07_T1_*` |
+| `t2_rosenblatt_seymour.py` | T2: do ring-type homometric collisions factor as B+C / B−C? set-level lemma, spectral polynomial search, Z12 control | Ready (numpy, ~70 s); writes `docs/experiment_07_T2_*` |
+| `t3_decision_anchor/` | T3: D_state vs D_community case family for Simulators/anchor-measurand-crossing; `predict.py` scores the near-disjoint prediction on the lexicon | Instrument only, unrun (no model endpoint; sources not fetchable) |
+| `t4_frame_rotation/` | T4: Levinson rotation task as text, 4 arms, scorer, constructed fixture | Instrument only, unrun (no model endpoint; authoring session not blind) |
+| `durability_register/` | Mechanism-level failure-mode register for ML used as infrastructure, scoped to durability and reconstructability: 21 entries, per-entry detection channel (may be NONE), reconstruction score, requirement set, null set, falsifiers F_A-F_H | Ready (stdlib); deliverable is `register.jsonl` |
+| `terrain_prior/` | Observed indicator -> substrate prior from a stated MECHANISM: bearing (pressure vs substrate band, per morphology) and entanglement (stem extent vs swing band) as two variables, never one score; checks P1 two-layer, P2 sensor inversion, P3 morphology split, P4 out of scope, P5 no mechanism | Ready (stdlib); cases A-E in the selftest |
+| `trigger_geometry/` | Was this response validated in THIS geometry? Sensor-correct/model-inverted class: T1 accumulation, T2 response coupling, T3 unstated envelope, T4 proxy state, T5 degradation correlation, T6 geometry absent; three verdicts, never one score | Ready (stdlib); cases A-E in the selftest |
+| `gap_register/` | Register of marks on unmeasured quantities: `gap_register.py` (add / validate V1–V6 / search / check / export / strip / kill-sample), `REGISTER.jsonl` (7 seeds), demo that fails V4 and V2 | Ready (stdlib); not SOMS physics, placed here for push access |
+| `e07_returns.py` | Rollup group D: 85-pair split, same-sigma H test, readout-quotient universes, G5 status, pair-list hash, E09 units/T*, T1/T2 status; writes `docs/experiment_07_returns.*` | Ready (numpy, ~30 s) |
+| `substrate_pilot_v0/` | Substrate coordination pilot v0: C1–C4/FLT/BND ledger with every SPEC §2 shall as a gate, FT battery, I-1..I-8 replay vs OIG-20-76 baselines, paper forms, onboarding tools | Ready (stdlib only); not SOMS physics, placed here for push access |
 | `firefly_swarm.py` | Stochastic resonance in coupled oscillators — does intermediate noise beat zero noise? | Ready (numpy/scipy/matplotlib) |
 | `constraint_drift.py` | Semantic drift detection: tracks constraint loss when a term's meaning silently changes over decades | Ready (numpy) |
 | `thermodynamic_audit.py` | Exergy-weighted impact scoring: detects when "profitable" activities are thermodynamically destructive | Ready (no deps) |
@@ -129,6 +139,26 @@ actually goes, and where it was leaking.
   scale finding written as a measured Q(Ax) ≠ Q(x) case: the energy ranking
   is invariant under the distance rescale, the Metropolis procedure at fixed
   T is not.
+
+### T1–T4 (follow-ups to E07a)
+
+- **T1** (`docs/experiment_07_T1_perturbation.md`): the G1 and G6 genuine
+  collisions are tie degeneracy. Level-preserving noise changes nothing;
+  generic pair noise removes 8508 of 8648 (G1) and 19991 of 20131 (G6).
+  Additive coincidences contribute zero under both the vector and the
+  multiset readout and appear only under the scalar sum. The residual 140
+  is the equality floor d(a,a)=0, exactly 28·(1+n): label-swap pairs no
+  relational encoding can separate.
+- **T2** (`docs/experiment_07_T2_rosenblatt_seymour.md`): ring 423/359/64
+  and cube 611/611/0 reproduce the reference table. The overlay numbers
+  depend on the labeling: binary gives |D8∩B3| = 4 and 155 pairs, Gray
+  (the E07 labeling) gives 8 and 259. The 64 non-isometric ring pairs are
+  one D8-orbit class, {0,1,2,5}/{0,1,3,4}. Set-level factorization is
+  impossible for 4-sets by a two-line lemma, and no signed polynomial
+  factorization was found within the stated bounds; the Forte Z12 pair is
+  not homometric in Z8 and does not factor within bound 1 either. The
+  mechanism of ring collisions is not sum/difference factorization.
+- **T3**, **T4**: instruments, unrun. See their READMEs.
 
 ### What moves the project forward
 
