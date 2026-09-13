@@ -24,10 +24,62 @@ python experiments/durability_register/failure_register.py emit        # REGISTE
 python experiments/durability_register/failure_register.py selftest
 ```
 
-## What came out (rev 7)
+## What came out (rev 8)
 
 ```
-entries 37     rated 35     unrated parts 2      LENGTH WATCH: 37 of a 40 tripwire
+entries 38     rated 36     unrated parts 2      LENGTH WATCH: 38 of a 40 tripwire
+sections       0: 1   3A: 7   3B-W: 11   3B: 8   3C: 8   6C: 3
+reconstruction AS-IS: NO 18   PARTIAL 16   NOT_APPLICABLE 4   YES 0
+detection gap  30 of 38      projection 31.6% of a 35% cap      citations 38 verified / 23 from memory
+coverage audit 69 rows, 0 gaps      amendments A-01..A-11 all recorded with their superseded statements
+```
+
+### Rev 8: the loss-variable map and the amendment record arrived
+
+Section 1B and section 9 had never been supplied. Both are now in the header, and two things in them were real work
+rather than transcription.
+
+**Finding F1 had no entry, and it is the sharpest thing in the order.** DUR-018: every classical recovery ran on a
+verification test. Mix a candidate concrete, test it against the surviving wall, and a failed rebuild is
+distinguishable from a successful one. Here the test is gone, because with the variance D-101 measures, a candidate
+that misses the published number is indistinguishable from a bad draw of the correct procedure, and one that hits it
+may be a good draw of a wrong procedure. **A missing test is worse than a missing record.** The entry says what that
+implies for the rest of the register: every other reconstruction score is capped by this one, and no amount of
+deposit, custody or hop logging lifts a rebuild to verified while the comparison stays undecidable. Its proposed
+control is the pair, not a single artifact: publish the variance basis with the figure, and retain DUR-001's
+reference sample so the candidate has something to be tested against. That pair is also the procedure test A-10 left
+open, so DUR-018 partly closes a 9-1 item.
+
+**Finding F2 was a rule my validator did not enforce.** "It is widely used, it will be fine" may not be accepted as
+an existing_control, because V9 demand continuity is at maximum here and still loses to V10 replacement velocity.
+`validate` now rejects an entry whose control cites popularity, adoption or user count, and the selftest proves it
+with a synthetic entry claiming a component is widely used.
+
+**The amendment record is now complete, A-01 to A-11**, each retaining its superseded statement. Two of its
+consequences are enforcement, not prose: A-02 says any control verifying bit integrity is not a control for the
+reader problem, and A-06 says section 6B is a floor rather than an estimate, which is now recorded on the hop budget
+itself. A-09's design constraint went onto DUR-008's requirement: keep the frozen interchange set small and readable
+**without** the stack.
+
+### Section 9-1 reconciled, item by item
+
+```
+CORRELATED-BLOCK LOSS        CLOSED HERE      DUR-009 (renumbered when the order claimed DUR-005)
+PROCEDURE REPRODUCIBILITY    PARTLY CLOSED    DUR-001-N2 entry exists; DUR-018 now proposes the control
+PROVENANCE REGRESS           CLOSED HERE      DUR-008 + DUR-008-N1
+CARRIER-SIDE DETECTION       OPEN, as stated  DUR-005-B records it; F_M excludes 4 of 5 as UNINSTRUMENTED
+NO FORCING FUNCTION          OPEN in general  two sector-scoped exceptions recorded, neither general
+```
+
+On the last one I disagree with the order in a narrow way and the register says so rather than smoothing it. F_E here
+names EU AI Act Article 12 with Article 26 retention and Annex IV, plus the FDA Predetermined Change Control Plan
+final guidance of December 2024. Both are real forcing functions and both are sector-scoped, and Article 26's
+six-month retention floor is shorter than every reconstruction question in this register. So the order's statement
+stands for the general case: nothing currently would make this binding. Procurement is the one lever that needs no
+regulator, because the three cheapest requirements are artifacts rather than behaviours.
+
+```
+entries 37     rated 35     unrated parts 2      (rev 7 figures below)
 sections       0: 1   3A: 6   3B-W WORKED: 11   3B: 8   3C: 8   6C COMPOUNDING: 3
 reconstruction AS-IS: NO 17   PARTIAL 16   NOT_APPLICABLE 4   YES 0
                axes NOT merged: with-control {DUR-001: PARTIAL} · trajectory {DUR-003: PARTIAL -> NO}
@@ -432,6 +484,8 @@ F_J  recursive speculation ENFORCED. Every 6C entry is PROJECTED unless it cites
                            refuses otherwise, and the selftest proves it with a synthetic MEASURED 6C entry.
 F_K  ambient set bounded   BOUNDED. Horizon declared, seven conditions admitted with a horizon judgement each,
                            three out-of-horizon candidates recorded as excluded. validate refuses an unbounded set.
+F2   demand is not a control ENFORCED. validate rejects an existing_control citing popularity, adoption or user
+                           count, per section 1B-1 finding F2.
 F_M  carrier-side bounded  BOUNDED, and mostly UNINSTRUMENTED: 1 of 5 conditions admitted to the active set, 4
                            excluded for having no production-rate measure. The screen has no null result.
 F_L  conjunction arithmetic NO NUMBER PUT ON IT. validate scans the conjunction for any probability or percentage

@@ -43,6 +43,10 @@ REDUNDANCY_WORDS = ("redundan", "replica", "multiple copies", "several copies", 
 NUMBER_IN_CONJUNCTION = re.compile(r"\b0?\.\d+\b|\b\d+(\.\d+)?\s*(%|percent)\b")
 # 6C-1 register consequence: substrate slowness is not a custody control.
 HARDWARE_STABILITY_CLAIM = re.compile(r"hardware is stable|substrate is stable|hardware slowness (is|as) a? ?control", re.I)
+# F2 (section 1B-1): V9 demand continuity is at maximum here and does not protect, because V10 replacement velocity
+# outruns documentation. "It is widely used, it will be fine" may not be accepted as an existing_control.
+DEMAND_AS_CONTROL = re.compile(r"widely used|widely adopted|large user base|many users|popular|heavily used|"
+                               r"demand is high|continuous use (protects|ensures)|everyone uses", re.I)
 ONSETS = ("immediate", "drift", "dormant-until-triggered")
 EVIDENCE = ("MEASURED", "TRANSPORTED", "PROJECTED")
 RECONSTRUCTION = ("YES", "PARTIAL", "NO", "NOT_APPLICABLE")
@@ -107,6 +111,10 @@ def validate(path=STORE):
         if e.get("section") == "6C" and e.get("evidence_class") != "PROJECTED" and not e.get("current_instance"):
             errs.append((i, "6C entry not PROJECTED and citing no current instance (F_J): a strong structural "
                            "argument may not be scored as measured"))
+        if DEMAND_AS_CONTROL.search(str(e.get("existing_control") or "")):
+            errs.append((i, "cites demand or popularity as an existing_control (F2): V9 is at maximum here and does "
+                           "not protect, because V10 replacement velocity outruns documentation. 'It is widely used, "
+                           "it will be fine' is not a control."))
         if HARDWARE_STABILITY_CLAIM.search(str(e.get("existing_control") or "")):
             errs.append((i, "cites substrate or hardware stability as a custody control (6C-1 register consequence): "
                            "hardware slowness protects nothing if the representation is redefined between cycles"))
@@ -278,6 +286,9 @@ def report(path=STORE):
             "requirements_where_control_is_partial": partial_reqs,
             "null_set": hdr["null_set"],
             "hop_accounting": hdr["hop_budget"],
+            "loss_variable_map": hdr["loss_variable_map"],
+            "still_open_9_1": hdr["still_open_9_1"],
+            "amendments": sorted(k for k in hdr["corrections"] if k.startswith("A-")),
             "length_watch": hdr["length_watch"],
             "volume_and_correlation": {"volume": hdr["volume_accounting"], "correlation": hdr["independence_correction"]},
             "shock_exposure": hdr["shock_recut"],
@@ -545,6 +556,15 @@ COVERAGE = [
      ["DUR-005-B"], ["still_open"], []),
     ("sibling instrument", "the control-state axis: as-is, with-control and moving scores never merged",
      ["DUR-001", "DUR-003"], ["reconstruction_axis_rule", "prior_art_in_ecosystem"], ["report", "validate"]),
+    ("1B loss-variable map", "V1 to V14 scored, amended scores authoritative, originals retained", [],
+     ["loss_variable_map"], ["report"]),
+    ("1B-1 F1", "the verification channel is blocked: a failed rebuild is indistinguishable from a bad draw",
+     ["DUR-018"], ["loss_variable_map"], []),
+    ("1B-1 F2", "demand at maximum does not protect; popularity is not an existing_control", [],
+     ["loss_variable_map"], ["DEMAND_AS_CONTROL", "validate"]),
+    ("1B-1 F3", "the protective set is thin and entirely document-side", [], ["loss_variable_map"], []),
+    ("9 amendment record", "A-01 to A-11 with the superseded statement retained in each", [], ["corrections"], []),
+    ("9-1 still open", "reconciled against what this register holds, item by item", [], ["still_open_9_1"], []),
     ("7 F_A..F_M", "every falsifier answered with a status", [], [], ["falsifiers"]),
     ("Step 5", "reconstruction distribution as a headline", [], [], ["report"]),
     ("Step 6", "requirement set for every entry with no control", [], [], ["report"]),
@@ -719,9 +739,9 @@ def selftest():
     hdr, entries = load()
     # the register is short by design: a long one is a warning sign (section 8). The guard is a TRIPWIRE, and the
     # length is reported with its growth accounting rather than silently accommodated.
-    assert len(entries) <= 40, len(entries)
+    assert len(entries) <= 40, len(entries)   # tripwire; 38 now, and the order is still growing
     lw = hdr["length_watch"]
-    assert lw["entries"] == len(entries) and lw["growth"]["rev 7"] == len(entries)
+    assert lw["entries"] == len(entries) and lw["growth"]["rev 8"] == len(entries)
     assert "no longer short" in lw["status"] and "tripwire" in lw["status"]
     assert "own durability failure" in lw["status"]          # the register's length is itself a durability risk
     assert "No entry was self-generated" in lw["accounting"]
@@ -942,7 +962,8 @@ def selftest():
     assert "DUR-004" in [c.get("candidate_measure", "") for c in ca["capacities"]][4]
     assert f["F_M_carrier_side_unfalsifiable"]["status"].startswith("BOUNDED")
     assert hdr["corrections"]["A-11"]["superseded"].startswith("DUR-005")
-    assert "A-01 to A-10 were never supplied" in hdr["corrections"]["note"]
+    assert "supplied in full" in hdr["corrections"]["note"]          # rev 7's gap note is now superseded
+    assert "earlier gap note is superseded" in hdr["corrections"]["note"]
     # the patch was not applied as a patch, and the entry says why
     assert "does not exist in this repository" in json.dumps(b5["citations"])
     assert "NOT applied as a patch" in json.dumps(b5["citations"])
@@ -969,6 +990,45 @@ def selftest():
     assert any("retyped" in x for x in pa["what_it_does_better"])
     assert "push access" in pa["recommendation"]
     assert "F_B_status_correction" in f["F_B_prior_art"]
+    # rev 8: the loss-variable map, its three findings, the full amendment record, DUR-018 and the F2 rule
+    vm = hdr["loss_variable_map"]
+    assert len(vm["variables"]) == 14 and {v["v"] for v in vm["variables"]} == {"V%d" % i for i in range(1, 15)}
+    assert vm["variables"][2]["amended"].startswith("--")                      # V3 amended by A-01
+    assert vm["variables"][5]["amended"].startswith("--")                      # V6 amended by A-02
+    assert "split" in vm["variables"][13]["amended"]                           # V14 split by A-03
+    assert vm["findings"]["F1"]["entry"] == "DUR-018"
+    assert "original_form_retained" in vm["findings"]["F3"]                    # the withdrawn claim stays visible
+    amds = sorted(k for k in hdr["corrections"] if k.startswith("A-"))
+    assert amds == ["A-%02d" % i for i in range(1, 12)], amds
+    for k in amds:
+        assert hdr["corrections"][k]["superseded"] and hdr["corrections"][k]["replacement"]
+    assert "ANY CONTROL THAT VERIFIES BIT INTEGRITY IS NOT A CONTROL" in hdr["corrections"]["A-02"]["consequence"]
+    assert "FLOOR, NOT AN ESTIMATE" in hdr["corrections"]["A-06"]["consequence"]
+    assert "A_06" in hdr["hop_budget"]
+    # DUR-018: the test, not the record, and it caps every other score
+    d18 = by_id["DUR-018"]
+    assert d18["evidence_class"] == "MEASURED" and d18["section"] == "3A"
+    assert "MISSING TEST IS WORSE THAN A MISSING RECORD" in d18["consequence"]
+    assert "UNVERIFIABLE" in d18["requirement"] and d18["reconstruction"] == "NO"
+    assert any(p.get("entry") == "DUR-001-N2" for p in d18["control_preconditions"])   # it closes A-10's open item
+    # the F2 rule bites
+    import copy, tempfile
+    bad4 = copy.deepcopy(by_id["D-101"]); bad4["id"] = "SYNTH-5"
+    bad4["existing_control"] = "PARTIAL: the component is widely used, so problems would be noticed"
+    with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as tf4:
+        tf4.write(json.dumps(hdr) + "\n")
+        for x in entries + [bad4]:
+            tf4.write(json.dumps(x) + "\n")
+    ve4 = validate(tf4.name)
+    assert any(i == "SYNTH-5" and "not a control" in m for i, m in ve4), ve4
+    os.unlink(tf4.name)
+    # 9-1 reconciled: three closed here, one partly, one open, and F_E's disagreement stated rather than hidden
+    so = hdr["still_open_9_1"]["items"]
+    assert len(so) == 5
+    assert sum(1 for x in so if x["status"] == "CLOSED HERE") == 2
+    assert any("PARTLY CLOSED" in x["status"] for x in so)
+    fe = [x for x in so if "forcing function" in x["item"]][0]
+    assert "OPEN for the general case" in fe["status"] and "order's statement stands" in fe["entry"]
     # citations carry a status and the unverified ones are visible
     assert rep["citations"]["verified_this_session"] >= 6 and rep["citations"]["from_memory_unverified"] >= 6
     # emissions are generated, not hand-written

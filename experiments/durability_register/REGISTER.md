@@ -13,12 +13,12 @@ NON-GOALS
   - not a code of ethics
   - scope is DURABILITY and RECONSTRUCTABILITY only: can the deployed object still be identified, re-produced, load-rated and inspected at t + N years, by someone who is not the original author and does not hold the tacit stack
 
-entries 37 (rated 35, unrated parts 2) | projected 32.4% of a 35% cap | detection gap 29 entries
-reconstruction  NO 17  NOT_APPLICABLE 4  PARTIAL 16
-citations  verified this session 36 | from memory, unverified 23
+entries 38 (rated 36, unrated parts 2) | projected 31.6% of a 35% cap | detection gap 30 entries
+reconstruction  NO 18  NOT_APPLICABLE 4  PARTIAL 16
+citations  verified this session 38 | from memory, unverified 23
 ```
 
-FIDELITY and CUSTODY are separate axes. FIDELITY (is the reported result true of the object produced) and CUSTODY (can the object be identified and re-produced later, by someone else) are separate axes and are not combined in any field. Custody is unmeasured in current practice, which is being read as adequate; an unmeasured variable is not absent, it is set to zero, which is a positive claim nobody licensed.
+FIDELITY and CUSTODY are separate axes. FIDELITY (is the reported result true of the object produced) and CUSTODY (can the object be identified and re-produced later, by someone else) are separate axes and are not combined in any field. Custody is unmeasured in current practice, which is being read as adequate; an unmeasured variable is not absent, it is set to zero, which is a positive claim nobody licensed. A-09: written records optimise FIDELITY and assume a reader who still holds the preconditions; transmitted forms optimise CUSTODY and pay fidelity for it. Where the preconditions are known to be losable, the custody-first design survives. The durable unit is the LOSS EVENT, not the technique.
 
 EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the RECONSTRUCTION STATE of one identified deployed object: (object id, field that changed, earliest possible date, latest possible date). A silent drift over two years is one event per changed field with wide date bounds. A single wrong output is NOT an event here at all: that is fidelity, which is out of scope. No count of failures appears anywhere in this deliverable; the only counts are counts of ENTRIES.
 
@@ -132,6 +132,27 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - minimum artifact that would close it: add the fields, then treat an empty field as a finding. The register's own schema rule (an entry missing a field is an UNRATED PART, filed as such) is the same mechanism applied to itself.
 - citation [VERIFIED_2026-09-13]: the compounding claim of the seed set in the work order, section 3A, final item
 - citation [FROM_MEMORY_UNVERIFIED]: Model Cards (Mitchell et al. 2019), Datasheets for Datasets (Gebru et al.), Data Statements (Bender and Friedman 2018), FactSheets (Arnold et al. 2019): documentation templates that add some of the missing fields and are not mandatory anywhere
+
+### DUR-018  the verification channel is blocked: a failed rebuild is indistinguishable from a bad draw
+
+- mechanism: Every classical recovery ran on a verification test (V12): mix a candidate concrete, test it against the surviving wall, and a failed reconstruction is distinguishable from a successful one. Here the test is gone. With run-to-run spread of the magnitude measured in 3A, a candidate rebuild that misses the published number is INDISTINGUISHABLE from a bad draw of the correct procedure, and one that hits it may be a good draw of a wrong procedure. Reconstruction cannot be VALIDATED even when it is attempted and even when every record survives.
+- load condition: a point estimate is the only published performance figure, and the procedure is stochastic. That is the normal case: D-104 records that no agreed significance measure ships with the number.
+- onset: immediate | evidence: MEASURED | reconstruction: NO
+- detection channel: NONE, and the thing missing IS the detection channel: this entry is about the absence of the test that would detect every other entry's failure. PROPOSED: publish the variance basis with the number (n identical-configuration runs and the resulting distribution) so a candidate can be compared against a distribution rather than a point, PLUS the retained reference sample of DUR-001 so there is a referent to test against. Neither alone constitutes a test.
+- detection latency: UNBOUNDED. The absence of a test produces no signal at any time: a failed validation attempt reads as a bad draw and is filed as noise.
+- attribution: the person attempting the rebuild, whose failure is read as their own error rather than as an unresolvable comparison
+- consequence: A MISSING TEST IS WORSE THAN A MISSING RECORD. Every other entry's reconstruction score is capped by this one: improving deposits, custody and hop logs cannot lift a rebuild to verified while the comparison remains undecidable. It is also why a PARTIAL score cannot be upgraded by record-keeping alone.
+- existing control: NONE. Nothing requires a variance basis to ship with a performance figure, and no deployment gate asks whether a rebuild of this object could be checked.
+- validity range: stochastic training procedures reported as a point estimate. Does not bind where a distribution is published with the figure, or where the fit is deterministic and a bit-exact comparison is available.
+- reconstruction note: NO, and structurally so: this entry is the reason the other NO and PARTIAL scores cannot be improved by better records. It is the test, not the record, that is absent.
+- PROPOSED control: a published variance envelope (n runs, distribution, seed basis) coupled to DUR-001's retained reference sample: together they make a candidate rebuild falsifiable
+- control precondition: the sample supplies the referent; a distribution with nothing to test against is still not a test (entry DUR-001)
+- control precondition: the test this control creates is a PROCEDURE test, which is the requirement A-10 left open; it is not the identity test DUR-001 provides (entry DUR-001-N2)
+- minimum artifact that would close it: publish the variance basis with every performance figure that a deployment decision rests on (n runs, the distribution, the seed basis), and retain the reference sample of DUR-001 so a candidate rebuild has something to be tested against. Without both, record the object as UNVERIFIABLE rather than as reconstructable at any level.
+- cross-reference (not re-derived): D-101 (the measured variance that makes the comparison undecidable); D-104 (the point estimate shipping without a distribution); DUR-001 and DUR-001-N2 (identity is closable; the procedure test is what this entry needs and A-10 left open); D-105 (readiness is not outcome: a rebuild that runs is not a rebuild that is correct)
+- citation [VERIFIED_2026-09-13]: operator work order section 1B-1 finding F1 and the V12 row of the loss-variable map, supplied in full 2026-09-13
+- citation [VERIFIED_2026-09-13]: anchored by D-101 (run-to-run variance) and D-104 (no agreed significance measure), whose own citations are recorded there and are FROM_MEMORY_UNVERIFIED
+- note: V12 RECONSTRUCTION TEST in the loss-variable map: classical '+ testable', ML '-- see F1'. This is the entry F1 points at, and it is the sharpest of the three findings because it inverts the usual priority: the register's other entries are about records, and this one says the test matters more.
 
 ## 3B-W WORKED ENTRIES - the two priority transports and the failure modes of their controls
 
@@ -689,6 +710,7 @@ Modes with no existing control, and the minimum artifact that would close each:
 - **D-000 the detection gap itself** -> a detection channel is a deliverable, not an assumption: for each deployed component, name the signal that would reveal degradation and its latency, or record NONE. NONE is a rateable answer; an empty field is not.
 - **D-104 no agreed significance measure, so point estimates ship without a distribution** -> state the distribution and the comparison procedure with the selection decision, or record the selection as UNRATED.
 - **D-106 the defect is not visible from reading the report** -> add the fields, then treat an empty field as a finding. The register's own schema rule (an entry missing a field is an UNRATED PART, filed as such) is the same mechanism applied to itself.
+- **DUR-018 the verification channel is blocked: a failed rebuild is indistinguishable from a bad draw** -> publish the variance basis with every performance figure that a deployment decision rests on (n runs, the distribution, the seed basis), and retain the reference sample of DUR-001 so a candidate rebuild has something to be tested against. Without both, record the object as UNVERIFIABLE rather than as reconstructable at any level.
 - **DUR-001 the deployed object cannot be distinguished from another produced by the same nominal procedure** -> a sealed probe-response record at deploy: probe set, responses, hash, deposited with a party that is not the operator, with a stated retention period and a rotation rule.
 - **DUR-001-N2 instance identity is not procedure reproducibility, and the two must not be summed** -> two separate ratings recorded separately and never summed into one reconstruction score: IDENTITY (closed by DUR-001) and PROCEDURE REPRODUCIBILITY (carried by D-101 and D-102, open).
 - **DUR-002-N1 an empty envelope reads as a broad envelope** -> blank must be a distinct value from wide: the envelope field takes a characterised distribution or the literal EMPTY, and EMPTY is the rating.
@@ -767,5 +789,5 @@ SHOCK RE-CUT (6B-3)
 
 ## Headline
 
-Of the 33 entries that make a reconstruction claim, PARTIAL 16 and NO 17, and NOT ONE scores YES. Section 8 predicted PARTIAL would dominate; it no longer does. The shift came entirely from entries the operator added in rev 6 (ambient precondition, custodian continuity and the three compounding entries), every one of which scores NO, so the expected yield was wrong in the direction of optimism. PARTIAL means enough of the record exists to rebuild something approximate and not enough to identify the object, which looks like adequacy from inside and is the class most likely to be under-reported. 4 further entries govern use or a control rather than rebuild and are scored NOT_APPLICABLE with a stated reason.
+Of the 34 entries that make a reconstruction claim, PARTIAL 16 and NO 18, and NOT ONE scores YES. Section 8 predicted PARTIAL would dominate; it no longer does. The shift came entirely from entries the operator added in rev 6 (ambient precondition, custodian continuity and the three compounding entries), every one of which scores NO, so the expected yield was wrong in the direction of optimism. PARTIAL means enough of the record exists to rebuild something approximate and not enough to identify the object, which looks like adequacy from inside and is the class most likely to be under-reported. 4 further entries govern use or a control rather than rebuild and are scored NOT_APPLICABLE with a stated reason.
 
