@@ -13,9 +13,9 @@ NON-GOALS
   - not a code of ethics
   - scope is DURABILITY and RECONSTRUCTABILITY only: can the deployed object still be identified, re-produced, load-rated and inspected at t + N years, by someone who is not the original author and does not hold the tacit stack
 
-entries 31 (rated 29, unrated parts 2) | projected 25.8% of a 35% cap | detection gap 24 entries
-reconstruction  NO 11  NOT_APPLICABLE 4  PARTIAL 16
-citations  verified this session 30 | from memory, unverified 23
+entries 36 (rated 34, unrated parts 2) | projected 30.6% of a 35% cap | detection gap 28 entries
+reconstruction  NO 16  NOT_APPLICABLE 4  PARTIAL 16
+citations  verified this session 35 | from memory, unverified 23
 ```
 
 FIDELITY and CUSTODY are separate axes. FIDELITY (is the reported result true of the object produced) and CUSTODY (can the object be identified and re-produced later, by someone else) are separate axes and are not combined in any field. Custody is unmeasured in current practice, which is being read as adequate; an unmeasured variable is not absent, it is set to zero, which is a positive claim nobody licensed.
@@ -254,7 +254,7 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - control precondition: the log must record the DROPPED set, not only the carried set: a log of what survived is the same selection filter written down, and reproduces the defect it was built to expose
 - control precondition: a hop log is only readable by someone who still understands the stack it describes, so attrition control depends on the carrier population holding (entry DUR-004)
 - minimum artifact that would close it: a hop log per object recording, per migration event, what was carried, what was DROPPED, and by whose decision; plus a retention horizon stated in hops rather than in years.
-- cross-reference (not re-derived): D-207 (format obsolescence: held and unreadable, the other half of the archive transport); D-206 (custody handoffs: a hop with a named holder on both sides is the recorded case; attrition is the unrecorded one); DUR-005 (the same hops, correlated across objects rather than compounding within one)
+- cross-reference (not re-derived): D-207 (format obsolescence: held and unreadable, the other half of the archive transport); D-206 (custody handoffs: a hop with a named holder on both sides is the recorded case; attrition is the unrecorded one); DUR-009 (the same hops, correlated across objects rather than compounding within one); DUR-008 / 6C-2 (degradation versus regress: this entry is the degradation, measurable per hop); 6C: under a compounding regime the hop budget of 6B does not hold, and this entry's survival fraction is applied at machine rate
 - citation [VERIFIED_2026-09-13]: operator work order section 3B-W, entry DUR-003, filled to schema by the operator
 - citation [VERIFIED_2026-09-13]: hop budget in section 6B: roughly 20 generational hops over 500 years against 20 to 50 substrate hops over 10 years, an order-of-magnitude estimate supplied by the operator
 - note: Distinguish from DUR-001. DUR-001 is 'cannot tell which object.' DUR-003 is 'the object is no longer being carried.' Independent. Also distinguish from D-207: there the object is held and unreadable; here it is not held at all, and nothing recorded the moment it stopped being held.
@@ -277,7 +277,46 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - citation [VERIFIED_2026-09-13]: mainframe and COBOL carrier-population figures as reported by vendor and consultancy posts citing a 2024 Global Mainframe Skills Report: 79 percent of organisations reporting difficulty filling mid-career legacy roles, an average COBOL programmer age of 55, roughly 10 percent of that workforce retiring annually, and abandoned modernisation programmes at banks, tax administrations and airlines
 - note: This is the INVERSE of the classical monument case. Pyramids: object retained, load off, gap harmless. Stranded: object retained, load on, gap is the liability. The classical intuition that a surviving artifact means a recoverable technology fails here.
 
-### DUR-005  correlated substrate and dependency shock: one event, a large synchronous slice
+### DUR-005  ambient precondition: the record is complete and the world it ran in is gone
+
+- mechanism: AMBIENT PRECONDITION. The record is complete on its own terms and still unusable, because the conditions under which the procedure ran were never candidates for statement. Not underspecified - never specified, because nobody holds 'there will be servers' as an assumption. It is the condition under which holding assumptions happens. This is the mode that makes reconstruction attempts fail REPEATEDLY ACROSS LONG PERIODS even where custody worked. The reconstructor is not missing a step in the procedure. The reconstructor is missing the world the procedure ran in, and the procedure gives no indication that a world was required.
+- load condition: Any record produced inside a stable operating environment - i.e. all of them, which is why this entry sits above the others.
+- onset: dormant-until-triggered | evidence: MEASURED | reconstruction: NO
+- detection channel: NONE from inside. Ambient conditions cannot be enumerated by the population for whom they are ambient, for the same structural reason an exclusion register cannot be generated from inside the frame it excludes from. PROPOSED: the ambient enumeration procedure (header key ambient_enumeration). Requires outside-the-stack input as a hard requirement, not a nicety.
+- detection latency: UNBOUNDED, and asymmetric: detectable cheaply BEFORE the condition ends, not at all after.
+- attribution: None. No actor omitted anything.
+- consequence: Reconstruction fails even where deposit, custody and hop logging all succeeded. This entry can VOID the controls proposed for DUR-001 through DUR-004 without any of them having failed.
+- existing control: NONE. Not addressed by reproducibility practice, which operates entirely inside the ambient set.
+- validity range: Holds wherever the record's reader is separated from the author by enough time or enough environmental change that any ambient condition has ended.
+- reconstruction note: NO, and undetectably so - the record looks complete. This is the failure mode that makes a complete-looking deposit worthless without changing anything about the deposit.
+- PROPOSED control: ambient enumeration: do not ask what is assumed, ask WHAT WOULD HAVE TO STOP EXISTING FOR THIS TO BECOME UNREADABLE, with participants from outside the stack, and record the resulting conditions with their expected lifetimes
+- control precondition: run with participants OUTSIDE the stack - different domain, different era of practice, different infrastructure assumptions. Run internally the question returns the stated set, which is already in the document. This is a hard requirement of the procedure, not a preference.
+- control precondition: the resulting list is a frozen reference and inherits the externality requirement: a list the generating system may revise tracks its current self-description instead of anchoring it (entry DUR-008-N1)
+- control precondition: F_K bound: a condition enters the register only if its expected lifetime falls within the retention horizon being claimed. Conditions outside the horizon are noted once and excluded, or the entry becomes unfalsifiable and the register loses standing.
+- minimum artifact that would close it: run the ambient enumeration with outside-the-stack participants, bound the output by the claimed retention horizon (F_K), and deposit the resulting list with the object. The list is not a prediction: it is the world-state the record depends on, written down while it is still visible.
+- cross-reference (not re-derived): DUR-001, DUR-002, DUR-003, DUR-004 (this entry can void their controls without any of them failing, which is why it is recorded above them rather than beside them); D-000 (the detection gap: ambient conditions are the case where the gap is structural rather than instrumental); DUR-008 (regress: an ambient condition that ends takes the vocabulary for naming it along)
+- citation [VERIFIED_2026-09-13]: operator work order 2026-09-13 rev 6, entry DUR-005 and the ambient enumeration procedure, filled to schema by the operator
+
+### DUR-006  custodian continuity assumed: the gate opens onto nothing after transfer
+
+- mechanism: CUSTODIAN CONTINUITY ASSUMED. Retention is contingent on a single holder continuing to exist, remain solvent, retain the carriers, keep the strategy, avoid seizure and avoid transfer. The artifact transfers by legal instrument; COMPREHENSION TRANSFERS BY CHOICE OF THE CARRIERS, and mostly does not. Gatekeeping is not a property that persists. It is a RELATION between a holder and a population, and it ends with the holder. The gate does not transfer - it opens onto nothing, because the asset moves and the comprehension does not.
+- load condition: Any artifact whose only readable copy sits inside one entity, under access control.
+- onset: dormant-until-triggered | evidence: MEASURED | reconstruction: NO
+- detection channel: Entity-health signals exist but do not measure the thing - a solvent, growing firm can reassign a team tomorrow. PROPOSED: carrier-side measurement from DUR-004 (bus factor, time-to-first-successful-modification by a new engineer), plus an explicit transfer clause stating what comprehension is required to operate the asset.
+- detection latency: Detectable before transfer only; the transfer itself is the event that reveals it.
+- attribution: Falls on the receiving party - state, acquirer, creditor - who did not make any of the decisions that produced the state.
+- consequence: Receiver takes possession of a stranded object: present, load-bearing, unreadable (DUR-004 by a different trigger).
+- existing control: NONE. Transfer instruments enumerate ASSETS. No instrument enumerates PRECONDITIONS, and nothing records which carrier put what into the artifact, so after transfer there is no way to establish what was received or what comprehension operating it requires.
+- validity range: Does not bind where a readable copy exists outside the entity - which is the entire content of the control.
+- reconstruction note: NO after transfer, in the general case
+- PROPOSED control: carrier-side measurement plus a transfer clause enumerating the comprehension required to operate the asset, not only the asset
+- control precondition: the carrier-side signals are DUR-004's, and they are the only channel that sees the quiet transfer mode (strategy change) (entry DUR-004)
+- control precondition: the clause must enumerate PRECONDITIONS, not assets: transfer instruments already enumerate assets and that is exactly what fails to carry comprehension
+- minimum artifact that would close it: CUSTODIAN-INDEPENDENCE, not custodian continuity: state how much of retention survives the disappearance of any single holder. A single-holder arrangement is a conjunction of seven terms (header key custodian_conjunction) and cannot claim continuity, because nothing in the arrangement ensures any term. A distributed arrangement is a disjunction and survives if any holder persists.
+- cross-reference (not re-derived): D-301 (the proprietary boundary as a custody term: this entry is its mechanism, and D-301's default of UNBOUNDED and NO follows from the conjunction in the header); DUR-004 (stranded under load: the same end state reached by carrier attrition instead of by transfer); DUR-009 (correlated shock: a single custodian is the limiting case of a shared node)
+- citation [VERIFIED_2026-09-13]: operator work order 2026-09-13 rev 6, entry DUR-006 with sub-sections A (transfer modes), B (the conjunction) and C (conjunction vs disjunction), filled to schema by the operator
+
+### DUR-009  correlated substrate and dependency shock: one event, a large synchronous slice
 
 - mechanism: Objects share hops. A framework break, a vendor end-of-life, a storage platform sunset, a cloud region retirement: one event applied to a large correlated fraction of the population at once. The loss is therefore not many independent small draws but a small number of correlated draws each taking a large slice, and a synchronous block loss defeats redundancy that was counted as independent.
 - load condition: two or more copies, instances or fallbacks that share a platform, a format, a dependency stack, an authorisation path or a budget line. Sharing any one of these makes them one copy against a shock to that thing.
@@ -385,7 +424,7 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - transported from digital archives and civil records: format obsolescence is a named preservation risk; formats are migrated on a schedule and independent-of-reader representations are preferred
 - why it carries: the abstract structure is: retention of bytes is not retention of the object when interpretation requires an artifact that is not retained. The mechanism is about the dependency between a record and its reader.
 - minimum artifact that would close it: store the deposit in a reader-independent representation where one exists, and schedule a load test plus migration decision on an interval shorter than the framework's support horizon.
-- cross-reference (not re-derived): DUR-003 (migration attrition: not held at all, the other half of the archive transport); DUR-005 (one format sunset removes every copy in that format at once)
+- cross-reference (not re-derived): DUR-003 (migration attrition: not held at all, the other half of the archive transport); DUR-009 (one format sunset removes every copy in that format at once)
 - citation [FROM_MEMORY_UNVERIFIED]: OAIS reference model (ISO 14721) and digital-preservation format-obsolescence practice
 
 ### D-208  no inspection interval and no action threshold
@@ -405,25 +444,6 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - citation [FROM_MEMORY_UNVERIFIED]: bridge inspection intervals, named as a transport source in the work order section 3B
 - citation [VERIFIED_2026-09-13]: EU AI Act post-market monitoring and Article 12 logging (https://artificialintelligenceact.eu/article/12/)
 
-### DUR-006  no batch record: the run's deviations from its own procedure are unrecorded
-
-- mechanism: The intended procedure is recorded (configuration, code, hyperparameters) and the ACTUAL RUN is not. Real runs deviate: a restart from an intermediate checkpoint, a shard that failed to load, a batch skipped after a numerical fault, a node swapped mid-run, a data snapshot that moved under the job. Each deviation changes the object produced, none is part of the configuration, and nothing requires any of them to be written down. The record therefore describes a run that did not happen.
-- load condition: training or fine-tuning runs long enough to be interrupted, which is all runs at scale; plus a logging system whose retention is set by operational need rather than by the object's service life
-- onset: immediate | evidence: TRANSPORTED | reconstruction: PARTIAL
-- detection channel: the run's own logs and job history, WHERE THEY ARE STILL RETAINED. Log retention is typically set in weeks or months while the object stays in service for years, so the channel closes on a schedule nobody connected to the object. NONE after the retention window.
-- detection latency: bounded by log retention, then UNBOUNDED: after the window there is no signal that a deviation ever occurred
-- attribution: the engineer who cannot explain a discrepancy between the documented procedure and the object's behaviour, read as not knowing their own system
-- consequence: a rebuild from the documented procedure produces a different object than the one bearing load, and the difference cannot be attributed to any recorded cause, so it is attributed to variance (D-101) and closed
-- existing control: PARTIAL. Experiment trackers record configuration and metrics, and some record restarts; none requires a deviation to be dispositioned, and none is retained on the object's schedule.
-- validity range: runs that can be interrupted or that read data from a mutable location; does not apply to a short deterministic fit over a frozen local dataset
-- transported from pharmaceutical manufacturing (the batch record): a batch record documents what was ACTUALLY done to this batch, not what the master formula specified, and every deviation from the master formula is recorded and given a written disposition before the batch can be released
-- why it carries: the abstract structure is a record of the INTENT standing in for a record of the EXECUTION, where the two are known to differ and the differences change the object. Nothing in that depends on chemistry. The deviation-with-disposition discipline is the part that carries and the part entirely absent here.
-- reconstruction note: the configuration is usually recoverable and the execution history is not, which is exactly the gap that makes a rebuild approximate rather than identifying
-- minimum artifact that would close it: a batch record per run, retained with the object rather than on the logging system's rotation: restarts, checkpoint lineage, data snapshot identifier, failed or skipped steps, hardware substitutions, and a written disposition for each deviation.
-- cross-reference (not re-derived): D-101 (variance: the explanation that absorbs every unrecorded deviation); D-102 (the stack: what was available, as against what this run actually did); DUR-001 (identity: a probe record fixes WHICH object, and says nothing about how it came to be that object)
-- citation [VERIFIED_2026-09-13]: pharmaceutical batch records and custody chain, named as a transport source in the work order section 3B and not previously covered by any entry
-- citation [VERIFIED_2026-09-13]: run-to-run variance anchors at D-101: variance is the bucket an unrecorded deviation gets attributed to
-
 ### DUR-007  load rating lost: the rating existed, its record is gone, the component stays in service
 
 - mechanism: A rating was established at some point and the record of it has since gone: the team dispersed, the evaluation harness rotted, the wiki page was deleted, the numbers live in a slide nobody kept. The component remains in service and is still treated as rated, because the memory that it was once evaluated outlives the evidence of what the evaluation said.
@@ -442,6 +462,25 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - cross-reference (not re-derived): DUR-002 (the rating exists and does not travel with the object: the other half of the load-rating pair); DUR-003 (attrition of the OBJECT across hops; this is attrition of its RATING); D-208 (inspection interval: a re-rating cadence is what would have caught the loss)
 - citation [VERIFIED_2026-09-13]: FHWA-directed practice that a load rating be established for every structure in the inventory even where as-built plans are missing, using field measurement with conservative era-appropriate assumptions, load testing, or documented engineering judgement (state load-rating manuals and VTRC / NTL reports on rating bridges with limited or missing as-built plans). Read from state manuals and research summaries located this session; the federal directive itself was not fetched. (https://vdot.virginia.gov/vtrc/main/online_reports/pdf/20-r27.pdf)
 - citation [VERIFIED_2026-09-13]: structural load rating lost, named as a transport mechanism in the work order section 3B and not previously covered by any entry
+
+### DUR-010  no batch record: the run's deviations from its own procedure are unrecorded
+
+- mechanism: The intended procedure is recorded (configuration, code, hyperparameters) and the ACTUAL RUN is not. Real runs deviate: a restart from an intermediate checkpoint, a shard that failed to load, a batch skipped after a numerical fault, a node swapped mid-run, a data snapshot that moved under the job. Each deviation changes the object produced, none is part of the configuration, and nothing requires any of them to be written down. The record therefore describes a run that did not happen.
+- load condition: training or fine-tuning runs long enough to be interrupted, which is all runs at scale; plus a logging system whose retention is set by operational need rather than by the object's service life
+- onset: immediate | evidence: TRANSPORTED | reconstruction: PARTIAL
+- detection channel: the run's own logs and job history, WHERE THEY ARE STILL RETAINED. Log retention is typically set in weeks or months while the object stays in service for years, so the channel closes on a schedule nobody connected to the object. NONE after the retention window.
+- detection latency: bounded by log retention, then UNBOUNDED: after the window there is no signal that a deviation ever occurred
+- attribution: the engineer who cannot explain a discrepancy between the documented procedure and the object's behaviour, read as not knowing their own system
+- consequence: a rebuild from the documented procedure produces a different object than the one bearing load, and the difference cannot be attributed to any recorded cause, so it is attributed to variance (D-101) and closed
+- existing control: PARTIAL. Experiment trackers record configuration and metrics, and some record restarts; none requires a deviation to be dispositioned, and none is retained on the object's schedule.
+- validity range: runs that can be interrupted or that read data from a mutable location; does not apply to a short deterministic fit over a frozen local dataset
+- transported from pharmaceutical manufacturing (the batch record): a batch record documents what was ACTUALLY done to this batch, not what the master formula specified, and every deviation from the master formula is recorded and given a written disposition before the batch can be released
+- why it carries: the abstract structure is a record of the INTENT standing in for a record of the EXECUTION, where the two are known to differ and the differences change the object. Nothing in that depends on chemistry. The deviation-with-disposition discipline is the part that carries and the part entirely absent here.
+- reconstruction note: the configuration is usually recoverable and the execution history is not, which is exactly the gap that makes a rebuild approximate rather than identifying
+- minimum artifact that would close it: a batch record per run, retained with the object rather than on the logging system's rotation: restarts, checkpoint lineage, data snapshot identifier, failed or skipped steps, hardware substitutions, and a written disposition for each deviation.
+- cross-reference (not re-derived): D-101 (variance: the explanation that absorbs every unrecorded deviation); D-102 (the stack: what was available, as against what this run actually did); DUR-001 (identity: a probe record fixes WHICH object, and says nothing about how it came to be that object)
+- citation [VERIFIED_2026-09-13]: pharmaceutical batch records and custody chain, named as a transport source in the work order section 3B and not previously covered by any entry
+- citation [VERIFIED_2026-09-13]: run-to-run variance anchors at D-101: variance is the bucket an unrecorded deviation gets attributed to
 
 ## 3C PROJECTED and UNRATED PARTS
 
@@ -533,7 +572,7 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 
 ### DUR-008  regress: the capacity to state what was lost is itself lost
 
-- mechanism: A DEGRADATION loses fidelity per hop and stays measurable: you can say what is missing, in what quantity, against what reference. A REGRESS loses the ability to state what was lost. The vocabulary, the questions, the criteria that would identify the absence went across the same hops as the object and were subject to the same per-hop selection filter. After a regress the inventory is complete with respect to every question anyone can still ask, and the loss is not recorded as a loss because there is nothing left to record it against. No amount of per-hop instrumentation reaches this: a hop log records what its authors could name at the time of the hop, so a regress passes through the log intact and undocumented.
+- mechanism: A DEGRADATION loses fidelity per hop and stays measurable: you can say what is missing, in what quantity, against what reference. A REGRESS loses the ability to state what was lost. The vocabulary, the questions, the criteria that would identify the absence went across the same hops as the object and were subject to the same per-hop selection filter. After a regress the inventory is complete with respect to every question anyone can still ask, and the loss is not recorded as a loss because there is nothing left to record it against. No amount of per-hop instrumentation reaches this: a hop log records what its authors could name at the time of the hop, so a regress passes through the log intact and undocumented. WORKED INSTANCE, supplied 2026-09-13 rev 6 section 6C-2: PROVENANCE REGRESS. Provenance is a record about a hop, so every hop is an opportunity to re-encode the provenance format itself. If each generation defines its own provenance convention then provenance requires provenance, and the requirement recurses with no fixed point unless some layer's format is frozen by something outside the generating system.
 - load condition: the instruments that would detect the absence are produced by the same system, team and period that produced the object, and are carried forward by the same hops. This is the normal case: evaluation harnesses, reference sets, review checklists and the register itself are all artifacts of the generating system.
 - onset: drift | evidence: PROJECTED | reconstruction: NO
 - detection channel: NONE, and this is not the ordinary NONE. The other detection gaps in this register could be closed by an instrument someone has not built yet. A regress cannot be closed from inside the system at all, because any instrument built inside it is subject to the same loss and will report clean. The only closure is a reference set frozen from OUTSIDE the generating system before the regress (see DUR-008-N1).
@@ -546,9 +585,9 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - PROPOSED control: an externally frozen SURVIVAL SET: the short list of things that must cross a hop, frozen by a party outside the generating system, stating what must still be answerable rather than how the work is to be done
 - control precondition: a survival set frozen by the generating system is inside the regress with everything else, and the freeze is then decorative (entry DUR-008-N1)
 - control precondition: the set constrains WHAT must survive a hop, not HOW the work is done. A process mandate has the cost that makes process mandates fail; a survival set is cheap because it leaves method alone.
-- minimum artifact that would close it: an externally frozen survival set, stated as WHAT must remain answerable after a hop and held by a party outside the generating system: the object's identity referent (DUR-001), its rating envelope (DUR-002), its execution record (DUR-006), and the list of questions the rating was established against. Freezing the questions is the part nothing currently does, and it is the only part that reaches this mode.
-- cross-reference (not re-derived): DUR-003 (degradation: the measurable sibling; the per-hop selection filter is shared, the detectability is not); D-000 (the detection gap: DUR-008 is D-000 applied to the instruments rather than to the object); D-106 (the defect is not visible from reading the report: the same structure one level down, where the missing field is still nameable); this register's own `coverage` command, whose zero-gap result is bounded by the same limit: it can only find mechanisms someone was still able to name
-- citation [VERIFIED_2026-09-13]: operator, 2026-09-13, in session: the degradation/regress split as a class boundary, and the arrest condition (freeze what must survive a hop, not how the work is done; the frozen set must be frozen from outside the generating system or it is inside the regress with everything else). Recorded from the operator's two sentences in conversation; the section they cite as 6C-7 was NOT supplied to this build and its full text has not been read.
+- minimum artifact that would close it: a frozen interchange layer that no generation is permitted to redefine (6C-7). Contents: object identity (DUR-001), rating envelope (DUR-002), and the hop log (DUR-003). Property: frozen by something outside the generating system, or it is inside the regress. The FORMAT of those fields is itself in the frozen set, because under the compounding case DUR-001 and DUR-002 are no longer a contract between an author and a later reader but a CONTRACT BETWEEN GENERATIONS.
+- cross-reference (not re-derived): DUR-003 (degradation: the measurable sibling; the per-hop selection filter is shared, the detectability is not); D-000 (the detection gap: DUR-008 is D-000 applied to the instruments rather than to the object); D-106 (the defect is not visible from reading the report: the same structure one level down, where the missing field is still nameable); this register's own `coverage` command, whose zero-gap result is bounded by the same limit: it can only find mechanisms someone was still able to name; DUR-015, DUR-016, DUR-017 (the 6C compounding case in which this regress runs at machine rate rather than human rate)
+- citation [VERIFIED_2026-09-13]: operator work order 2026-09-13 rev 6, section 6C-2 (provenance regress; 'distinguish these in the register: DUR-003 is degradation, this is a separate class') and section 6C-7 (the minimal arrest). The section text was NOT available when this entry was first written on the operator's two sentences in conversation; it is now supplied and the entry is re-cited to it.
 - note: Class boundary, stated by the operator 2026-09-13: DUR-003 handles degradation (fidelity lost per hop, still measurable); nothing handled regress until this entry. The two are not degrees of the same thing. Instrumenting hops harder improves DUR-003 and does not touch DUR-008.
 
 ### DUR-008-N1  the survival set is frozen by the system it is meant to outlive
@@ -570,6 +609,57 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - citation [VERIFIED_2026-09-13]: operator, 2026-09-13, in session: the frozen set has to be frozen from outside the generating system, or it is inside the regress with everything else
 - citation [FROM_MEMORY_UNVERIFIED]: metrological traceability to an external standard as a structural requirement
 
+## 6C COMPOUNDING - the hop generator inside the system (all PROJECTED per F_J)
+
+### DUR-015  rate mismatch: the only layer with a shared external referent is the slow one
+
+- mechanism: The layers move at different rates and only one of them has a shared external referent. Hardware changes in years, is capital-bound, and is unsynchronised across firms, but it is anchored by physics, power draw, supply chain, cooling and fab capacity. Model generations change many times per hardware generation with no shared referent. The representation layer - format, language, provenance convention - changes per generation with no shared referent. So the substrate is the slow layer and the only anchored one, while everything carrying meaning moves faster than the thing that anchors it.
+- load condition: a system in which generations are produced faster than the substrate they run on changes, and the representation is redefined per generation
+- onset: drift | evidence: PROJECTED | reconstruction: NO
+- detection channel: NONE as a signal; the mismatch is visible by inspection of the layer rates and is not watched by anything. PROPOSED: state, per deployed object, which layer holds its referent and at what rate that layer changes.
+- detection latency: UNBOUNDED: nothing reports a rate mismatch, and each layer's own metrics look healthy
+- attribution: nobody: every layer is behaving as designed
+- consequence: nothing anchors. This INVERTS the classical case: Roman concrete had fast carriers and a slow durable substrate that held the referent, so the object outlived the people and could be tested. Here the substrate is slow AND changing (legacy hardware retained while several model generations move off it, new hardware arriving with different characteristics per firm) and the meaning-bearing layer is the fast one.
+- existing control: NONE.
+- validity range: systems whose generation rate exceeds their substrate change rate; does not apply where the representation is fixed across generations
+- reconstruction note: a reconstruction needs a referent that outlives the representation; this entry says which layer holds one and that it is not the layer carrying meaning
+- minimum artifact that would close it: per object, name the layer that holds its referent and that layer's change rate; a claim of durability that rests on substrate slowness is void unless the representation is also frozen.
+- cross-reference (not re-derived): D-207 (format obsolescence: the reader is gone; here the reader changes faster than the substrate it reads on); DUR-008 (the regress this rate mismatch feeds)
+- citation [VERIFIED_2026-09-13]: operator work order 2026-09-13 rev 6, section 6C-1
+- note: REGISTER CONSEQUENCE, stated by the order: an entry may not cite 'the hardware is stable' as a custody control. Hardware slowness protects nothing if the representation layered on it is redefined between hardware cycles. Enforced by validate.
+
+### DUR-016  seam multiplication: no owner of the boundary has ever existed, and an automated system must still return a value
+
+- mechanism: Each firm's chain is internally consistent and externally uninterpretable: different hardware, tooling, data conventions, definitions of what counts as validated, provenance formats, several held closed for competitive reasons. That is the disciplinary-seam structure, with two differences that make it worse. Seams multiply at GENERATION rate rather than institutional rate, and there was never a natural-philosophy layer here to have been dissolved, so no owner of the seam has ever existed for this domain. An institution can defer a seam question indefinitely. An automated system must return a value: across an uninterpretable boundary it will return one, selecting a criterion with no record that a selection occurred.
+- load condition: two or more chains that must exchange values, developed independently, with no shared interchange contract and no party whose remit covers the boundary
+- onset: immediate | evidence: PROJECTED | reconstruction: NO
+- detection channel: NONE. The selection leaves no record by construction: the value returned is well-formed and carries no marker that a criterion was chosen in the absence of one. PROPOSED: a return contract at the boundary in which UNINTERPRETABLE is a distinct return state, the same shape as DUR-002's OUT_OF_ENVELOPE.
+- detection latency: UNBOUNDED
+- attribution: the operator of whichever chain acted on the value, who cannot see the other chain's conventions
+- consequence: criteria get selected silently at every boundary crossing, at generation rate, and the record of each crossing says a value was exchanged and nothing about what it meant
+- existing control: NONE. Interchange formats exist for models and data and none carries a validation-criterion declaration, so a crossing cannot report that the criterion was absent.
+- validity range: boundaries between independently developed chains; does not apply inside one chain, where the conventions are shared even if unstated
+- reconstruction note: governs what a crossing meant rather than whether an object can be rebuilt; recorded NO because the criterion selected at a crossing is not recoverable afterwards
+- minimum artifact that would close it: an interchange contract at each boundary carrying the validation criterion and the envelope, with UNINTERPRETABLE as a distinct return state. Absent that, record the boundary as a silent-selection site rather than as an integration.
+- cross-reference (not re-derived): DUR-002 (the return-contract shape this needs: a distinct state rather than a low score); DUR-017 (the load case where this bites while load is on)
+- citation [VERIFIED_2026-09-13]: operator work order 2026-09-13 rev 6, section 6C-3
+
+### DUR-017  coupled preemption under load: two controllers acting on each other's incommensurable output
+
+- mechanism: Adjacent segments of one physical system, each managed by a different firm's stack, each with its own internal representation of what a reading means and no provenance the other can parse. The systems are not required to agree about science. They are required to INTEROPERATE UNDER LOAD. Each side acts on the other's output while unable to establish what that output was measured against or under what envelope it was produced, and each side's action becomes the other's next input.
+- load condition: two or more automated controllers coupled through a physical system, under independent management, with no shared representation and no human in the per-decision path
+- onset: dormant-until-triggered | evidence: PROJECTED | reconstruction: NO
+- detection channel: NONE in the coupling itself. Each side's own monitoring reports healthy because each side is internally consistent. PROPOSED: an interchange contract (DUR-016) plus an envelope check at the coupling (DUR-002), and a declared behaviour when the other side's output is uninterpretable.
+- detection latency: UNBOUNDED before the event; the event is the detection
+- attribution: the operator of whichever segment failed visibly, which is a function of where the physical consequence landed rather than of where the incommensurability was
+- consequence: this is the load case that makes the register non-optional. A wrong research result gets corrected. Two coupled controllers with incommensurable representations fail while the load is on, and the failure is physical.
+- existing control: NONE for the representation question. Interconnection standards govern electrical and protocol behaviour and do not carry what a reading was measured against or the envelope it was produced under.
+- validity range: physically coupled automated systems under separate management; does not apply where one party controls both sides of the coupling or a human approves each cross-boundary action
+- reconstruction note: after a coupled failure neither side's record establishes what the other's values meant, so the event cannot be reconstructed even with both logs in hand
+- minimum artifact that would close it: at every coupling between independently managed automated systems: a declared interchange contract, an envelope check on the incoming value, and a stated behaviour for UNINTERPRETABLE that is not 'proceed with the value'.
+- cross-reference (not re-derived): experiments/trigger_geometry/ (the response-inversion instrument: a trigger validated in one geometry and applied in another, which is this failure at single-system scale); DUR-016 (the seam this runs across); DUR-002 (the envelope neither side can read)
+- citation [VERIFIED_2026-09-13]: operator work order 2026-09-13 rev 6, section 6C-4, including the grid-segment worked case
+
 ## Requirement set (step 6)
 
 Modes with no existing control, and the minimum artifact that would close each:
@@ -582,13 +672,18 @@ Modes with no existing control, and the minimum artifact that would close each:
 - **DUR-002-N1 an empty envelope reads as a broad envelope** -> blank must be a distinct value from wide: the envelope field takes a characterised distribution or the literal EMPTY, and EMPTY is the rating.
 - **DUR-003 migration attrition: the object is not lost at any hop and is gone after N of them** -> a hop log per object recording, per migration event, what was carried, what was DROPPED, and by whose decision; plus a retention horizon stated in hops rather than in years.
 - **DUR-004 stranded under load: artifact present, demand maximal, comprehension absent** -> instrument the three signals that already exist: bus-factor count per deployed component, time-to-first-successful-modification by an engineer who did not build it, and a record of failed replacement attempts. This is the only entry in the register whose detection channel needs measuring rather than inventing.
+- **DUR-005 ambient precondition: the record is complete and the world it ran in is gone** -> run the ambient enumeration with outside-the-stack participants, bound the output by the claimed retention horizon (F_K), and deposit the resulting list with the object. The list is not a prediction: it is the world-state the record depends on, written down while it is still visible.
+- **DUR-006 custodian continuity assumed: the gate opens onto nothing after transfer** -> CUSTODIAN-INDEPENDENCE, not custodian continuity: state how much of retention survives the disappearance of any single holder. A single-holder arrangement is a conjunction of seven terms (header key custodian_conjunction) and cannot claim continuity, because nothing in the arrangement ensures any term. A distributed arrangement is a disjunction and survives if any holder persists.
 - **D-205 latent fault dormant until an unusual load combination** -> state the validation envelope's instance count and sequence structure, and mark any operating geometry absent from it as ABSENT rather than safe. The check exists in this repository already.
 - **DUR-007 load rating lost: the rating existed, its record is gone, the component stays in service** -> treat the loss of an evaluation record as an event: a component whose rating cannot be produced on request is UNRATED, and either re-rated against a held reference or restricted to a conservative posted envelope until it is. The bridge practice is the template: re-rate or post, never carry the belief forward.
 - **D-301 the reconstruction path runs through a single commercial entity** -> an escrow deposit outside the vendor, or an explicit recorded acceptance that reconstruction is NO. The second is cheap and is currently made by silence rather than by decision.
 - **D-302 what was excluded from the training data is not recorded** -> retain the exclusion filters as executable artifacts with the corpus pointer, so the same corpus plus the same filters is a reproducible input.
 - **D-304 the inspection reference stops being held-out** -> custody rules for the reference set: sealed, dated, never in a training or selection path, with a replacement schedule and a record of each use.
-- **DUR-008 regress: the capacity to state what was lost is itself lost** -> an externally frozen survival set, stated as WHAT must remain answerable after a hop and held by a party outside the generating system: the object's identity referent (DUR-001), its rating envelope (DUR-002), its execution record (DUR-006), and the list of questions the rating was established against. Freezing the questions is the part nothing currently does, and it is the only part that reaches this mode.
+- **DUR-008 regress: the capacity to state what was lost is itself lost** -> a frozen interchange layer that no generation is permitted to redefine (6C-7). Contents: object identity (DUR-001), rating envelope (DUR-002), and the hop log (DUR-003). Property: frozen by something outside the generating system, or it is inside the regress. The FORMAT of those fields is itself in the frozen set, because under the compounding case DUR-001 and DUR-002 are no longer a contract between an author and a later reader but a CONTRACT BETWEEN GENERATIONS.
 - **DUR-008-N1 the survival set is frozen by the system it is meant to outlive** -> name the external holder and the change rule before the set is called frozen: who holds it, who may change it, and whether a pre-current version is retrievable by someone outside the generating system. A set with no external holder is recorded as UNFROZEN rather than as a control.
+- **DUR-015 rate mismatch: the only layer with a shared external referent is the slow one** -> per object, name the layer that holds its referent and that layer's change rate; a claim of durability that rests on substrate slowness is void unless the representation is also frozen.
+- **DUR-016 seam multiplication: no owner of the boundary has ever existed, and an automated system must still return a value** -> an interchange contract at each boundary carrying the validation criterion and the envelope, with UNINTERPRETABLE as a distinct return state. Absent that, record the boundary as a silent-selection site rather than as an integration.
+- **DUR-017 coupled preemption under load: two controllers acting on each other's incommensurable output** -> at every coupling between independently managed automated systems: a declared interchange contract, an envelope check on the incoming value, and a stated behaviour for UNINTERPRETABLE that is not 'proceed with the value'.
 
 Modes with a partial control, where the mechanism exists and nothing attaches it:
 
@@ -598,13 +693,13 @@ Modes with a partial control, where the mechanism exists and nothing attaches it
 - **D-105 readiness is not outcome: a complete-looking record still does not execute** -> schedule a rebuild attempt as an inspection, on a cadence, from the deposit only. A checklist is not evidence of reconstructability; a successful cold rebuild is.
 - **DUR-001-N1 probe leakage: the identity control is trained against and stops measuring identity** -> rotation, or per-deployment probe generation from a seed held by the third party, stated as a precondition of the DUR-001 control rather than as a caveat on it.
 - **DUR-002 the object is used outside the conditions its rating was established on, with no signal** -> a machine-readable envelope attached to the serving interface, and a return contract in which OUT_OF_ENVELOPE is a distinct return state rather than a low confidence score.
-- **DUR-005 correlated substrate and dependency shock: one event, a large synchronous slice** -> state N_eff rather than N wherever redundancy is credited as a control, computed with the shared-node classes of the existing effective-redundancy instrument, and put a budget line against each announced end-of-life date.
+- **DUR-009 correlated substrate and dependency shock: one event, a large synchronous slice** -> state N_eff rather than N wherever redundancy is credited as a control, computed with the shared-node classes of the existing effective-redundancy instrument, and put a budget line against each announced end-of-life date.
 - **D-203 as-built drift: the deployed object diverges from the documented one** -> a change record per served object plus a canary set with recorded answers and a probe cadence. The canary mechanism already exists in this repository; adopt it rather than re-deriving it.
 - **D-204 no configuration control and no part traceability for the stack** -> a bill of materials for the assembly, content-addressed per part, recorded at deploy time, with the non-code parts (index, prompt, preprocessing, tokeniser) in scope.
 - **D-206 custody breaks at every handoff and no handoff is documented** -> a signed handover record at every boundary: named holder before, named holder after, date, and what was transferred (weights, environment, data pointer, rating envelope, reference sample).
 - **D-207 format obsolescence: the object survives and the reader does not** -> store the deposit in a reader-independent representation where one exists, and schedule a load test plus migration decision on an interval shorter than the framework's support horizon.
 - **D-208 no inspection interval and no action threshold** -> an inspection interval, a held reference set that the component was never fitted on, a re-measurement procedure, and an action threshold stated before the first inspection.
-- **DUR-006 no batch record: the run's deviations from its own procedure are unrecorded** -> a batch record per run, retained with the object rather than on the logging system's rotation: restarts, checkpoint lineage, data snapshot identifier, failed or skipped steps, hardware substitutions, and a written disposition for each deviation.
+- **DUR-010 no batch record: the run's deviations from its own procedure are unrecorded** -> a batch record per run, retained with the object rather than on the logging system's rotation: restarts, checkpoint lineage, data snapshot identifier, failed or skipped steps, hardware substitutions, and a written disposition for each deviation.
 - **D-303 the deployed object is the pipeline, and only the model is versioned** -> version the assembly, not the model: one identifier covering weights, preprocessing, retrieval state, prompt and post-processing, recorded per decision batch.
 
 ## Null set (step 7): modes checked and found already controlled
@@ -649,5 +744,5 @@ SHOCK RE-CUT (6B-3)
 
 ## Headline
 
-Of the 27 entries that make a reconstruction claim, PARTIAL is modal (16) and NOT ONE scores YES. PARTIAL means enough of the record exists to rebuild something approximate and not enough to identify the object, which looks like adequacy from inside and is the class most likely to be under-reported. 4 further entries govern use or a control rather than rebuild and are scored NOT_APPLICABLE with a stated reason.
+Of the 32 entries that make a reconstruction claim, PARTIAL 16 and NO 16, and NOT ONE scores YES. Section 8 predicted PARTIAL would dominate; it no longer does. The shift came entirely from entries the operator added in rev 6 (ambient precondition, custodian continuity and the three compounding entries), every one of which scores NO, so the expected yield was wrong in the direction of optimism. PARTIAL means enough of the record exists to rebuild something approximate and not enough to identify the object, which looks like adequacy from inside and is the class most likely to be under-reported. 4 further entries govern use or a control rather than rebuild and are scored NOT_APPLICABLE with a stated reason.
 

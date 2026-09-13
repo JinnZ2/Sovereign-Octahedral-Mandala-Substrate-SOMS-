@@ -20,6 +20,7 @@ infrastructure (WORK ORDER FAILURE-MODE ENUMERATION FOR ML-AS-INFRASTRUCTURE, 20
   python failure_register.py selftest
 """
 import json
+import re
 import os
 import random
 import sys
@@ -36,6 +37,12 @@ MANDATORY = ("mechanism", "detection_channel", "consequence")
 # Copies on one platform, in one format, under one dependency stack are ONE copy against substrate and
 # dependency shock.
 REDUNDANCY_WORDS = ("redundan", "replica", "multiple copies", "several copies", "backup", "mirror")
+# F_J: a 6C entry describes a partly projected regime. It is PROJECTED unless it cites a current instance.
+# F_L: the custodian conjunction must carry NO probability number anywhere: the conclusion rests on the inability
+# to ensure each term, and the terms are correlated, so any naive product is wrong.
+NUMBER_IN_CONJUNCTION = re.compile(r"\b0?\.\d+\b|\b\d+(\.\d+)?\s*(%|percent)\b")
+# 6C-1 register consequence: substrate slowness is not a custody control.
+HARDWARE_STABILITY_CLAIM = re.compile(r"hardware is stable|substrate is stable|hardware slowness (is|as) a? ?control", re.I)
 ONSETS = ("immediate", "drift", "dormant-until-triggered")
 EVIDENCE = ("MEASURED", "TRANSPORTED", "PROJECTED")
 RECONSTRUCTION = ("YES", "PARTIAL", "NO", "NOT_APPLICABLE")
@@ -97,6 +104,12 @@ def validate(path=STORE):
         if e.get("reconstruction_trajectory") and not e.get("reconstruction_note"):
             errs.append((i, "a reconstruction trajectory without a note: a score that moves must say so in prose "
                            "as well as in the field (section 3B-W, DUR-003)"))
+        if e.get("section") == "6C" and e.get("evidence_class") != "PROJECTED" and not e.get("current_instance"):
+            errs.append((i, "6C entry not PROJECTED and citing no current instance (F_J): a strong structural "
+                           "argument may not be scored as measured"))
+        if HARDWARE_STABILITY_CLAIM.search(str(e.get("existing_control") or "")):
+            errs.append((i, "cites substrate or hardware stability as a custody control (6C-1 register consequence): "
+                           "hardware slowness protects nothing if the representation is redefined between cycles"))
         ctrl = str(e.get("existing_control") or "").lower()
         if any(w in ctrl for w in REDUNDANCY_WORDS) and not e.get("redundancy_not_shared"):
             errs.append((i, "existing_control claims redundancy without stating what the copies do NOT share "
@@ -125,6 +138,27 @@ def validate(path=STORE):
                 errs.append((i, "transport rests on analogy: rejected at review (step 3 transport rule)"))
         if e["status"] == "RATED" and control_is(e, "NONE") and not e.get("requirement"):
             errs.append((i, "existing_control NONE with no requirement stated (step 6)"))
+    # F_K: every ambient condition carries a horizon judgement, and out-of-horizon ones are excluded not admitted
+    amb = hdr.get("ambient_enumeration") or {}
+    if amb:
+        if not amb.get("retention_horizon"):
+            errs.append(("<header>", "ambient set with no claimed retention horizon to bound it (F_K)"))
+        for c in amb.get("candidate_set", []):
+            if "within_horizon" not in c:
+                errs.append(("<header>", "ambient condition %r carries no within_horizon judgement (F_K)" % c.get("condition")))
+            elif c["within_horizon"] is not True:
+                errs.append(("<header>", "ambient condition %r is admitted but not within the horizon: F_K says note "
+                                         "once and exclude" % c.get("condition")))
+        if not amb.get("excluded_outside_horizon"):
+            errs.append(("<header>", "no excluded-outside-horizon list: F_K's bound is not demonstrated (the "
+                                     "unbounded candidates must be shown as excluded, not merely absent)"))
+    # F_L: no number anywhere in the conjunction
+    conj = json.dumps(hdr.get("custodian_conjunction") or {})
+    m = NUMBER_IN_CONJUNCTION.search(conj)
+    if m:
+        errs.append(("<header>", "the custodian conjunction carries a number (%r): F_L forbids it - the terms are "
+                                 "correlated, so any naive product is wrong and the conclusion does not rest on "
+                                 "arithmetic" % m.group(0)))
     n = len(entries)
     proj = sum(1 for e in entries if e["evidence_class"] == "PROJECTED")
     frac = round(proj / n, 3) if n else 0
@@ -181,13 +215,25 @@ def report(path=STORE):
     cites = [(c.get("status"), c.get("ref")) for e in entries for c in e.get("citations", [])]
     return {"entries": len(entries), "rated": len(R), "unrated_parts": len(entries) - len(R),
             "reconstruction_distribution": dist,
-            "reconstruction_headline": "Of the %d entries that make a reconstruction claim, PARTIAL is modal (%d) and "
-                                       "NOT ONE scores YES. PARTIAL means enough of the record exists to rebuild "
-                                       "something approximate and not enough to identify the object, which looks like "
-                                       "adequacy from inside and is the class most likely to be under-reported. "
-                                       "%d further entries govern use or a control rather than rebuild and are scored "
-                                       "NOT_APPLICABLE with a stated reason."
-                                       % (len(claiming), dist.get("PARTIAL", 0), dist.get("NOT_APPLICABLE", 0)),
+            "reconstruction_headline": (
+                "Of the %d entries that make a reconstruction claim, PARTIAL %d and NO %d, and NOT ONE scores YES. %s "
+                "PARTIAL means enough of the record exists to rebuild something approximate and not enough to identify "
+                "the object, which looks like adequacy from inside and is the class most likely to be under-reported. "
+                "%d further entries govern use or a control rather than rebuild and are scored NOT_APPLICABLE with a "
+                "stated reason."
+                % (len(claiming), dist.get("PARTIAL", 0), dist.get("NO", 0),
+                   ("Section 8 predicted PARTIAL would dominate; it no longer does. The shift came entirely from "
+                    "entries the operator added in rev 6 (ambient precondition, custodian continuity and the three "
+                    "compounding entries), every one of which scores NO, so the expected yield was wrong in the "
+                    "direction of optimism."
+                    if dist.get("NO", 0) >= dist.get("PARTIAL", 0) else
+                    "This matches section 8's expected yield."),
+                   dist.get("NOT_APPLICABLE", 0))),
+            "expected_yield_check": {"predicted": "PARTIAL dominates (section 8)",
+                                     "observed": {"PARTIAL": dist.get("PARTIAL", 0), "NO": dist.get("NO", 0),
+                                                  "YES": dist.get("YES", 0)},
+                                     "status": "PREDICTION NO LONGER HOLDS: tied or NO-dominant"
+                                     if dist.get("NO", 0) >= dist.get("PARTIAL", 0) else "holds"},
             "coupled_pairs": sorted({tuple(sorted((e["id"], o))) for e in entries for o in e.get("coupled_with", [])}),
             "proposed_controls": [{"id": e["id"], "proposed": e["proposed_control"],
                                    "preconditions": [p.get("entry") or p.get("note") for p in e.get("control_preconditions", [])]}
@@ -292,13 +338,42 @@ def falsifiers(path=STORE):
             "substrate_correction": "D-207 no longer reads as decay. The bits do not rot; the READER is gone. Intact "
                                     "and unreadable is a distinct state from decayed and it is worse, because it "
                                     "reads as retained."},
+        "F_J_recursive_case_speculation": {
+            "status": "ENFORCED",
+            "rule": "every 6C entry is evidence_class PROJECTED unless it cites a current instance; validate refuses "
+                    "otherwise",
+            "entries_6C": [e["id"] for e in entries if e.get("section") == "6C"],
+            "all_projected": all(e["evidence_class"] == "PROJECTED" for e in entries if e.get("section") == "6C"),
+            "reads": "the order says the rate mismatch (6C-1) and the closed-boundary custody choices (6C-6) are "
+                     "observable now and the regress (6C-2) is not yet. This build cites no measured instance for any "
+                     "of them, so all three 6C entries stay PROJECTED. A strong structural argument is not scored as "
+                     "measured, which is the whole content of this falsifier."},
+        "F_K_ambient_set_unbounded": {
+            "status": "BOUNDED",
+            "retention_horizon": (hdr.get("ambient_enumeration") or {}).get("retention_horizon"),
+            "admitted": [c["condition"] for c in (hdr.get("ambient_enumeration") or {}).get("candidate_set", [])],
+            "excluded_outside_horizon": (hdr.get("ambient_enumeration") or {}).get("excluded_outside_horizon"),
+            "reads": "the ambient question generates candidates without limit, so a condition enters only if its "
+                     "expected lifetime falls within the claimed horizon. The out-of-horizon candidates are recorded "
+                     "as excluded rather than left unmentioned, so the bound is visible and DUR-005 stays "
+                     "falsifiable. validate refuses an admitted condition that is not within the horizon, and "
+                     "refuses an ambient set with no horizon or no exclusion list."},
+        "F_L_conjunction_arithmetic": {
+            "status": "NO NUMBER PUT ON IT",
+            "correlation": (hdr.get("custodian_conjunction") or {}).get("F_L"),
+            "conclusion_rests_on": (hdr.get("custodian_conjunction") or {}).get("reasoning"),
+            "enforced": "validate scans the conjunction for any probability or percentage and fails if one appears",
+            "reads": "the seven terms are correlated - insolvency drives carrier loss drives strategy change - so the "
+                     "joint failure probability is HIGHER than a naive product and any naive number is wrong in the "
+                     "reassuring direction. The conclusion, that a single-custodian arrangement cannot claim "
+                     "continuity, rests on the inability to ensure each term and survives without arithmetic."},
         "F_I_independence": {
             "status": "PASS" if (hdr.get("volume_accounting") and hdr.get("independence_correction")
-                                and any(e["id"] == "DUR-005" for e in entries)) else
+                                and any(e["id"] == "DUR-009" for e in entries)) else
                       "FAIL: the volume argument appears without its correlation correction",
             "volume_present": bool(hdr.get("volume_accounting")),
             "correlation_present": bool(hdr.get("independence_correction")),
-            "correlation_entry": "DUR-005 (correlated substrate and dependency shock)",
+            "correlation_entry": "DUR-009 (correlated substrate and dependency shock; renumbered from DUR-005 in rev 6)",
             "reads": "the expected-count form (objects x hops x per-hop probability) is carried in the header ONLY "
                      "beside the correction that objects share hops, so the two modes are never reported as one. "
                      "VOLUME gives a steady individually-invisible rate (DUR-003); CORRELATION gives synchronous "
@@ -351,7 +426,7 @@ COVERAGE = [
     ("3B pressure vessel", "stamped validity envelope and certified test conditions", ["DUR-002", "DUR-002-N1"], [], []),
     ("3B pressure vessel", "material provenance, including what was excluded", ["D-302"], [], []),
     ("3B pharmaceutical", "retained reference sample", ["DUR-001", "DUR-001-N1", "DUR-001-N2"], [], []),
-    ("3B pharmaceutical", "batch records: what was actually done, with deviations dispositioned", ["DUR-006"], [], []),
+    ("3B pharmaceutical", "batch records: what was actually done, with deviations dispositioned", ["DUR-010"], [], []),
     ("3B pharmaceutical", "custody chain", ["D-206"], [], []),
     ("3B nuclear transport", "continuous custody, documented handoff at every stop", ["D-206"], [], []),
     ("3B archive", "format obsolescence, dependency on a reader that no longer exists", ["D-207"], [], []),
@@ -375,9 +450,9 @@ COVERAGE = [
     ("6B hop budget", "account in hops, not years", [], ["hop_budget"], ["emit"]),
     ("6B-1 volume", "the expected-count form, with the system and operator levels kept apart", ["DUR-003"],
      ["volume_accounting"], []),
-    ("6B-2 correlation", "objects share hops; correlation needs its own entry", ["DUR-005"],
+    ("6B-2 correlation", "objects share hops; correlation needs its own entry", ["DUR-009"],
      ["independence_correction"], ["falsifiers:F_I"]),
-    ("6B-2 register rule", "redundancy as a control must state what the copies do not share", ["DUR-005"],
+    ("6B-2 register rule", "redundancy as a control must state what the copies do not share", ["DUR-009"],
      ["independence_correction"], ["REDUNDANCY_WORDS", "validate"]),
     ("6B-3 shock re-cut", "carrier low; substrate and dependency high and scheduled", ["D-207"], ["shock_recut"], []),
     ("6B-3 substrate", "the bits do not rot, the reader is gone; intact and unreadable reads as retained", ["D-207"], [], []),
@@ -385,7 +460,28 @@ COVERAGE = [
      ["DUR-003", "DUR-008"], ["degradation_vs_regress"], []),
     ("operator 2026-09-13", "the arrest: freeze what must survive a hop, from outside the generating system",
      ["DUR-008", "DUR-008-N1"], ["degradation_vs_regress"], []),
-    ("7 F_A..F_I", "every falsifier answered with a status", [], [], ["falsifiers"]),
+    ("3B-W DUR-005", "ambient precondition, and the ambient enumeration procedure as its control", ["DUR-005"],
+     ["ambient_enumeration"], ["validate"]),
+    ("3B-W DUR-006", "custodian continuity assumed", ["DUR-006"], ["transfer_modes"], []),
+    ("6 DUR-006-A", "transfer modes enumerated; the quiet one has no external signal", ["DUR-006", "DUR-004"],
+     ["transfer_modes"], []),
+    ("6 DUR-006-B", "the seven-term conjunction, with no number put on it", ["DUR-006"],
+     ["custodian_conjunction"], ["falsifiers:F_L", "validate"]),
+    ("6 DUR-006-C", "conjunction vs disjunction; custodian-INDEPENDENCE is the right variable", ["DUR-006"],
+     ["custodian_independence"], []),
+    ("6C-1 rate mismatch", "the slow layer holds the only shared referent; substrate stability is not a control",
+     ["DUR-015"], ["compounding_6C"], ["HARDWARE_STABILITY_CLAIM", "validate"]),
+    ("6C-2 provenance regress", "provenance requires provenance; a separate class from degradation", ["DUR-008"],
+     ["degradation_vs_regress"], []),
+    ("6C-3 seam multiplication", "seams at generation rate, no owner, a value returned anyway", ["DUR-016"], [], []),
+    ("6C-4 interoperation", "coupled preemption under load: the case that makes the register non-optional", ["DUR-017"], [], []),
+    ("6C-5 V3 flip", "carrier = someone who can read the representation; protective becomes loss-driving",
+     ["DUR-004"], ["compounding_6C"], []),
+    ("6C-6 custody choices", "every loss-driving variable here is a choice, and the control must overcome an incentive",
+     [], ["compounding_6C"], ["falsifiers:F_E"]),
+    ("6C-7 minimal arrest", "a frozen interchange layer, frozen outside the generating system; the format is in the set",
+     ["DUR-008", "DUR-008-N1"], ["compounding_6C"], []),
+    ("7 F_A..F_L", "every falsifier answered with a status", [], [], ["falsifiers"]),
     ("Step 5", "reconstruction distribution as a headline", [], [], ["report"]),
     ("Step 6", "requirement set for every entry with no control", [], [], ["report"]),
     ("Step 7", "the null set: modes checked and found already controlled", [], ["null_set"], []),
@@ -440,8 +536,9 @@ def emit(path=STORE):
           "EVENT DEFINITION (F_H). " + hdr["event_definition_F_H"], ""]
     sec_names = {"0": "Entry 0 - the detection gap itself", "3A": "3A MEASURED",
                  "3B-W": "3B-W WORKED ENTRIES - the two priority transports and the failure modes of their controls",
-                 "3B": "3B TRANSPORTED", "3C": "3C PROJECTED and UNRATED PARTS"}
-    for sec in ("0", "3A", "3B-W", "3B", "3C"):
+                 "3B": "3B TRANSPORTED", "3C": "3C PROJECTED and UNRATED PARTS",
+                 "6C": "6C COMPOUNDING - the hop generator inside the system (all PROJECTED per F_J)"}
+    for sec in ("0", "3A", "3B-W", "3B", "3C", "6C"):
         L += ["## %s" % sec_names[sec], ""]
         for e in [x for x in entries if x["section"] == sec]:
             L.append("### %s  %s%s" % (e["id"], e["title"], "  [UNRATED PART]" if e["status"] == "UNRATED_PART" else ""))
@@ -558,16 +655,17 @@ def selftest():
     hdr, entries = load()
     # the register is short by design: a long one is a warning sign (section 8). The guard is a TRIPWIRE, and the
     # length is reported with its growth accounting rather than silently accommodated.
-    assert len(entries) <= 35, len(entries)
+    assert len(entries) <= 40, len(entries)
     lw = hdr["length_watch"]
-    assert lw["entries"] == len(entries) and lw["growth"]["rev 5"] == len(entries)
-    assert "no longer short" in lw["status"] and "displace" in lw["status"]
+    assert lw["entries"] == len(entries) and lw["growth"]["rev 6"] == len(entries)
+    assert "no longer short" in lw["status"] and "tripwire" in lw["status"]
+    assert "own durability failure" in lw["status"]          # the register's length is itself a durability risk
     assert "No entry was self-generated" in lw["accounting"]
     # entry 0 is the detection gap and it is first
     assert entries[0]["id"] == "D-000" and entries[0]["detection_channel"] == "NONE"
     # every section is populated and measured entries exist to set the floor
     secs = {e["section"] for e in entries}
-    assert secs == {"0", "3A", "3B-W", "3B", "3C"}
+    assert secs == {"0", "3A", "3B-W", "3B", "3C", "6C"}
     assert sum(1 for e in entries if e["evidence_class"] == "MEASURED") >= 5
     # projection cap holds and is reported
     assert hdr["projected_fraction"] <= hdr["projected_cap"]
@@ -601,8 +699,13 @@ def selftest():
     # step 5 headline: PARTIAL is modal
     rep = report()
     d = rep["reconstruction_distribution"]
-    assert "YES" not in d and d["PARTIAL"] == max(v for k, v in d.items() if k != "NOT_APPLICABLE")
+    assert "YES" not in d
+    # section 8 predicted PARTIAL would dominate. After rev 6 it does not, and the report says so rather than
+    # reporting PARTIAL as modal on a tie.
+    assert rep["expected_yield_check"]["status"].startswith("PREDICTION NO LONGER HOLDS")
+    assert "wrong in the direction of optimism" in rep["reconstruction_headline"]
     assert d.get("NOT_APPLICABLE", 0) == 4
+    assert "6C" in {e.get("section") for e in entries}
     assert len(rep["entries_with_a_real_detection_channel"]) >= 1                  # DUR-004 at minimum
     # every RATED entry with no control states a requirement (step 6)
     for e in rated(entries):
@@ -653,9 +756,9 @@ def selftest():
     assert by_id["DUR-004"]["reconstruction"] == "NO" and "comprehension" in by_id["DUR-004"]["reconstruction_note"]
     assert "bus" in by_id["DUR-004"]["detection_channel"].lower()
     # DUR-005 carries the redundancy rule and points at the existing instrument rather than re-deriving it
-    assert by_id["DUR-005"]["redundancy_not_shared"]
-    assert "effective-redundancy-audit" in json.dumps(by_id["DUR-005"]["cross_reference"])
-    assert "N_eff" in by_id["DUR-005"]["requirement"]
+    assert by_id["DUR-009"]["redundancy_not_shared"]
+    assert "effective-redundancy-audit" in json.dumps(by_id["DUR-009"]["cross_reference"])
+    assert "N_eff" in by_id["DUR-009"]["requirement"]
     # the REGISTER RULE bites: a synthetic entry claiming redundancy with nothing stated is rejected
     import copy, tempfile
     bad = copy.deepcopy(by_id["D-207"])
@@ -677,10 +780,10 @@ def selftest():
     # rev 4: the coverage audit runs clean, and the two gaps it found are closed
     c = coverage()
     assert c["n_gaps"] == 0, c["gaps"]
-    assert "DUR-006" in by_id and "DUR-007" in by_id
+    assert "DUR-010" in by_id and "DUR-007" in by_id
     # DUR-006 is the batch record: execution, not intent, with deviations dispositioned
-    assert "deviation" in by_id["DUR-006"]["requirement"] and "batch record" in by_id["DUR-006"]["requirement"]
-    assert "retention" in by_id["DUR-006"]["detection_channel"] or "retained" in by_id["DUR-006"]["detection_channel"]
+    assert "deviation" in by_id["DUR-010"]["requirement"] and "batch record" in by_id["DUR-010"]["requirement"]
+    assert "retention" in by_id["DUR-010"]["detection_channel"] or "retained" in by_id["DUR-010"]["detection_channel"]
     # DUR-007 is the rating lost, not the object lost, and its requirement is re-rate or restrict
     assert by_id["DUR-007"]["reconstruction"] == "NO" and "rating record" in by_id["DUR-007"]["reconstruction_note"]
     assert "UNRATED" in by_id["DUR-007"]["requirement"] and "restrict" in by_id["DUR-007"]["requirement"]
@@ -707,8 +810,59 @@ def selftest():
     assert "never 'no mechanism" in hdr["coverage_limit"]
     assert coverage()["limit"] == hdr["coverage_limit"]
     assert "coverage" in json.dumps(r8["cross_reference"])
-    # the cited section was not supplied, and the entries say so rather than implying a document
-    assert "NOT supplied" in json.dumps(r8["citations"]) and "6C-7" in json.dumps(r8["citations"])
+    # rev 5 recorded that the cited section was not supplied; rev 6 supplies it and the citation says both
+    assert "6C-2" in json.dumps(r8["citations"]) and "6C-7" in json.dumps(r8["citations"])
+    assert "NOT available when this entry was first written" in json.dumps(r8["citations"])
+    # rev 6: operator ids DUR-005 and DUR-006 arrive for different mechanisms; the register's own moved aside
+    assert by_id["DUR-005"]["title"].startswith("ambient precondition")
+    assert by_id["DUR-006"]["title"].startswith("custodian continuity")
+    assert by_id["DUR-009"]["renumbered_from"] == "DUR-005" and by_id["DUR-010"]["renumbered_from"] == "DUR-006"
+    assert set(hdr["id_map_renumbered"]) == {"DUR-005", "DUR-006"}
+    # DUR-005 can void the other controls, and its detection channel needs outside-the-stack input
+    assert "VOID" in by_id["DUR-005"]["consequence"]
+    assert "OUTSIDE" in json.dumps(by_id["DUR-005"]["control_preconditions"])
+    amb = hdr["ambient_enumeration"]
+    assert amb["retention_horizon"] and len(amb["candidate_set"]) == 7 and amb["excluded_outside_horizon"]
+    assert all(c["within_horizon"] is True for c in amb["candidate_set"])
+    assert sum(1 for c in amb["candidate_set"] if "ECONOMIC" in c["kind"] or "INSTITUTIONAL" in c["kind"]) == 3
+    # DUR-006: six transfer modes, the quiet one named, seven conjunction terms, no number on any of it
+    tm = hdr["transfer_modes"]
+    assert len(tm["modes"]) == 6 and "strategy change" in tm["the_quiet_one"]
+    cj = hdr["custodian_conjunction"]
+    assert len(cj["terms"]) == 7 and "cannot claim continuity" in cj["conclusion"]
+    assert not NUMBER_IN_CONJUNCTION.search(json.dumps(cj))
+    ci = hdr["custodian_independence"]
+    assert ci["single_custodian"]["form"] == "CONJUNCTION" and ci["distributed_retention"]["form"] == "DISJUNCTION"
+    assert "CUSTODIAN-INDEPENDENCE" in ci["variable_correction"] and "NOT verified" in ci["natural_experiment"]
+    assert "framework being wrong" in ci["framework_warning"]
+    assert "CUSTODIAN-INDEPENDENCE" in by_id["DUR-006"]["requirement"]
+    # 6C: three entries, all PROJECTED under F_J, and the hardware-stability claim is refused
+    sixC = [e for e in entries if e.get("section") == "6C"]
+    assert {e["id"] for e in sixC} == {"DUR-015", "DUR-016", "DUR-017"}
+    assert all(e["evidence_class"] == "PROJECTED" for e in sixC)
+    assert f["F_J_recursive_case_speculation"]["all_projected"] is True
+    import copy, tempfile
+    bad = copy.deepcopy(by_id["DUR-015"]); bad["id"] = "SYNTH-2"; bad["evidence_class"] = "MEASURED"
+    bad2 = copy.deepcopy(by_id["DUR-015"]); bad2["id"] = "SYNTH-3"
+    bad2["existing_control"] = "PARTIAL: the hardware is stable, which carries the object"
+    with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as tf2:
+        tf2.write(json.dumps(hdr) + "\n")
+        for x in entries + [bad, bad2]:
+            tf2.write(json.dumps(x) + "\n")
+    ve2 = validate(tf2.name)
+    assert any(i == "SYNTH-2" and "F_J" in m for i, m in ve2), ve2
+    assert any(i == "SYNTH-3" and "custody control" in m for i, m in ve2), ve2
+    os.unlink(tf2.name)
+    # 6C-5, 6C-7 and the generational contract land on the entries they modify
+    assert "READ THE REPRESENTATION" in by_id["DUR-004"]["carrier_definition"]
+    assert "loss-driving" in hdr["compounding_6C"]["V3_flip_6C5"]
+    assert "CONTRACT BETWEEN GENERATIONS" in by_id["DUR-008"]["requirement"]
+    for i in ("DUR-001", "DUR-002"):
+        assert "CONTRACT BETWEEN GENERATIONS" in by_id[i]["generational_contract"]
+    # DUR-008 is re-cited to 6C-2 now that the section text exists
+    assert "6C-2" in json.dumps(by_id["DUR-008"]["citations"]) and "now supplied" in json.dumps(by_id["DUR-008"]["citations"])
+    assert f["F_K_ambient_set_unbounded"]["status"] == "BOUNDED"
+    assert f["F_L_conjunction_arithmetic"]["status"] == "NO NUMBER PUT ON IT"
     # citations carry a status and the unverified ones are visible
     assert rep["citations"]["verified_this_session"] >= 6 and rep["citations"]["from_memory_unverified"] >= 6
     # emissions are generated, not hand-written

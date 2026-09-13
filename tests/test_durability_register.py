@@ -22,7 +22,9 @@ def test_projection_cap_and_no_yes_reconstruction():
     assert hdr["projected_fraction"] <= hdr["projected_cap"]
     rep = fr.report()
     assert "YES" not in rep["reconstruction_distribution"]        # headline: nothing is fully reconstructable
-    assert rep["reconstruction_distribution"]["PARTIAL"] > rep["reconstruction_distribution"]["NO"]
+    # section 8 predicted PARTIAL would dominate. After rev 6 it does not, and the report states that rather
+    # than calling PARTIAL modal on a tie.
+    assert rep["expected_yield_check"]["status"].startswith("PREDICTION NO LONGER HOLDS")
 
 
 def test_falsifiers_report_status_including_not_run():

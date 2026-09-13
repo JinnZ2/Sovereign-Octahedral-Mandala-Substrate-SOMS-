@@ -24,19 +24,116 @@ python experiments/durability_register/failure_register.py emit        # REGISTE
 python experiments/durability_register/failure_register.py selftest
 ```
 
-## What came out (rev 5)
+## What came out (rev 6)
 
 ```
-entries 31     rated 29     unrated parts 2      LENGTH WATCH: no longer short, see below
-sections       0: 1   3A MEASURED: 6   3B-W WORKED: 8   3B TRANSPORTED: 8   3C PROJECTED: 8
-reconstruction PARTIAL 16   NO 11   NOT_APPLICABLE 4   YES 0
-detection gap  24 of 31 entries: channel begins NONE, or latency is unbounded
-projection     25.8% against a stated 35% cap  (33.3 -> 29.2 -> 25.9 -> 24.1 -> 25.8)
-citations      30 verified this session   23 named from memory and NOT verified
-requirements   15 modes with no control at all   14 where the mechanism exists and nothing attaches it
+entries 36     rated 34     unrated parts 2      LENGTH WATCH: tripwire moved 35 -> 40, see below
+sections       0: 1   3A: 6   3B-W WORKED: 10   3B: 8   3C: 8   6C COMPOUNDING: 3
+reconstruction PARTIAL 16   NO 16   NOT_APPLICABLE 4   YES 0     <- section 8's prediction no longer holds
+detection gap  28 of 36 entries: channel begins NONE, or latency is unbounded
+projection     30.6% against a stated 35% cap  (33.3 -> 29.2 -> 25.9 -> 24.1 -> 25.8 -> 30.6)
+citations      35 verified this session   23 named from memory and NOT verified
+requirements   20 modes with no control at all   14 where the mechanism exists and nothing attaches it
 null set       4 modes checked and found already controlled
-coverage audit 45 rows, 0 gaps, 1 entry not mapped to an order section (D-105, derived from D-102)
+coverage audit 57 rows, 0 gaps, 1 entry not mapped to an order section (D-105, derived from D-102)
 ```
+
+**The expected yield inverted.** Section 8 predicted PARTIAL would dominate and NO would be rare. After rev 6 the
+two are tied at 16, and every entry the operator added in this revision scores NO: ambient precondition, custodian
+continuity, and all three compounding entries. The prediction was wrong in the direction of optimism, the report
+says so in its headline rather than calling PARTIAL modal on a tie, and the selftest asserts the correction so it
+cannot quietly revert.
+
+### Rev 6: two id collisions, resolved in the operator's favour
+
+The order assigns DUR-005 to the ambient precondition and DUR-006 to custodian continuity. This register had already
+used both numbers for mechanisms of its own. Operator ids are authoritative, so:
+
+```
+DUR-005 (mine, correlated substrate and dependency shock)  ->  DUR-009
+DUR-006 (mine, no batch record)                            ->  DUR-010
+```
+
+Recorded in the header's `id_map_renumbered` and on each moved entry as `renumbered_from` with the reason, so a
+reader who saw an earlier revision can follow the move. Every cross-reference, coverage row and selftest assertion
+was repointed.
+
+### DUR-005 ambient precondition, and why it sits above the others
+
+It can VOID the controls proposed for DUR-001 through DUR-004 without any of them having failed. The record is
+complete on its own terms; what is missing is the world the procedure ran in, and the procedure gives no indication
+that a world was required. Its detection channel is NONE **from inside**, for the same structural reason an exclusion
+register cannot be generated from inside the frame it excludes from.
+
+The control is the ambient enumeration, and the question is not "what is assumed":
+
+```
+ask   WHAT WOULD HAVE TO STOP EXISTING FOR THIS TO BECOME UNREADABLE?
+with  participants OUTSIDE the stack — hard requirement, not a preference
+bound F_K: a condition enters only if its expected lifetime is within the claimed horizon (10 years here)
+
+admitted   power at current density and cost · fabrication at current tolerance · a network ·
+           a machine that reads the format · storage priced as unlimited · compute priced as
+           unlimited · a continuing custodian
+           the last three are ECONOMICS AND INSTITUTIONS presented as technical background
+excluded   the sun · the species · the grid as an institution   (noted once, per F_K)
+```
+
+`validate` refuses an ambient set with no horizon, an admitted condition outside the horizon, or a missing exclusion
+list, so the bound is demonstrated rather than asserted.
+
+### DUR-006 custodian continuity, and the arithmetic that is not arithmetic
+
+Six transfer modes, all observed, none rare, each moving the artifact without moving the carriers. The important one
+for detection is **strategy change**: the artifact is retained and still served, there is no transaction, no filing,
+no announcement, no external signal of any kind, and only DUR-004's carrier-side measurements see it. That is why
+DUR-006's detection channel is DUR-004's.
+
+The seven-term conjunction is in the header. Every term must hold simultaneously and continuously; nothing in the
+arrangement ensures any of them; therefore continuity cannot be claimed. **No number appears anywhere near it**, and
+`validate` fails the register if one does. F_L is the reason: the terms are correlated, insolvency drives carrier
+loss drives strategy change, so the joint failure probability is higher than a naive product and any naive number is
+wrong in the reassuring direction. The conclusion rests on the inability to ensure each term and survives without
+arithmetic.
+
+The variable correction is recorded as the order states it: **custodian continuity is the wrong variable, custodian-
+independence is the right one.** A single holder is a conjunction and survives only if all terms hold; distributed
+retention is a disjunction and survives if any holder persists. A framework that rates custodian quality will rate a
+fully distributed arrangement lowest, and that is the framework being wrong rather than the arrangement. The natural
+experiment is carried as the operator's instance, unnamed and unverified here, not as a citation.
+
+### 6C compounding: three entries, all PROJECTED, and one rule that bites
+
+```
+DUR-015  rate mismatch          the slow layer holds the only shared external referent, and everything
+                                carrying meaning moves faster than it. Nothing anchors. INVERTS the
+                                classical case, where a slow durable substrate held the referent.
+DUR-016  seam multiplication    seams at generation rate, no owner of the boundary has ever existed, and
+                                an automated system must return a value: it selects a criterion with no
+                                record that a selection occurred.
+DUR-017  coupled preemption     two controllers acting on each other's incommensurable output, under load.
+                                A wrong research result gets corrected; this fails while the load is on.
+```
+
+All three are PROJECTED under F_J, which `validate` enforces: a 6C entry that is not PROJECTED and cites no current
+instance is refused. The order says the rate mismatch and the custody choices are observable now and the regress is
+not yet; this build cites no measured instance for any of them, so none is scored as measured however strong the
+argument reads.
+
+6C-1 also produced a rule with teeth: **an entry may not cite hardware or substrate stability as a custody control.**
+`validate` rejects it. Hardware slowness protects nothing if the representation layered on it is redefined between
+hardware cycles.
+
+6C-2 closed the gap I flagged in rev 5. DUR-008 was written from two sentences in conversation because section 6C had
+not been supplied; it is now re-cited to 6C-2 and 6C-7, and its citation records both that history and the fact the
+section arrived later. Its requirement is now the minimal arrest in full: a frozen interchange layer no generation may
+redefine, containing identity, envelope and hop log, frozen outside the generating system, with the FORMAT of those
+fields inside the frozen set, because under the compounding case DUR-001 and DUR-002 are a contract between
+generations rather than between an author and a later reader.
+
+6C-5's correction landed on DUR-004 as a `carrier_definition` field: a carrier is not someone in the field, it is
+someone who can read the representation. Carrier population moves from protective to loss-driving, and the header
+records the flip so the earlier score does not persist in derived work.
 
 ### Rev 5: the degradation / regress class boundary
 
@@ -179,11 +276,11 @@ percent of MMLU samples flagged in the LLaMA-2 report; over 90 percent of QuAC, 
 GPT-3 study; 13-gram and 50-character overlap thresholds), plus the finding that rephrased samples evade n-gram
 decontamination. The survey is a SECONDARY source for each underlying report and the citation says so.
 
-**Nothing scored YES on reconstruction.** Not one of the 27 entries that make a reconstruction claim. The expected-yield note in the work order said PARTIAL
+**Nothing scored YES on reconstruction.** Not one of the 32 entries that make a reconstruction claim. The expected-yield note in the work order said PARTIAL
 would dominate, and it does, but the absence of a single YES is the sharper result: for this deployment class
 there is no failure mode in the register whose retained record is sufficient to identify the object.
 
-**Twenty-four of thirty-one entries have no detection channel or an unbounded latency.** That is the work order's
+**Twenty-eight of thirty-six entries have no detection channel or an unbounded latency.** That is the work order's
 Entry 0 reproducing itself through the body of the register. These are the modes that cannot generate the
 evidence that would make fixing them mandatory, which is the mechanism by which the enumeration does not get
 written.
@@ -218,12 +315,13 @@ F_A  transport valid       PASS. 8 transported entries, all stating an abstract 
                            mandatory at home, neither exists here.
 F_B  prior art             CHECKED, not redundant, scoped to the residual (above).
 F_C  unbounded scope       AUDITED, and the sample is reported against the whole register because the mandated 20%
-                           sample (6 of 31, seed 13) happened to contain NEITHER rejectable entry and reads 0.0.
-                           Whole-register rate: 2 of 31 (6.5%), both already filed as UNRATED PARTS rather than
+                           sample (7 of 36, seed 13) happened to contain NEITHER rejectable entry and reads 0.0.
+                           Whole-register rate: 2 of 36 (5.6%), both already filed as UNRATED PARTS rather than
                            discarded. A 0% sampled rate reported alone would have been the register's own
                            detection gap reproduced in its audit. Author-run, which is the weak case F_G fixes.
-F_D  projection inflation  25.8% against a 35% cap (33.3 -> 29.2 -> 25.9 -> 24.1 -> 25.8; rev 5 rose because the
-                           regress entry has no anchor and is honestly classed PROJECTED) because every
+F_D  projection inflation  30.6% against a 35% cap (33.3 -> 29.2 -> 25.9 -> 24.1 -> 25.8 -> 30.6). Rev 6 rose
+                           because F_J forces all three compounding entries to PROJECTED. That is the falsifier
+                           working: the fraction is the price of not scoring a structural argument as measured. because every
                            entry the operator has added is anchored: rev 3 adds two TRANSPORTED, one MEASURED and
                            one TRANSPORTED. Stated in the header.
 F_E  not the mechanism     STATED, and the honest answer is mostly nothing. Two real forcing functions exist and
@@ -244,6 +342,12 @@ F_G  reader precondition   NOT RUN. The test needs a reader outside the domain; 
 F_I  independence          PASS. The volume form and the correlation correction are in the header together, and
                            the correlation mode has its own entry (DUR-005), so neither can be cited alone. The
                            register rule is enforced by validate, not by prose.
+F_J  recursive speculation ENFORCED. Every 6C entry is PROJECTED unless it cites a current instance; validate
+                           refuses otherwise, and the selftest proves it with a synthetic MEASURED 6C entry.
+F_K  ambient set bounded   BOUNDED. Horizon declared, seven conditions admitted with a horizon judgement each,
+                           three out-of-horizon candidates recorded as excluded. validate refuses an unbounded set.
+F_L  conjunction arithmetic NO NUMBER PUT ON IT. validate scans the conjunction for any probability or percentage
+                           and fails if one appears. The conclusion rests on the inability to ensure each term.
 F_H  event definition      DEFINED BEFORE ANY COUNT. An event is a bounded change in the reconstruction state of
                            one identified object: (object, field, earliest date, latest date). A two-year silent
                            drift is one event per changed field with wide bounds. A single wrong output is not an
