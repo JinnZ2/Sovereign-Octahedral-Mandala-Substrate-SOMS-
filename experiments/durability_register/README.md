@@ -23,18 +23,57 @@ python experiments/durability_register/failure_register.py emit        # REGISTE
 python experiments/durability_register/failure_register.py selftest
 ```
 
-## What came out (rev 2, with section 3B-W integrated)
+## What came out (rev 3)
 
 ```
-entries 24     rated 22     unrated parts 2      (short by design; a long register is a warning sign)
-sections       0: 1   3A MEASURED: 6   3B-W WORKED: 5   3B TRANSPORTED: 6   3C PROJECTED: 6
-reconstruction PARTIAL 14   NO 7   NOT_APPLICABLE 3   YES 0
-detection gap  18 of 24 entries have a detection channel beginning NONE, or an unbounded latency
-projection     29.2% against a stated 35% cap
-citations      19 verified this session   21 named from memory and NOT verified
-requirements   10 modes with no control at all   11 where the mechanism exists and nothing attaches it
+entries 27     rated 25     unrated parts 2      (short by design; a long register is a warning sign)
+sections       0: 1   3A MEASURED: 6   3B-W WORKED: 8   3B TRANSPORTED: 6   3C PROJECTED: 6
+reconstruction PARTIAL 15   NO 9   NOT_APPLICABLE 3   YES 0
+detection gap  20 of 27 entries: channel begins NONE, or latency is unbounded
+projection     25.9% against a stated 35% cap  (33.3% rev 1 -> 29.2% rev 2 -> 25.9% rev 3)
+citations      24 verified this session   22 named from memory and NOT verified
+requirements   12 modes with no control at all   11 where the mechanism exists and nothing attaches it
 null set       4 modes checked and found already controlled
 ```
+
+### Rev 3: what the new sections forced
+
+**DUR-003 migration attrition** and **DUR-004 stranded under load** entered as the operator supplied them. Two
+things in them changed the schema rather than just adding rows.
+
+DUR-003's reconstruction is a trajectory, not a value: it degrades from PARTIAL toward NO with no state change
+recorded anywhere on the path. Scoring that as a single value would reproduce the defect the entry describes, so
+`reconstruction_trajectory` is now a field, `validate` requires a prose note beside it, and the score stays at its
+current value rather than its destination.
+
+DUR-004 is the first entry in the register whose detection channel is real. Bus-factor count,
+time-to-first-successful-modification by an engineer who did not build the thing, failed replacement attempts: all
+three are measurable today and none is measured. It is also the inverse of the classical case, and that inversion
+is now the F_F answer. Pyramids: object retained, load off, comprehension gap harmless. Stranded: object retained,
+load **on**, comprehension gap *is* the liability. A surviving artifact is not a recoverable technology.
+
+**DUR-005 correlated substrate and dependency shock** is new and was required by section 6B-2, which says
+correlation needs its own entry. It is transported from common-cause failure analysis, where redundant channels are
+credited only after shared causes are removed from the count. It points at `effective-redundancy-audit` in
+JinnZ2/Simulators, which already computes N_eff from six shared-node classes, rather than re-deriving it.
+
+**The register rule from 6B-2 is enforced in code.** Any entry claiming redundancy as a control must state what
+the copies do NOT share, and `validate` rejects one that does not. The selftest proves the rule bites by building a
+synthetic entry that claims redundant buckets and checking it is refused.
+
+**The shock re-cut changed an existing entry's text, not just the header.** D-207 no longer reads as decay: the
+bits do not rot, the reader is gone, and intact-and-unreadable is a distinct state from decayed that is *worse*
+because every inventory, checksum and storage metric reports the deposit as healthy. Carrier shock stays low here;
+substrate and dependency shock are high and are scheduled, which ought to make them the easy case and does not,
+because a planned shock with no budget line behaves exactly like an unplanned one.
+
+**The accounting is carried in hops, with no numbers invented.** The header holds the hop budget (about 20
+generational hops over 500 years against 20 to 50 substrate hops over 10 years, the operator's order-of-magnitude
+estimate and labelled as theirs), the expected-count form, and the correction that objects share hops. No value is
+supplied for objects, hops or per-hop probability, because putting numbers on that form is exactly the projection
+inflation F_D forbids. The two consequences are kept apart: at system level loss is a rate, and at operator level
+it still looks rare, so every operator's local experience honestly reports that it does not happen. That second
+one is entry D-000 again, one level up.
 
 ### Section 3B-W: the operator's worked entries supersede mine
 
@@ -72,11 +111,11 @@ percent of MMLU samples flagged in the LLaMA-2 report; over 90 percent of QuAC, 
 GPT-3 study; 13-gram and 50-character overlap thresholds), plus the finding that rephrased samples evade n-gram
 decontamination. The survey is a SECONDARY source for each underlying report and the citation says so.
 
-**Nothing scored YES on reconstruction.** Not one of the 21 entries that make a reconstruction claim. The expected-yield note in the work order said PARTIAL
+**Nothing scored YES on reconstruction.** Not one of the 24 entries that make a reconstruction claim. The expected-yield note in the work order said PARTIAL
 would dominate, and it does, but the absence of a single YES is the sharper result: for this deployment class
 there is no failure mode in the register whose retained record is sufficient to identify the object.
 
-**Sixteen of twenty-one entries have no detection channel or an unbounded latency.** That is the work order's
+**Twenty of twenty-seven entries have no detection channel or an unbounded latency.** That is the work order's
 Entry 0 reproducing itself through the body of the register. These are the modes that cannot generate the
 evidence that would make fixing them mandatory, which is the mechanism by which the enumeration does not get
 written.
@@ -111,14 +150,13 @@ F_A  transport valid       PASS. 8 transported entries, all stating an abstract 
                            mandatory at home, neither exists here.
 F_B  prior art             CHECKED, not redundant, scoped to the residual (above).
 F_C  unbounded scope       AUDITED, and the sample is reported against the whole register because the mandated 20%
-                           sample (5 of 24, seed 13) happened to contain NEITHER rejectable entry and reads 0.0.
-                           Whole-register rate: 2 of 24 (8.3%), both already filed as UNRATED PARTS rather than
+                           sample (5 of 27, seed 13) happened to contain NEITHER rejectable entry and reads 0.0.
+                           Whole-register rate: 2 of 27 (7.4%), both already filed as UNRATED PARTS rather than
                            discarded. A 0% sampled rate reported alone would have been the register's own
                            detection gap reproduced in its audit. Author-run, which is the weak case F_G fixes.
-F_D  projection inflation  29.2% against a 35% cap, down from 33.3% in rev 1: the five new 3B-W entries are two
-                           TRANSPORTED (both with justifications that state an abstract structure), two MEASURED
-                           (contamination figures; variance anchors inherited from D-101) and one TRANSPORTED.
-                           Stated in the header.
+F_D  projection inflation  25.9% against a 35% cap, falling across revisions (33.3 -> 29.2 -> 25.9) because every
+                           entry the operator has added is anchored: rev 3 adds two TRANSPORTED, one MEASURED and
+                           one TRANSPORTED. Stated in the header.
 F_E  not the mechanism     STATED, and the honest answer is mostly nothing. Two real forcing functions exist and
                            both are narrow: EU AI Act Article 12 logging with Article 26 deployer retention of at
                            least six months plus Annex IV documentation, in the Act's high-risk categories; and
@@ -134,6 +172,9 @@ F_F  artifact present      CHECKED per entry. D-207 is the one mode where the ob
 F_G  reader precondition   NOT RUN. The test needs a reader outside the domain; running it on the author would
                            reproduce the blindness it tests for. Packaged as outsider_test.md with three field
                            definitions already known to be weak.
+F_I  independence          PASS. The volume form and the correlation correction are in the header together, and
+                           the correlation mode has its own entry (DUR-005), so neither can be cited alone. The
+                           register rule is enforced by validate, not by prose.
 F_H  event definition      DEFINED BEFORE ANY COUNT. An event is a bounded change in the reconstruction state of
                            one identified object: (object, field, earliest date, latest date). A two-year silent
                            drift is one event per changed field with wide bounds. A single wrong output is not an
@@ -178,7 +219,8 @@ Three entries point at instruments already in this repository instead of restati
 
 ```
 register.jsonl        the store: header (deployment class, non-goals, event definition, composition rule,
-                      supersession map, null set, counts) + 24 entries
+                      supersession map, hop budget, volume and correlation accounting, shock re-cut,
+                      null set, counts) + 27 entries
 failure_register.py   validate / audit / report / falsifiers / emit / selftest
 REGISTER.md           build product, human emission
 outsider_test.md      build product, the F_G test sheet, unrun

@@ -30,6 +30,10 @@ FIELDS = ("id", "mechanism", "load_condition", "onset", "detection_channel", "de
           "consequence", "evidence_class", "existing_control", "reconstruction", "validity_range")
 # F_C binding constraints: no mechanism, no detection channel, no consequence-under-load, no entry
 MANDATORY = ("mechanism", "detection_channel", "consequence")
+# section 6B-2 REGISTER RULE: an entry claiming redundancy as a control must say what the copies do NOT share.
+# Copies on one platform, in one format, under one dependency stack are ONE copy against substrate and
+# dependency shock.
+REDUNDANCY_WORDS = ("redundan", "replica", "multiple copies", "several copies", "backup", "mirror")
 ONSETS = ("immediate", "drift", "dormant-until-triggered")
 EVIDENCE = ("MEASURED", "TRANSPORTED", "PROJECTED")
 RECONSTRUCTION = ("YES", "PARTIAL", "NO", "NOT_APPLICABLE")
@@ -88,6 +92,13 @@ def validate(path=STORE):
             errs.append((i, "reconstruction not in %s" % (RECONSTRUCTION,)))
         if e.get("reconstruction") == "NOT_APPLICABLE" and not e.get("reconstruction_note"):
             errs.append((i, "reconstruction NOT_APPLICABLE without a note saying what the entry governs instead"))
+        if e.get("reconstruction_trajectory") and not e.get("reconstruction_note"):
+            errs.append((i, "a reconstruction trajectory without a note: a score that moves must say so in prose "
+                           "as well as in the field (section 3B-W, DUR-003)"))
+        ctrl = str(e.get("existing_control") or "").lower()
+        if any(w in ctrl for w in REDUNDANCY_WORDS) and not e.get("redundancy_not_shared"):
+            errs.append((i, "existing_control claims redundancy without stating what the copies do NOT share "
+                           "(section 6B-2 REGISTER RULE)"))
         for other in e.get("coupled_with", []):
             back = [x for x in entries if x["id"] == other]
             if not back:
@@ -185,6 +196,10 @@ def report(path=STORE):
             "requirements_where_no_control_exists": reqs,
             "requirements_where_control_is_partial": partial_reqs,
             "null_set": hdr["null_set"],
+            "hop_accounting": hdr["hop_budget"],
+            "volume_and_correlation": {"volume": hdr["volume_accounting"], "correlation": hdr["independence_correction"]},
+            "shock_exposure": hdr["shock_recut"],
+            "entries_with_a_real_detection_channel": [e["id"] for e in entries if not has_detection_gap(e)],
             "citations": {"verified_this_session": sum(1 for s, _ in cites if s == "VERIFIED_2026-09-13"),
                           "from_memory_unverified": sum(1 for s, _ in cites if s == "FROM_MEMORY_UNVERIFIED")},
             "projected_fraction": hdr["projected_fraction"], "projected_cap": hdr["projected_cap"]}
@@ -264,7 +279,31 @@ def falsifiers(path=STORE):
                      "one entry where the object IS retained and the reader is lost, and it names what and where. "
                      "D-201 and D-301 are the opposite case and are worded as WAS NEVER CAPTURED, not WILL BE LOST.",
             "entries_that_assume_something_recoverable_exists": ["D-207 (the deposit's bytes)",
-                                                                 "D-105 (a retained artifact to probe)"]},
+                                                                 "D-105 (a retained artifact to probe)",
+                                                                 "DUR-003 (an object still being carried at hop N)",
+                                                                 "DUR-004 (the object is present and under load)"],
+            "the_inverse_case": "DUR-004 is where the classical intuition inverts. Pyramids: object retained, load "
+                                "off, comprehension gap harmless. Stranded: object retained, load ON, comprehension "
+                                "gap IS the liability. A surviving artifact is not a recoverable technology, and in "
+                                "this case it is a system that works and cannot be changed.",
+            "substrate_correction": "D-207 no longer reads as decay. The bits do not rot; the READER is gone. Intact "
+                                    "and unreadable is a distinct state from decayed and it is worse, because it "
+                                    "reads as retained."},
+        "F_I_independence": {
+            "status": "PASS" if (hdr.get("volume_accounting") and hdr.get("independence_correction")
+                                and any(e["id"] == "DUR-005" for e in entries)) else
+                      "FAIL: the volume argument appears without its correlation correction",
+            "volume_present": bool(hdr.get("volume_accounting")),
+            "correlation_present": bool(hdr.get("independence_correction")),
+            "correlation_entry": "DUR-005 (correlated substrate and dependency shock)",
+            "reads": "the expected-count form (objects x hops x per-hop probability) is carried in the header ONLY "
+                     "beside the correction that objects share hops, so the two modes are never reported as one. "
+                     "VOLUME gives a steady individually-invisible rate (DUR-003); CORRELATION gives synchronous "
+                     "block losses that defeat redundancy counted as independent (DUR-005). No values for objects, "
+                     "hops or probability are supplied: only the hop-count order of magnitude, which is the "
+                     "operator's estimate and is labelled as such.",
+            "register_rule_enforced": "validate refuses any entry claiming redundancy as a control without stating "
+                                      "what the copies do not share"},
         "F_G_reader_precondition_blindness": {
             "status": "NOT RUN",
             "why": "the test requires a reader outside the domain, who is not available to this session. Running it "
@@ -323,6 +362,10 @@ def emit(path=STORE):
                 t = e["transport"]
                 L.append("- transported from %s: %s" % (t["source_domain"], t["home_practice"]))
                 L.append("- why it carries: %s" % t["why_it_carries"])
+            if e.get("reconstruction_trajectory"):
+                L.append("- reconstruction trajectory: %s" % e["reconstruction_trajectory"])
+            if e.get("redundancy_not_shared"):
+                L.append("- redundant copies do NOT share: %s" % e["redundancy_not_shared"])
             if e.get("reconstruction_note"):
                 L.append("- reconstruction note: %s" % e["reconstruction_note"])
             if e.get("proposed_control"):
@@ -354,7 +397,27 @@ def emit(path=STORE):
         L.append("- **%s** %s" % (n["id"], n["mode"]))
         L.append("    - %s (%s)" % (n["why_controlled"], n["control_status"]))
         L.append("    - residual: %s" % n["residual"])
-    L += ["", "## Headline", "", rep["reconstruction_headline"], ""]
+    L += ["", "## Timeframe and volume accounting (section 6B)", "", "```"]
+    hb = hdr["hop_budget"]
+    L.append("HOP BUDGET (order of magnitude; the operator's estimate, not a measurement)")
+    for k, v in hb["budget"].items():
+        L.append("  %-26s %s" % (k, v))
+    L.append("  %s" % hb["consequence"])
+    L.append("")
+    L.append("VOLUME (6B-1)      %s" % hdr["volume_accounting"]["form"])
+    L.append("  system level     %s" % hdr["volume_accounting"]["system_level"])
+    L.append("  operator level   %s" % hdr["volume_accounting"]["operator_level"])
+    L.append("  no values supplied for objects, hops or probability: %s" % hdr["volume_accounting"]["no_values"])
+    L.append("")
+    L.append("CORRELATION (6B-2) %s" % hdr["independence_correction"]["correction"])
+    L.append("  register rule    %s" % hdr["independence_correction"]["register_rule"])
+    L.append("")
+    L.append("SHOCK RE-CUT (6B-3)")
+    for k, v in hdr["shock_recut"]["classes"].items():
+        L.append("  %-6s %-18s %s" % (k, v["name"], v["exposure"]))
+    L.append("  %s" % hdr["shock_recut"]["scheduled_note"])
+    L.append("  %s" % hdr["shock_recut"]["substrate_correction"])
+    L += ["```", "", "## Headline", "", rep["reconstruction_headline"], ""]
     open(os.path.join(HERE, "REGISTER.md"), "w").write("\n".join(L) + "\n")
 
     # F_G test sheet: five entries stripped of their classifications, for an outside reader
@@ -438,6 +501,7 @@ def selftest():
     d = rep["reconstruction_distribution"]
     assert "YES" not in d and d["PARTIAL"] == max(v for k, v in d.items() if k != "NOT_APPLICABLE")
     assert d.get("NOT_APPLICABLE", 0) == 3
+    assert len(rep["entries_with_a_real_detection_channel"]) >= 1                  # DUR-004 at minimum
     # every RATED entry with no control states a requirement (step 6)
     for e in rated(entries):
         if control_is(e, "NONE"):
@@ -474,6 +538,40 @@ def selftest():
     n2 = by_id["DUR-001-N2"]
     assert "D-101" in json.dumps(n2["cross_reference"]) and "D-102" in json.dumps(n2["cross_reference"])
     assert "never summed" in n2["requirement"] or "not summed" in n2["requirement"]
+    # rev 3: DUR-003 migration attrition, DUR-004 stranded under load, DUR-005 correlated shock
+    for i in ("DUR-003", "DUR-004", "DUR-005"):
+        assert i in by_id, i
+    # DUR-003 is not DUR-001 and not D-207: carried-forward, not unidentifiable and not unreadable
+    assert "no longer being carried" in by_id["DUR-003"]["note"] and "DUR-001" in by_id["DUR-003"]["note"]
+    assert by_id["DUR-003"]["reconstruction_trajectory"] and by_id["DUR-003"]["reconstruction"] == "PARTIAL"
+    assert "value" in by_id["DUR-003"]["mechanism"]                               # the per-hop selection filter
+    # DUR-004 is the one entry with a detection channel that is weak but real, and it is measurable today
+    assert not has_detection_gap(by_id["DUR-004"]), by_id["DUR-004"]["detection_channel"]
+    assert by_id["DUR-004"]["id"] in rep["entries_with_a_real_detection_channel"]
+    assert by_id["DUR-004"]["reconstruction"] == "NO" and "comprehension" in by_id["DUR-004"]["reconstruction_note"]
+    assert "bus" in by_id["DUR-004"]["detection_channel"].lower()
+    # DUR-005 carries the redundancy rule and points at the existing instrument rather than re-deriving it
+    assert by_id["DUR-005"]["redundancy_not_shared"]
+    assert "effective-redundancy-audit" in json.dumps(by_id["DUR-005"]["cross_reference"])
+    assert "N_eff" in by_id["DUR-005"]["requirement"]
+    # the REGISTER RULE bites: a synthetic entry claiming redundancy with nothing stated is rejected
+    import copy, tempfile
+    bad = copy.deepcopy(by_id["D-207"])
+    bad["id"] = "SYNTH-1"; bad["existing_control"] = "PARTIAL: redundant copies are kept in two buckets"
+    bad.pop("redundancy_not_shared", None)
+    with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as tf:
+        tf.write(json.dumps(hdr) + "\n")
+        for x in entries + [bad]:
+            tf.write(json.dumps(x) + "\n")
+    ve = validate(tf.name)
+    assert any(i == "SYNTH-1" and "do NOT share" in m for i, m in ve), ve
+    os.unlink(tf.name)
+    # 6B-3: the substrate correction is in D-207's own text, not only in the falsifier prose
+    assert "do not rot" in by_id["D-207"]["mechanism"] or "does not rot" in by_id["D-207"]["mechanism"]
+    assert "reads as retained" in by_id["D-207"]["consequence"]
+    # F_I: volume and correlation appear together or neither
+    assert f["F_I_independence"]["status"] == "PASS"
+    assert hdr["volume_accounting"]["no_values"] and hdr["hop_budget"]["estimate_owner"]
     # citations carry a status and the unverified ones are visible
     assert rep["citations"]["verified_this_session"] >= 6 and rep["citations"]["from_memory_unverified"] >= 6
     # emissions are generated, not hand-written

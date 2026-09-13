@@ -13,9 +13,9 @@ NON-GOALS
   - not a code of ethics
   - scope is DURABILITY and RECONSTRUCTABILITY only: can the deployed object still be identified, re-produced, load-rated and inspected at t + N years, by someone who is not the original author and does not hold the tacit stack
 
-entries 24 (rated 22, unrated parts 2) | projected 29.2% of a 35% cap | detection gap 18 entries
-reconstruction  NO 7  NOT_APPLICABLE 3  PARTIAL 14
-citations  verified this session 19 | from memory, unverified 21
+entries 27 (rated 25, unrated parts 2) | projected 25.9% of a 35% cap | detection gap 20 entries
+reconstruction  NO 9  NOT_APPLICABLE 3  PARTIAL 15
+citations  verified this session 24 | from memory, unverified 22
 ```
 
 FIDELITY and CUSTODY are separate axes. FIDELITY (is the reported result true of the object produced) and CUSTODY (can the object be identified and re-produced later, by someone else) are separate axes and are not combined in any field. Custody is unmeasured in current practice, which is being read as adequate; an unmeasured variable is not absent, it is set to zero, which is a positive claim nobody licensed.
@@ -235,6 +235,71 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - cross-reference (not re-derived): D-106 (the defect is not visible from reading the report: the same structure one level up); this register's own UNRATED PART rule, where an empty field is printed as EMPTY and is distinct from a field whose value is NONE
 - citation [VERIFIED_2026-09-13]: operator work order section 3B-W, DUR-002-N1
 
+### DUR-003  migration attrition: the object is not lost at any hop and is gone after N of them
+
+- mechanism: MIGRATION ATTRITION. The object survives no single event, but is carried across repeated hops - framework version breaks, dependency EOL, storage migration, account and org changes, platform deprecation. At each hop a survival fraction applies, and what is carried forward is selected BY CURRENTLY PERCEIVED VALUE. Anything whose value appears later is filtered out by construction.
+- load condition: Any object whose retention depends on being actively carried rather than passively held. All hosted, containerised or dependency-bound artifacts.
+- onset: drift | evidence: TRANSPORTED | reconstruction: PARTIAL
+- detection channel: NONE. Attrition is invisible per hop by definition; the object that was dropped is not the object anyone is looking at. PROPOSED: hop log. Every migration event records what was carried, what was dropped, and by whose decision. Cheap, and it converts an undated attrition into a dated one.
+- detection latency: UNBOUNDED. Discovered only when something is needed and absent.
+- attribution: None available - no actor performed a loss. Each hop decision was locally correct.
+- consequence: Reconstruction path degrades silently while all headline indicators remain healthy.
+- existing control: NONE at the artifact level.
+- validity range: Holds where hop count over the retention horizon exceeds ~1. Does not apply to objects deposited once in an archive with a custodian whose mandate is retention rather than operation.
+- transported from archive and records management (format obsolescence and appraisal): retention is treated as an active, funded, scheduled commitment, and appraisal decisions about what to carry forward are themselves recorded
+- why it carries: the abstract structure is retention contingent on repeated active re-commitment, with a per-hop selection filter that is not the criterion the future reader will use. Identical structure, different substrate.
+- reconstruction trajectory: PARTIAL -> NO, with no state change recorded at any point on the path
+- reconstruction note: Degrades from PARTIAL toward NO without any state change being recorded. Scored at its current value with the trajectory carried in its own field, because a score that moves and reports a single value is the defect this entry describes.
+- PROPOSED control: hop log: one record per migration event naming what was carried, what was dropped, and by whose decision
+- control precondition: the log must record the DROPPED set, not only the carried set: a log of what survived is the same selection filter written down, and reproduces the defect it was built to expose
+- control precondition: a hop log is only readable by someone who still understands the stack it describes, so attrition control depends on the carrier population holding (entry DUR-004)
+- minimum artifact that would close it: a hop log per object recording, per migration event, what was carried, what was DROPPED, and by whose decision; plus a retention horizon stated in hops rather than in years.
+- cross-reference (not re-derived): D-207 (format obsolescence: held and unreadable, the other half of the archive transport); D-206 (custody handoffs: a hop with a named holder on both sides is the recorded case; attrition is the unrecorded one); DUR-005 (the same hops, correlated across objects rather than compounding within one)
+- citation [VERIFIED_2026-09-13]: operator work order section 3B-W, entry DUR-003, filled to schema by the operator
+- citation [VERIFIED_2026-09-13]: hop budget in section 6B: roughly 20 generational hops over 500 years against 20 to 50 substrate hops over 10 years, an order-of-magnitude estimate supplied by the operator
+- note: Distinguish from DUR-001. DUR-001 is 'cannot tell which object.' DUR-003 is 'the object is no longer being carried.' Independent. Also distinguish from D-207: there the object is held and unreadable; here it is not held at all, and nothing recorded the moment it stopped being held.
+
+### DUR-004  stranded under load: artifact present, demand maximal, comprehension absent
+
+- mechanism: STRANDED UNDER LOAD. The object is retained and still bearing production load, but the carrier population that can read, modify, verify or replace it has gone to near zero. Not lost - stranded. Artifact present, demand maximal, comprehension absent.
+- load condition: Long-lived deployment plus high carrier turnover plus high precondition load. The combination, not any one term.
+- onset: drift | evidence: MEASURED | reconstruction: NO
+- detection channel: WEAK but non-zero, unlike most entries here: bus-factor count, time-to-first-successful-modification by a new engineer, failed replacement attempts. These are measurable today and are not measured.
+- detection latency: Detectable BEFORE the failure if the above are instrumented; otherwise detected at the first required change that cannot be made.
+- attribution: Lands on whoever is holding it when a change is finally required, typically years after the decisions that produced the state.
+- consequence: The system continues to work and cannot be altered. Every option except continued operation closes. This is a live liability, unlike a lost artifact with no load on it.
+- existing control: NONE for ML specifically. General software practice has partial controls (documentation mandates, rotation) with known poor compliance.
+- validity range: Applies where the object cannot be cheaply retrained or regenerated from a specification. Where regeneration is cheap and the spec is held, stranding does not bind.
+- reconstruction note: Reconstruction requires comprehension, which is the missing term. A complete deposit does not close this entry.
+- minimum artifact that would close it: instrument the three signals that already exist: bus-factor count per deployed component, time-to-first-successful-modification by an engineer who did not build it, and a record of failed replacement attempts. This is the only entry in the register whose detection channel needs measuring rather than inventing.
+- cross-reference (not re-derived): D-102 (the unstated stack: what a departing carrier was holding in place of a record); DUR-003 (a hop log is only readable while carriers remain, which couples these two)
+- citation [VERIFIED_2026-09-13]: operator work order section 3B-W, entry DUR-004, filled to schema by the operator
+- citation [VERIFIED_2026-09-13]: mainframe and COBOL carrier-population figures as reported by vendor and consultancy posts citing a 2024 Global Mainframe Skills Report: 79 percent of organisations reporting difficulty filling mid-career legacy roles, an average COBOL programmer age of 55, roughly 10 percent of that workforce retiring annually, and abandoned modernisation programmes at banks, tax administrations and airlines
+- note: This is the INVERSE of the classical monument case. Pyramids: object retained, load off, gap harmless. Stranded: object retained, load on, gap is the liability. The classical intuition that a surviving artifact means a recoverable technology fails here.
+
+### DUR-005  correlated substrate and dependency shock: one event, a large synchronous slice
+
+- mechanism: Objects share hops. A framework break, a vendor end-of-life, a storage platform sunset, a cloud region retirement: one event applied to a large correlated fraction of the population at once. The loss is therefore not many independent small draws but a small number of correlated draws each taking a large slice, and a synchronous block loss defeats redundancy that was counted as independent.
+- load condition: two or more copies, instances or fallbacks that share a platform, a format, a dependency stack, an authorisation path or a budget line. Sharing any one of these makes them one copy against a shock to that thing.
+- onset: dormant-until-triggered | evidence: TRANSPORTED | reconstruction: NO
+- detection channel: an effective-redundancy audit BEFORE the event: enumerate what the copies share and count the channels that survive the failure of every shared node. The shared node is usually a process, an input, a decision or a budget, which is why a component-level redundancy diagram cannot draw it. Announced end-of-life calendars are the second channel and are read as notices rather than as dated shocks.
+- detection latency: the interval between the announcement and the event, which is usually months and is usually spent; UNBOUNDED where no audit exists, because the correlation is discovered by the block loss itself
+- attribution: the platform or vendor that scheduled the change, which is where blame lands and where no remedy sits; the operator who counted the copies as independent is not identified anywhere
+- consequence: redundancy that was carried as a control fails as one unit while under load, and the failure is read as an unforeseeable external event rather than as an uncorrected independence assumption
+- existing control: PARTIAL. Multi-region and multi-provider practice exists and is usually credited as redundancy without a shared-node audit, so the credited count is the unaudited one.
+- validity range: populations of two or more nominally independent copies; does not apply to a single copy, where the mode is simply the copy's own loss
+- transported from common-cause failure analysis in nuclear and aerospace reliability engineering: common-cause failure is an enumerated category with its own analysis: redundant channels are credited only after the shared causes (shared power, shared maintenance crew, shared design, shared calibration) have been identified and removed from the count
+- why it carries: the abstract structure is a redundancy claim whose channels share a cause that the redundancy diagram does not draw, so the credited channel count exceeds the surviving channel count. That is a property of how the claim was computed, not of reactors. The shared causes here are platform, format, dependency stack, authorisation path and budget.
+- redundant copies do NOT share: NOTHING is assumed unshared by default. A copy counts as a separate channel only after platform, serialisation format, dependency stack, authorisation path, maintenance process and budget line have each been shown not to be shared; copies differing only in region or bucket name share all six and are one channel.
+- reconstruction note: the reconstruction path is as correlated as the copies: where every retained copy sits under one dependency stack, the stack's end-of-life removes all of them at once
+- PROPOSED control: N_eff rather than N: the count of channels that survive failure of every shared node, computed before the shock and recomputed when any shared node changes
+- control precondition: the audit must enumerate shared PROCESSES, INPUTS, DECISIONS and BUDGETS, not only shared components: a diagram of components will show independence that does not exist
+- control precondition: the same hops that correlate across objects also compound within one, and the two must be reported separately (entry DUR-003)
+- minimum artifact that would close it: state N_eff rather than N wherever redundancy is credited as a control, computed with the shared-node classes of the existing effective-redundancy instrument, and put a budget line against each announced end-of-life date.
+- cross-reference (not re-derived): JinnZ2/Simulators effective-redundancy-audit: computes N_eff from six shared-node classes (authorization, information, discretion, maintenance, envelope, verification); the correlated-failure-at-scale marker in this ecosystem, cross-referenced rather than re-derived; JinnZ2/Simulators fragility-cascade; DUR-003 (volume: the same hops compounding within one object); D-301 (a reconstruction path through one commercial entity is the limiting case of a shared node)
+- citation [VERIFIED_2026-09-13]: operator work order section 6B-2, which states that correlation needs its own entry and is the worse of the two modes for infrastructure
+- citation [FROM_MEMORY_UNVERIFIED]: common-cause failure analysis as a mature enumerated category in reliability engineering
+
 ## 3B TRANSPORTED
 
 ### D-203  as-built drift: the deployed object diverges from the documented one
@@ -308,18 +373,19 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 
 ### D-207  format obsolescence: the object survives and the reader does not
 
-- mechanism: Weights are retained in a serialisation format that depends on a specific library version to load, and on a runtime that depends on a driver that depends on hardware. The bytes persist; the ability to interpret them expires. This is the one mode where the object IS retained, which is why it is recoverable in principle and why its neglect is cheapest to fix.
+- mechanism: Weights are retained in a serialisation format that depends on a specific library version to load, and on a runtime that depends on a driver that depends on hardware. The bits do not rot; the READER is gone. This is the one mode where the object IS retained, which is why it is recoverable in principle and why its neglect is cheapest to fix.
 - load condition: retention is planned in years while the loader's support horizon is months
 - onset: dormant-until-triggered | evidence: TRANSPORTED | reconstruction: PARTIAL
 - detection channel: a scheduled load test of the deposit on a current runtime
 - detection latency: one test interval; UNBOUNDED if never scheduled, and the discovery point is usually the moment the object is needed
 - attribution: the archivist or the successor team, who are read as having lost the file they in fact still hold
-- consequence: a retained deposit that cannot be executed is a record of an object, not the object
+- consequence: a retained deposit that cannot be executed is a record of an object, not the object. Intact and unreadable is a distinct state from decayed, and it is worse, because it reads as retained: every inventory, checksum and storage metric reports the deposit as healthy.
 - existing control: PARTIAL: open exchange formats and framework-independent serialisations exist; migration of deposits on a schedule is not practised
 - validity range: any deposit intended to outlive its framework's support window
 - transported from digital archives and civil records: format obsolescence is a named preservation risk; formats are migrated on a schedule and independent-of-reader representations are preferred
 - why it carries: the abstract structure is: retention of bytes is not retention of the object when interpretation requires an artifact that is not retained. The mechanism is about the dependency between a record and its reader.
 - minimum artifact that would close it: store the deposit in a reader-independent representation where one exists, and schedule a load test plus migration decision on an interval shorter than the framework's support horizon.
+- cross-reference (not re-derived): DUR-003 (migration attrition: not held at all, the other half of the archive transport); DUR-005 (one format sunset removes every copy in that format at once)
 - citation [FROM_MEMORY_UNVERIFIED]: OAIS reference model (ISO 14721) and digital-preservation format-obsolescence practice
 
 ### D-208  no inspection interval and no action threshold
@@ -381,6 +447,7 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - existing control: PARTIAL: pipeline versioning is possible and practised unevenly; retrieval corpus state is rarely versioned at all
 - validity range: pipelines with independently mutable stages
 - minimum artifact that would close it: version the assembly, not the model: one identifier covering weights, preprocessing, retrieval state, prompt and post-processing, recorded per decision batch.
+- cross-reference (not re-derived): DUR-003 (the pipeline's parts are carried across hops separately, and the least-valued part at each hop is the one dropped)
 - citation [VERIFIED_2026-09-13]: walked backwards from the reconstruction field per work order section 3C
 - citation [FROM_MEMORY_UNVERIFIED]: Sculley et al., Hidden Technical Debt in Machine Learning Systems (NeurIPS 2015): changing anything changes everything, entanglement, undeclared consumers, configuration debt
 
@@ -436,6 +503,8 @@ Modes with no existing control, and the minimum artifact that would close each:
 - **DUR-001 the deployed object cannot be distinguished from another produced by the same nominal procedure** -> a sealed probe-response record at deploy: probe set, responses, hash, deposited with a party that is not the operator, with a stated retention period and a rotation rule.
 - **DUR-001-N2 instance identity is not procedure reproducibility, and the two must not be summed** -> two separate ratings recorded separately and never summed into one reconstruction score: IDENTITY (closed by DUR-001) and PROCEDURE REPRODUCIBILITY (carried by D-101 and D-102, open).
 - **DUR-002-N1 an empty envelope reads as a broad envelope** -> blank must be a distinct value from wide: the envelope field takes a characterised distribution or the literal EMPTY, and EMPTY is the rating.
+- **DUR-003 migration attrition: the object is not lost at any hop and is gone after N of them** -> a hop log per object recording, per migration event, what was carried, what was DROPPED, and by whose decision; plus a retention horizon stated in hops rather than in years.
+- **DUR-004 stranded under load: artifact present, demand maximal, comprehension absent** -> instrument the three signals that already exist: bus-factor count per deployed component, time-to-first-successful-modification by an engineer who did not build it, and a record of failed replacement attempts. This is the only entry in the register whose detection channel needs measuring rather than inventing.
 - **D-205 latent fault dormant until an unusual load combination** -> state the validation envelope's instance count and sequence structure, and mark any operating geometry absent from it as ABSENT rather than safe. The check exists in this repository already.
 - **D-301 the reconstruction path runs through a single commercial entity** -> an escrow deposit outside the vendor, or an explicit recorded acceptance that reconstruction is NO. The second is cheap and is currently made by silence rather than by decision.
 - **D-302 what was excluded from the training data is not recorded** -> retain the exclusion filters as executable artifacts with the corpus pointer, so the same corpus plus the same filters is a reproducible input.
@@ -449,6 +518,7 @@ Modes with a partial control, where the mechanism exists and nothing attaches it
 - **D-105 readiness is not outcome: a complete-looking record still does not execute** -> schedule a rebuild attempt as an inspection, on a cadence, from the deposit only. A checklist is not evidence of reconstructability; a successful cold rebuild is.
 - **DUR-001-N1 probe leakage: the identity control is trained against and stops measuring identity** -> rotation, or per-deployment probe generation from a seed held by the third party, stated as a precondition of the DUR-001 control rather than as a caveat on it.
 - **DUR-002 the object is used outside the conditions its rating was established on, with no signal** -> a machine-readable envelope attached to the serving interface, and a return contract in which OUT_OF_ENVELOPE is a distinct return state rather than a low confidence score.
+- **DUR-005 correlated substrate and dependency shock: one event, a large synchronous slice** -> state N_eff rather than N wherever redundancy is credited as a control, computed with the shared-node classes of the existing effective-redundancy instrument, and put a budget line against each announced end-of-life date.
 - **D-203 as-built drift: the deployed object diverges from the documented one** -> a change record per served object plus a canary set with recorded answers and a probe cadence. The canary mechanism already exists in this repository; adopt it rather than re-deriving it.
 - **D-204 no configuration control and no part traceability for the stack** -> a bill of materials for the assembly, content-addressed per part, recorded at deploy time, with the non-code parts (index, prompt, preprocessing, tokeniser) in scope.
 - **D-206 custody breaks at every handoff and no handoff is documented** -> a signed handover record at every boundary: named holder before, named holder after, date, and what was transferred (weights, environment, data pointer, rating envelope, reference sample).
@@ -471,7 +541,32 @@ Modes with a partial control, where the mechanism exists and nothing attaches it
     - Article 12 mandates automatic logging over the system's lifetime and Article 26 obliges deployers to retain logs; this is an actual forcing function, not a recommendation (CONTROLLED BY REGULATION, within scope only)
     - residual: the minimum deployer retention is six months, which is shorter than any reconstruction question this register asks, and the scope is the Act's high-risk categories rather than deployed ML generally
 
+## Timeframe and volume accounting (section 6B)
+
+```
+HOP BUDGET (order of magnitude; the operator's estimate, not a measurement)
+  classical transmission     hop = generational handoff, about 25 years; N over 500 years is about 20 hops
+  ML infrastructure          hops = framework break + dependency EOL + storage migration + org or team change + platform deprecation + supersession, several per year; N over 10 years is about 20 to 50 hops
+  ratio                      SAME N, compressed by roughly fifty
+  the classical loss curve is not being avoided, it is being RUN AT SPEED. Any argument of the form 'this is recent, there has not been time to lose it' is counting the wrong unit.
+
+VOLUME (6B-1)      expected losses ~ (objects) x (hops) x (per-object per-hop failure probability)
+  system level     with many objects the expected count is large even at very small per-hop probability: loss is not a risk, it is a rate
+  operator level   per object it still looks rare, so no individual operator observes enough events to update. Every operator's local experience honestly reports 'this does not happen.' Detection fails at exactly the level where decisions are made, which is the same shape as entry D-000.
+  no values supplied for objects, hops or probability: no values are supplied for objects, hops or probability, and none is estimated here. The form is carried for its shape; putting numbers on it would be the projection inflation F_D forbids.
+
+CORRELATION (6B-2) objects share hops: one framework break, vendor EOL, platform sunset or region retirement applies to a large correlated fraction of the population at once. So it is not many independent small draws but a small number of correlated draws each taking a large slice.
+  register rule    any entry claiming redundancy as an existing_control must state what the redundant copies DO NOT SHARE. Copies on the same platform, in the same format, under the same dependency stack are one copy for substrate and dependency shock. Enforced by validate.
+
+SHOCK RE-CUT (6B-3)
+  V14a   CARRIER SHOCK      genuinely LOW here
+  V14b   SUBSTRATE SHOCK    HIGH
+  V14c   DEPENDENCY SHOCK   HIGH
+  the scheduled kind ought to be the easy case: it is announced in advance. It is not budgeted, so it is not. A planned shock with no budget line behaves exactly like an unplanned one.
+  the bits do not rot. The READER is gone. Intact and unreadable is a distinct state from decayed, and it is worse, because it reads as retained (carried in D-207's own text).
+```
+
 ## Headline
 
-Of the 21 entries that make a reconstruction claim, PARTIAL is modal (14) and NOT ONE scores YES. PARTIAL means enough of the record exists to rebuild something approximate and not enough to identify the object, which looks like adequacy from inside and is the class most likely to be under-reported. 3 further entries govern use or a control rather than rebuild and are scored NOT_APPLICABLE with a stated reason.
+Of the 24 entries that make a reconstruction claim, PARTIAL is modal (15) and NOT ONE scores YES. PARTIAL means enough of the record exists to rebuild something approximate and not enough to identify the object, which looks like adequacy from inside and is the class most likely to be under-reported. 3 further entries govern use or a control rather than rebuild and are scored NOT_APPLICABLE with a stated reason.
 
