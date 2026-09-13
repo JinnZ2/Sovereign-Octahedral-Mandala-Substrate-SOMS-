@@ -199,6 +199,7 @@ def report(path=STORE):
             "requirements_where_control_is_partial": partial_reqs,
             "null_set": hdr["null_set"],
             "hop_accounting": hdr["hop_budget"],
+            "length_watch": hdr["length_watch"],
             "volume_and_correlation": {"volume": hdr["volume_accounting"], "correlation": hdr["independence_correction"]},
             "shock_exposure": hdr["shock_recut"],
             "entries_with_a_real_detection_channel": [e["id"] for e in entries if not has_detection_gap(e)],
@@ -380,6 +381,10 @@ COVERAGE = [
      ["independence_correction"], ["REDUNDANCY_WORDS", "validate"]),
     ("6B-3 shock re-cut", "carrier low; substrate and dependency high and scheduled", ["D-207"], ["shock_recut"], []),
     ("6B-3 substrate", "the bits do not rot, the reader is gone; intact and unreadable reads as retained", ["D-207"], [], []),
+    ("operator 2026-09-13", "degradation vs regress as a class boundary; per-hop instrumentation reaches only the first",
+     ["DUR-003", "DUR-008"], ["degradation_vs_regress"], []),
+    ("operator 2026-09-13", "the arrest: freeze what must survive a hop, from outside the generating system",
+     ["DUR-008", "DUR-008-N1"], ["degradation_vs_regress"], []),
     ("7 F_A..F_I", "every falsifier answered with a status", [], [], ["falsifiers"]),
     ("Step 5", "reconstruction distribution as a headline", [], [], ["report"]),
     ("Step 6", "requirement set for every entry with no control", [], [], ["report"]),
@@ -410,6 +415,7 @@ def coverage(path=STORE):
     unmapped = sorted(ids - claimed)
     return {"rows": rows, "gaps": gaps, "n_rows": len(rows), "n_gaps": len(gaps),
             "entries_not_mapped_to_any_order_section": unmapped,
+            "limit": hdr.get("coverage_limit"),
             "reads": "a GAP is a named mechanism with no entry. Entries not mapped to an order section are either "
                      "supporting entries derived from one (D-105 readiness, D-403+ if any) or scope this register "
                      "added on its own, and either way they should be justified rather than assumed."}
@@ -550,8 +556,13 @@ def selftest():
     errs = validate()
     assert errs == [], errs
     hdr, entries = load()
-    # the register is short by design: a long one is a warning sign
-    assert len(entries) <= 30, len(entries)
+    # the register is short by design: a long one is a warning sign (section 8). The guard is a TRIPWIRE, and the
+    # length is reported with its growth accounting rather than silently accommodated.
+    assert len(entries) <= 35, len(entries)
+    lw = hdr["length_watch"]
+    assert lw["entries"] == len(entries) and lw["growth"]["rev 5"] == len(entries)
+    assert "no longer short" in lw["status"] and "displace" in lw["status"]
+    assert "No entry was self-generated" in lw["accounting"]
     # entry 0 is the detection gap and it is first
     assert entries[0]["id"] == "D-000" and entries[0]["detection_channel"] == "NONE"
     # every section is populated and measured entries exist to set the floor
@@ -591,7 +602,7 @@ def selftest():
     rep = report()
     d = rep["reconstruction_distribution"]
     assert "YES" not in d and d["PARTIAL"] == max(v for k, v in d.items() if k != "NOT_APPLICABLE")
-    assert d.get("NOT_APPLICABLE", 0) == 3
+    assert d.get("NOT_APPLICABLE", 0) == 4
     assert len(rep["entries_with_a_real_detection_channel"]) >= 1                  # DUR-004 at minimum
     # every RATED entry with no control states a requirement (step 6)
     for e in rated(entries):
@@ -676,6 +687,28 @@ def selftest():
     assert by_id["DUR-007"]["transport"]["rests_on_analogy"] is False
     # the unmapped set is small and known: coverage is an audit, not a rubber stamp
     assert len(c["entries_not_mapped_to_any_order_section"]) <= 4, c["entries_not_mapped_to_any_order_section"]
+    # rev 5: the degradation/regress class boundary
+    for i in ("DUR-008", "DUR-008-N1"):
+        assert i in by_id, i
+    dr = hdr["degradation_vs_regress"]
+    assert "DUR-003" in dr["degradation"] and "DUR-008" in dr["regress"]
+    assert "not touch" in dr["why_it_is_a_class_boundary"] or "does not touch" in dr["why_it_is_a_class_boundary"]
+    # the regress entry says its NONE is not the ordinary NONE, and that no per-hop instrument reaches it
+    r8 = by_id["DUR-008"]
+    assert "not the ordinary NONE" in r8["detection_channel"] and "OUTSIDE" in r8["detection_channel"]
+    assert "per-hop instrumentation" in r8["mechanism"] or "per-hop instrumentation" in r8["note"]
+    assert r8["evidence_class"] == "PROJECTED" and "lowest weight" in r8["evidence_note"]   # widest consequence, weakest anchor
+    assert "own score is subject to the mechanism it describes" in r8["reconstruction_note"]
+    # the arrest is what must survive, not how work is done, and the externality is a precondition entry
+    assert "not HOW the work is done" in json.dumps(r8["control_preconditions"])
+    assert any(p.get("entry") == "DUR-008-N1" for p in r8["control_preconditions"])
+    assert "UNFROZEN" in by_id["DUR-008-N1"]["requirement"]
+    # the register records that its own coverage result is bounded by the same mechanism
+    assert "never 'no mechanism" in hdr["coverage_limit"]
+    assert coverage()["limit"] == hdr["coverage_limit"]
+    assert "coverage" in json.dumps(r8["cross_reference"])
+    # the cited section was not supplied, and the entries say so rather than implying a document
+    assert "NOT supplied" in json.dumps(r8["citations"]) and "6C-7" in json.dumps(r8["citations"])
     # citations carry a status and the unverified ones are visible
     assert rep["citations"]["verified_this_session"] >= 6 and rep["citations"]["from_memory_unverified"] >= 6
     # emissions are generated, not hand-written
@@ -710,6 +743,7 @@ def main(argv):
             print("%-24s %-8s %s" % (r["section"], "OK" if r["status"] == "COVERED" else "GAP",
                                      r["asks_for"] if r["status"] == "COVERED" else r["status"] + " | " + r["asks_for"]))
         print("\n%d rows, %d gaps" % (c["n_rows"], c["n_gaps"]))
+        print("LIMIT: %s" % c["limit"])
         if c["entries_not_mapped_to_any_order_section"]:
             print("entries not mapped to an order section: %s" % ", ".join(c["entries_not_mapped_to_any_order_section"]))
         return 1 if c["n_gaps"] else 0

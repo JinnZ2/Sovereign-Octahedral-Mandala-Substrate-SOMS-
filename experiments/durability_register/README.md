@@ -24,19 +24,57 @@ python experiments/durability_register/failure_register.py emit        # REGISTE
 python experiments/durability_register/failure_register.py selftest
 ```
 
-## What came out (rev 4)
+## What came out (rev 5)
 
 ```
-entries 29     rated 27     unrated parts 2      (short by design; a long register is a warning sign)
-sections       0: 1   3A MEASURED: 6   3B-W WORKED: 8   3B TRANSPORTED: 8   3C PROJECTED: 6
-reconstruction PARTIAL 16   NO 10   NOT_APPLICABLE 3   YES 0
-detection gap  22 of 29 entries: channel begins NONE, or latency is unbounded
-projection     24.1% against a stated 35% cap  (33.3 -> 29.2 -> 25.9 -> 24.1 across revisions)
-citations      28 verified this session   22 named from memory and NOT verified
-requirements   13 modes with no control at all   14 where the mechanism exists and nothing attaches it
+entries 31     rated 29     unrated parts 2      LENGTH WATCH: no longer short, see below
+sections       0: 1   3A MEASURED: 6   3B-W WORKED: 8   3B TRANSPORTED: 8   3C PROJECTED: 8
+reconstruction PARTIAL 16   NO 11   NOT_APPLICABLE 4   YES 0
+detection gap  24 of 31 entries: channel begins NONE, or latency is unbounded
+projection     25.8% against a stated 35% cap  (33.3 -> 29.2 -> 25.9 -> 24.1 -> 25.8)
+citations      30 verified this session   23 named from memory and NOT verified
+requirements   15 modes with no control at all   14 where the mechanism exists and nothing attaches it
 null set       4 modes checked and found already controlled
-coverage audit 43 rows, 0 gaps, 1 entry not mapped to an order section (D-105, derived from D-102)
+coverage audit 45 rows, 0 gaps, 1 entry not mapped to an order section (D-105, derived from D-102)
 ```
+
+### Rev 5: the degradation / regress class boundary
+
+```
+DEGRADATION   loses fidelity per hop, stays measurable       -> DUR-003
+              what is missing can be stated and quantified
+REGRESS       loses the ability to STATE what was lost       -> DUR-008  (new)
+              the naming capacity went across the same hops
+
+              per-hop instrumentation improves the first and does not touch the second:
+              a hop log records what its authors could still name, so a regress passes
+              through it intact and undocumented
+ARREST        freeze WHAT must survive a hop, not HOW the work is done
+              frozen from OUTSIDE the generating system, or it is inside the regress   -> DUR-008-N1
+```
+
+DUR-008 is the only entry whose detection channel is not the ordinary NONE. Every other gap here could be closed by
+an instrument nobody has built yet. This one cannot be closed from inside the system at all, because an instrument
+built inside it is subject to the same loss and reports clean. It is also the entry with the widest consequence and
+the weakest anchor: PROJECTED, lowest weight, because an anchor would require observing a regress from outside it,
+which is the thing the mechanism says cannot be done from inside. And it is the one entry whose own reconstruction
+score is subject to the mechanism it describes, which the note says outright.
+
+DUR-008-N1 carries the externality requirement as its own entry, transported from metrological traceability: a
+measurement is traceable only to a standard maintained outside the measuring laboratory, and a lab that calibrates
+against its own working reference has precision and no traceability. A survival set the generating system can revise
+is in the same position. Third-party evaluation commissioned, scoped and paid for by the evaluated party is internal
+custody with an external label. A set with no named external holder is recorded as UNFROZEN rather than as a control.
+
+**The register now records the limit of its own coverage check.** `coverage` reports gaps against mechanisms someone
+was able to name, so its zero-gap result means no named mechanism is unentered, never that no mechanism is missing.
+That line prints with every coverage run so a clean result cannot be read as completeness.
+
+**Length watch.** 31 entries is not short, and section 8 says a long register is a warning sign rather than a
+result. The guard in the selftest moved from 30 to 35 and is a tripwire, not a budget. The growth accounting is in
+the header and in the emission: every entry after rev 1 was operator-supplied, required by a section that demanded
+its own entry, or a named mechanism the coverage audit found unentered. None was self-generated. The next addition
+that is neither operator-supplied nor gap-closing should displace an entry instead of extending the list.
 
 ### Rev 4: the order arrived unchanged, so the work was verification
 
@@ -141,11 +179,11 @@ percent of MMLU samples flagged in the LLaMA-2 report; over 90 percent of QuAC, 
 GPT-3 study; 13-gram and 50-character overlap thresholds), plus the finding that rephrased samples evade n-gram
 decontamination. The survey is a SECONDARY source for each underlying report and the citation says so.
 
-**Nothing scored YES on reconstruction.** Not one of the 26 entries that make a reconstruction claim. The expected-yield note in the work order said PARTIAL
+**Nothing scored YES on reconstruction.** Not one of the 27 entries that make a reconstruction claim. The expected-yield note in the work order said PARTIAL
 would dominate, and it does, but the absence of a single YES is the sharper result: for this deployment class
 there is no failure mode in the register whose retained record is sufficient to identify the object.
 
-**Twenty-two of twenty-nine entries have no detection channel or an unbounded latency.** That is the work order's
+**Twenty-four of thirty-one entries have no detection channel or an unbounded latency.** That is the work order's
 Entry 0 reproducing itself through the body of the register. These are the modes that cannot generate the
 evidence that would make fixing them mandatory, which is the mechanism by which the enumeration does not get
 written.
@@ -180,11 +218,12 @@ F_A  transport valid       PASS. 8 transported entries, all stating an abstract 
                            mandatory at home, neither exists here.
 F_B  prior art             CHECKED, not redundant, scoped to the residual (above).
 F_C  unbounded scope       AUDITED, and the sample is reported against the whole register because the mandated 20%
-                           sample (6 of 29, seed 13) happened to contain NEITHER rejectable entry and reads 0.0.
-                           Whole-register rate: 2 of 29 (6.9%), both already filed as UNRATED PARTS rather than
+                           sample (6 of 31, seed 13) happened to contain NEITHER rejectable entry and reads 0.0.
+                           Whole-register rate: 2 of 31 (6.5%), both already filed as UNRATED PARTS rather than
                            discarded. A 0% sampled rate reported alone would have been the register's own
                            detection gap reproduced in its audit. Author-run, which is the weak case F_G fixes.
-F_D  projection inflation  24.1% against a 35% cap, falling across revisions (33.3 -> 29.2 -> 25.9 -> 24.1) because every
+F_D  projection inflation  25.8% against a 35% cap (33.3 -> 29.2 -> 25.9 -> 24.1 -> 25.8; rev 5 rose because the
+                           regress entry has no anchor and is honestly classed PROJECTED) because every
                            entry the operator has added is anchored: rev 3 adds two TRANSPORTED, one MEASURED and
                            one TRANSPORTED. Stated in the header.
 F_E  not the mechanism     STATED, and the honest answer is mostly nothing. Two real forcing functions exist and

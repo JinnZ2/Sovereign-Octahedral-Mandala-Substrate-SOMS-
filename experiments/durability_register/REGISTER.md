@@ -13,9 +13,9 @@ NON-GOALS
   - not a code of ethics
   - scope is DURABILITY and RECONSTRUCTABILITY only: can the deployed object still be identified, re-produced, load-rated and inspected at t + N years, by someone who is not the original author and does not hold the tacit stack
 
-entries 29 (rated 27, unrated parts 2) | projected 24.1% of a 35% cap | detection gap 22 entries
-reconstruction  NO 10  NOT_APPLICABLE 3  PARTIAL 16
-citations  verified this session 28 | from memory, unverified 22
+entries 31 (rated 29, unrated parts 2) | projected 25.8% of a 35% cap | detection gap 24 entries
+reconstruction  NO 11  NOT_APPLICABLE 4  PARTIAL 16
+citations  verified this session 30 | from memory, unverified 23
 ```
 
 FIDELITY and CUSTODY are separate axes. FIDELITY (is the reported result true of the object produced) and CUSTODY (can the object be identified and re-produced later, by someone else) are separate axes and are not combined in any field. Custody is unmeasured in current practice, which is being read as adequate; an unmeasured variable is not absent, it is set to zero, which is a positive claim nobody licensed.
@@ -531,6 +531,45 @@ EVENT DEFINITION (F_H). An EVENT in this register is a bounded change in the REC
 - citation [FROM_MEMORY_UNVERIFIED]: performative prediction and feedback-loop literature, not located this session
 - note: Filed as an UNRATED PART. The executor cannot state a detection channel that separates the component's contribution from the population's movement, and will not invent one.
 
+### DUR-008  regress: the capacity to state what was lost is itself lost
+
+- mechanism: A DEGRADATION loses fidelity per hop and stays measurable: you can say what is missing, in what quantity, against what reference. A REGRESS loses the ability to state what was lost. The vocabulary, the questions, the criteria that would identify the absence went across the same hops as the object and were subject to the same per-hop selection filter. After a regress the inventory is complete with respect to every question anyone can still ask, and the loss is not recorded as a loss because there is nothing left to record it against. No amount of per-hop instrumentation reaches this: a hop log records what its authors could name at the time of the hop, so a regress passes through the log intact and undocumented.
+- load condition: the instruments that would detect the absence are produced by the same system, team and period that produced the object, and are carried forward by the same hops. This is the normal case: evaluation harnesses, reference sets, review checklists and the register itself are all artifacts of the generating system.
+- onset: drift | evidence: PROJECTED | reconstruction: NO
+- detection channel: NONE, and this is not the ordinary NONE. The other detection gaps in this register could be closed by an instrument someone has not built yet. A regress cannot be closed from inside the system at all, because any instrument built inside it is subject to the same loss and will report clean. The only closure is a reference set frozen from OUTSIDE the generating system before the regress (see DUR-008-N1).
+- detection latency: UNBOUNDED, and unlike every other unbounded latency here it does not end when someone eventually looks: looking uses the surviving questions
+- attribution: nobody, ever. There is no discrepancy for anyone to be accountable for, because the record and the questions agree.
+- consequence: every audit passes, every coverage check reports full coverage, and the register's own gap count reads zero, while a class of loss has occurred that none of those instruments can represent. The failure is not that the answer is wrong; it is that the question is gone.
+- existing control: NONE.
+- validity range: systems whose evaluation instruments are produced and carried by the same population as the object. Does not apply where an external party holds a reference set predating the current generation of the system, which is exactly what DUR-008-N1 requires and what nothing currently provides.
+- reconstruction note: not scoreable from inside: a reconstruction score requires a statement of what is missing, which is the capacity this entry says is gone. NO is recorded as the honest floor rather than as a measurement, and this is the one entry whose own score is subject to the mechanism it describes.
+- PROPOSED control: an externally frozen SURVIVAL SET: the short list of things that must cross a hop, frozen by a party outside the generating system, stating what must still be answerable rather than how the work is to be done
+- control precondition: a survival set frozen by the generating system is inside the regress with everything else, and the freeze is then decorative (entry DUR-008-N1)
+- control precondition: the set constrains WHAT must survive a hop, not HOW the work is done. A process mandate has the cost that makes process mandates fail; a survival set is cheap because it leaves method alone.
+- minimum artifact that would close it: an externally frozen survival set, stated as WHAT must remain answerable after a hop and held by a party outside the generating system: the object's identity referent (DUR-001), its rating envelope (DUR-002), its execution record (DUR-006), and the list of questions the rating was established against. Freezing the questions is the part nothing currently does, and it is the only part that reaches this mode.
+- cross-reference (not re-derived): DUR-003 (degradation: the measurable sibling; the per-hop selection filter is shared, the detectability is not); D-000 (the detection gap: DUR-008 is D-000 applied to the instruments rather than to the object); D-106 (the defect is not visible from reading the report: the same structure one level down, where the missing field is still nameable); this register's own `coverage` command, whose zero-gap result is bounded by the same limit: it can only find mechanisms someone was still able to name
+- citation [VERIFIED_2026-09-13]: operator, 2026-09-13, in session: the degradation/regress split as a class boundary, and the arrest condition (freeze what must survive a hop, not how the work is done; the frozen set must be frozen from outside the generating system or it is inside the regress with everything else). Recorded from the operator's two sentences in conversation; the section they cite as 6C-7 was NOT supplied to this build and its full text has not been read.
+- note: Class boundary, stated by the operator 2026-09-13: DUR-003 handles degradation (fidelity lost per hop, still measurable); nothing handled regress until this entry. The two are not degrees of the same thing. Instrumenting hops harder improves DUR-003 and does not touch DUR-008.
+
+### DUR-008-N1  the survival set is frozen by the system it is meant to outlive
+
+- mechanism: The arrest works only if the frozen set is fixed from outside the generating system. A survival set written, held, revised and interpreted by the same team, on the same platform, under the same dependency stack, is carried by the same hops and filtered by the same criteria as everything else. It will be updated to stay convenient, and each update is locally reasonable, so the set tracks the system's current self-description instead of anchoring it.
+- load condition: the freeze is internal: same authors, same storage, same review, or revisable without an external party's involvement
+- onset: drift | evidence: TRANSPORTED | reconstruction: NOT_APPLICABLE
+- detection channel: check the freeze's externality, which is cheap and binary-ish: who can change the set, where it is held, and whether a version predating the current generation of the system is still retrievable by someone outside it. If every copy is internal, the freeze provides nothing.
+- detection latency: immediate on inspection of the custody arrangement; UNBOUNDED if nobody inspects it, because an internally frozen set looks identical to an externally frozen one from inside
+- attribution: the team that maintained the set in good faith, whose updates were each defensible
+- consequence: the control reports as present and does not arrest the regress: the register, the reference set and the object degrade together while the freeze is cited as the reason they cannot
+- existing control: NONE. Third-party evaluation exists and is commissioned, scoped and paid for by the party being evaluated, which is internal custody with an external label.
+- validity range: any frozen set, survival list, reference corpus or probe set; the stronger the internal process around it, the more convincingly an internal freeze reads as an external one
+- transported from metrology (traceability to an external standard) and independent verification practice in certification and audit: a measurement is traceable only to a standard maintained outside the measuring laboratory, through an unbroken chain of comparisons. A laboratory that calibrates against its own working reference has precision and no traceability, and the distinction is structural, not a matter of diligence.
+- why it carries: the abstract structure is a reference whose authority depends on being maintained outside the system it judges, and which becomes self-referential the moment the system can revise it. Nothing in that depends on physical units. The register, the reference set and the probe set are all references in exactly that position.
+- reconstruction note: governs the DUR-008 control rather than the object's record
+- minimum artifact that would close it: name the external holder and the change rule before the set is called frozen: who holds it, who may change it, and whether a pre-current version is retrievable by someone outside the generating system. A set with no external holder is recorded as UNFROZEN rather than as a control.
+- cross-reference (not re-derived): DUR-001-N1 (probe leakage: the same externality requirement on the identity control, where the threat is training against the probe rather than revising it); D-304 (the inspection reference stops being held-out: internal custody of a reference set, one level down); D-301 (a reconstruction path through a single commercial entity: the limiting case of internal custody)
+- citation [VERIFIED_2026-09-13]: operator, 2026-09-13, in session: the frozen set has to be frozen from outside the generating system, or it is inside the regress with everything else
+- citation [FROM_MEMORY_UNVERIFIED]: metrological traceability to an external standard as a structural requirement
+
 ## Requirement set (step 6)
 
 Modes with no existing control, and the minimum artifact that would close each:
@@ -548,6 +587,8 @@ Modes with no existing control, and the minimum artifact that would close each:
 - **D-301 the reconstruction path runs through a single commercial entity** -> an escrow deposit outside the vendor, or an explicit recorded acceptance that reconstruction is NO. The second is cheap and is currently made by silence rather than by decision.
 - **D-302 what was excluded from the training data is not recorded** -> retain the exclusion filters as executable artifacts with the corpus pointer, so the same corpus plus the same filters is a reproducible input.
 - **D-304 the inspection reference stops being held-out** -> custody rules for the reference set: sealed, dated, never in a training or selection path, with a replacement schedule and a record of each use.
+- **DUR-008 regress: the capacity to state what was lost is itself lost** -> an externally frozen survival set, stated as WHAT must remain answerable after a hop and held by a party outside the generating system: the object's identity referent (DUR-001), its rating envelope (DUR-002), its execution record (DUR-006), and the list of questions the rating was established against. Freezing the questions is the part nothing currently does, and it is the only part that reaches this mode.
+- **DUR-008-N1 the survival set is frozen by the system it is meant to outlive** -> name the external holder and the change rule before the set is called frozen: who holds it, who may change it, and whether a pre-current version is retrievable by someone outside the generating system. A set with no external holder is recorded as UNFROZEN rather than as a control.
 
 Modes with a partial control, where the mechanism exists and nothing attaches it:
 
@@ -608,5 +649,5 @@ SHOCK RE-CUT (6B-3)
 
 ## Headline
 
-Of the 26 entries that make a reconstruction claim, PARTIAL is modal (16) and NOT ONE scores YES. PARTIAL means enough of the record exists to rebuild something approximate and not enough to identify the object, which looks like adequacy from inside and is the class most likely to be under-reported. 3 further entries govern use or a control rather than rebuild and are scored NOT_APPLICABLE with a stated reason.
+Of the 27 entries that make a reconstruction claim, PARTIAL is modal (16) and NOT ONE scores YES. PARTIAL means enough of the record exists to rebuild something approximate and not enough to identify the object, which looks like adequacy from inside and is the class most likely to be under-reported. 4 further entries govern use or a control rather than rebuild and are scored NOT_APPLICABLE with a stated reason.
 
