@@ -1,0 +1,433 @@
+"""
+failure_register.py -- the durability / reconstructability failure-mode register for ML components used as
+infrastructure (WORK ORDER FAILURE-MODE ENUMERATION FOR ML-AS-INFRASTRUCTURE, 2026-09-13). CC0. Stdlib only.
+
+  The deliverable is register.jsonl. This file validates it, audits it against its own mandatory-field rule,
+  and generates the human emission. It makes no claim the register does not carry.
+
+  NON-GOALS (header, repeated here): not model behaviour, alignment or misuse; not harm incidents; not a code
+  of ethics. Scope is durability and reconstructability only.
+
+  FIDELITY and CUSTODY are separate axes and are never combined in a field.
+
+  python failure_register.py validate      schema + mandatory-field gate + projection cap + header counts
+  python failure_register.py audit         F_C: random 20% audited against the mandatory fields, rejection rate
+  python failure_register.py report        reconstruction distribution, detection gap, requirement set, null set
+  python failure_register.py falsifiers    F_A..F_H, each with its status and what it rests on
+  python failure_register.py emit          write REGISTER.md and outsider_test.md
+  python failure_register.py selftest
+"""
+import json
+import os
+import random
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+STORE = os.path.join(HERE, "register.jsonl")
+
+# section 2 schema. An entry missing any field is an UNRATED PART and is filed, not discarded.
+FIELDS = ("id", "mechanism", "load_condition", "onset", "detection_channel", "detection_latency", "attribution",
+          "consequence", "evidence_class", "existing_control", "reconstruction", "validity_range")
+# F_C binding constraints: no mechanism, no detection channel, no consequence-under-load, no entry
+MANDATORY = ("mechanism", "detection_channel", "consequence")
+ONSETS = ("immediate", "drift", "dormant-until-triggered")
+EVIDENCE = ("MEASURED", "TRANSPORTED", "PROJECTED")
+RECONSTRUCTION = ("YES", "PARTIAL", "NO")
+CITATION_STATUS = ("VERIFIED_2026-09-13", "FROM_MEMORY_UNVERIFIED")
+
+
+def load(path=STORE):
+    rows = [json.loads(l) for l in open(path) if l.strip()]
+    return rows[0], rows[1:]
+
+
+def has_detection_gap(e):
+    return e.get("detection_channel") == "NONE" or "UNBOUNDED" in str(e.get("detection_latency") or "")
+
+
+def rated(entries):
+    return [e for e in entries if e["status"] == "RATED"]
+
+
+def control_is(e, word):
+    """existing_control is prose that begins with its verdict: 'NONE', 'NONE as a gate...', 'PARTIAL: ...'.
+    Matching on the prefix rather than on equality is what keeps the requirement set from under-reporting."""
+    return str(e.get("existing_control") or "").strip().upper().startswith(word)
+
+
+def validate(path=STORE):
+    hdr, entries = load(path)
+    errs = []
+    seen = set()
+    for e in entries:
+        i = e.get("id", "<no id>")
+        if i in seen:
+            errs.append((i, "duplicate id"))
+        seen.add(i)
+        missing = [f for f in FIELDS if f not in e]
+        if missing:
+            errs.append((i, "field absent from the record entirely: %s" % ", ".join(missing)))
+        empty = [f for f in MANDATORY if not str(e.get(f) or "").strip()]
+        if e["status"] == "RATED" and empty:
+            errs.append((i, "RATED entry with an empty mandatory field (%s): must be filed as an UNRATED_PART "
+                            "(F_C)" % ", ".join(empty)))
+        if e["status"] == "UNRATED_PART" and not empty:
+            errs.append((i, "filed UNRATED_PART but every mandatory field is populated: file it as RATED"))
+        if e["status"] == "UNRATED_PART" and not e.get("note"):
+            errs.append((i, "UNRATED_PART without a note saying which fields are empty and why"))
+        if e.get("onset") not in ONSETS:
+            errs.append((i, "onset not in %s" % (ONSETS,)))
+        if e.get("evidence_class") not in EVIDENCE:
+            errs.append((i, "evidence_class not in %s" % (EVIDENCE,)))
+        if e.get("reconstruction") not in RECONSTRUCTION:
+            errs.append((i, "reconstruction not in %s" % (RECONSTRUCTION,)))
+        for c in e.get("citations", []):
+            if c.get("status") not in CITATION_STATUS:
+                errs.append((i, "citation without a legal status: %r" % c.get("ref", "")[:40]))
+        if e.get("evidence_class") == "TRANSPORTED":
+            t = e.get("transport") or {}
+            if not t.get("source_domain") or not t.get("why_it_carries"):
+                errs.append((i, "TRANSPORTED without a named source domain and a why-it-carries justification (step 3)"))
+            if t.get("rests_on_analogy") is not False:
+                errs.append((i, "transport rests on analogy: rejected at review (step 3 transport rule)"))
+        if e["status"] == "RATED" and control_is(e, "NONE") and not e.get("requirement"):
+            errs.append((i, "existing_control NONE with no requirement stated (step 6)"))
+    n = len(entries)
+    proj = sum(1 for e in entries if e["evidence_class"] == "PROJECTED")
+    frac = round(proj / n, 3) if n else 0
+    if frac > hdr["projected_cap"]:
+        errs.append(("<register>", "PROJECTED fraction %.3f exceeds the stated cap %.2f: the register is a "
+                                   "speculation list wearing a register's format (F_D)" % (frac, hdr["projected_cap"])))
+    for k, v in (("entries", n), ("projected_entries", proj), ("projected_fraction", frac),
+                 ("unrated_parts", sum(1 for e in entries if e["status"] == "UNRATED_PART")),
+                 ("detection_none_or_unbounded", sum(1 for e in entries if has_detection_gap(e)))):
+        if hdr.get(k) != v:
+            errs.append(("<header>", "header %s says %r, recomputed %r" % (k, hdr.get(k), v)))
+    return errs
+
+
+def audit(path=STORE, frac=0.2, seed=13):
+    """F_C: audit a random fraction of entries against the mandatory fields and report the rejection rate.
+    Author-run, which F_G says is the weak case; the rate is reported with that caveat attached."""
+    hdr, entries = load(path)
+    rng = random.Random(seed)
+    k = max(1, round(frac * len(entries)))
+    sample = rng.sample(sorted(entries, key=lambda e: e["id"]), k)
+    rejected = []
+    for e in sample:
+        empty = [f for f in MANDATORY if not str(e.get(f) or "").strip()]
+        if empty:
+            rejected.append({"id": e["id"], "empty": empty, "filed_as": e["status"]})
+    return {"sampled": [e["id"] for e in sample], "n_sampled": k, "of": len(entries), "seed": seed,
+            "rejected": rejected, "rejection_rate": round(len(rejected) / k, 3),
+            "caveat": "the audit was run by the register's author against the author's own field definitions. "
+                      "F_G is the test that would make it evidence, and F_G is NOT RUN."}
+
+
+def report(path=STORE):
+    hdr, entries = load(path)
+    R = rated(entries)
+    dist = {}
+    for e in entries:
+        dist[e["reconstruction"]] = dist.get(e["reconstruction"], 0) + 1
+    by_section = {}
+    for e in entries:
+        by_section.setdefault(e["section"], []).append(e["id"])
+    gap = [e["id"] for e in entries if has_detection_gap(e)]
+    reqs = [{"id": e["id"], "title": e["title"], "requirement": e["requirement"]}
+            for e in R if control_is(e, "NONE") and e.get("requirement")]
+    partial_reqs = [{"id": e["id"], "title": e["title"], "requirement": e["requirement"]}
+                    for e in R if control_is(e, "PARTIAL") and e.get("requirement")]
+    cites = [(c.get("status"), c.get("ref")) for e in entries for c in e.get("citations", [])]
+    return {"entries": len(entries), "rated": len(R), "unrated_parts": len(entries) - len(R),
+            "reconstruction_distribution": dist,
+            "reconstruction_headline": "PARTIAL is the modal score (%d of %d): enough of the record exists to rebuild "
+                                       "something approximate, not enough to identify the object. PARTIAL looks like "
+                                       "adequacy from inside, which is why it is the class most likely to be "
+                                       "under-reported." % (dist.get("PARTIAL", 0), len(entries)),
+            "by_section": by_section, "detection_gap_entries": gap,
+            "detection_gap_note": "these are the high-priority set: they cannot generate the evidence that would make "
+                                  "fixing them mandatory",
+            "requirements_where_no_control_exists": reqs,
+            "requirements_where_control_is_partial": partial_reqs,
+            "null_set": hdr["null_set"],
+            "citations": {"verified_this_session": sum(1 for s, _ in cites if s == "VERIFIED_2026-09-13"),
+                          "from_memory_unverified": sum(1 for s, _ in cites if s == "FROM_MEMORY_UNVERIFIED")},
+            "projected_fraction": hdr["projected_fraction"], "projected_cap": hdr["projected_cap"]}
+
+
+def falsifiers(path=STORE):
+    hdr, entries = load(path)
+    transports = [e for e in entries if e["evidence_class"] == "TRANSPORTED"]
+    survived = [e["id"] for e in transports if (e.get("transport") or {}).get("rests_on_analogy") is False
+                and (e.get("transport") or {}).get("why_it_carries")]
+    a = audit(path)
+    return {
+        "F_A_bridge_transport_valid": {
+            "status": "PASS" if survived else "FAIL -> cut the transport section and run on 3A alone",
+            "transported_entries": len(transports), "survived_justification": survived,
+            "reads": "each transported entry states an abstract structure (a record insufficient to rebuild the "
+                     "object) rather than a resemblance between domains. The two highest-value transports are the "
+                     "retained reference sample (D-201) and the stamped validity envelope (D-202): both are cheap, "
+                     "both are mandatory in their home domain, neither exists here."},
+        "F_B_prior_art": {
+            "status": "CHECKED, NOT REDUNDANT, SCOPED TO THE RESIDUAL",
+            "catalogues_that_exist_and_are_harm_scoped": [
+                "MIT AI Risk Repository: 1700+ risks from 74 frameworks, 7 domains / 24 subdomains, causal taxonomy "
+                "(entity, intentionality, timing). Durability and reconstructability are not a domain.",
+                "AI Incident Database and the MIT AI Incident Tracker: 1300+ reported incidents classified by harm "
+                "type (10 harm categories). Incident-sourced by construction, so it cannot hold a mode with "
+                "detection_channel NONE.",
+                "Microsoft / Berkman Klein Failure Modes in Machine Learning (arXiv 1911.11034): intentional and "
+                "unintentional failure modes, security-scoped."],
+            "adjacent_work_that_covers_part_of_the_residual": [
+                "Sculley et al. Hidden Technical Debt in ML Systems (2015): mechanism-level and closest in spirit; no "
+                "detection-channel field, no reconstruction score, not a register.",
+                "ML Test Score (Breck et al. 2017): a rubric of controls, which is the requirement set rather than the "
+                "failure enumeration.",
+                "ReproScore (arXiv 2605.13275, 2026): readiness versus outcome for RESEARCH SOFTWARE artifacts, "
+                "measured over 423 repositories. Closest measured anchor for D-102 and D-105; scope is artifacts, not "
+                "deployed objects.",
+                "Documentation templates (Model Cards, Datasheets, Data Statements, FactSheets): they add fields; none "
+                "enumerates what happens when the fields are absent, and none is mandatory."],
+            "residual_this_register_occupies": "a mechanism-level enumeration scoped to durability and "
+                                               "reconstructability, carrying a detection channel (permitted to be "
+                                               "NONE) and a reconstruction score, for a fixed deployment class.",
+            "caveat": "the prior-art check was four targeted searches on one day. It establishes that the major "
+                      "catalogues are harm-scoped; it does not establish that no durability catalogue exists anywhere."},
+        "F_C_unbounded_scope": {"status": "AUDITED", "rejection_rate": a["rejection_rate"],
+                                "sample": a["sampled"], "rejected": a["rejected"], "caveat": a["caveat"]},
+        "F_D_projection_inflation": {
+            "status": "UNDER CAP, NARROWLY",
+            "projected_fraction": hdr["projected_fraction"], "cap": hdr["projected_cap"],
+            "reads": "one third of the register is projection. That is under the stated cap and close enough to it "
+                     "that the next projected entry added without a measured or transported anchor should displace "
+                     "one instead."},
+        "F_E_the_enumeration_is_not_the_mechanism": {
+            "status": "STATED, AND THE HONEST ANSWER IS MOSTLY NOTHING",
+            "forcing_functions_that_exist": [
+                "EU AI Act Article 12 (automatic logging over the system lifetime) and Article 26 (deployer retention "
+                "of logs, minimum six months), plus Annex IV technical documentation. Real, binding, and scoped to the "
+                "Act's high-risk categories. The six-month floor is shorter than every reconstruction question here.",
+                "FDA Predetermined Change Control Plan, final guidance 2024-12-03: a pre-authorised modification "
+                "protocol with an impact assessment. This is as-built drift control with teeth, for AI-enabled "
+                "medical device software functions only."],
+            "what_would_make_this_binding": "attributable, expensive failure. Neither exists for the fixed deployment "
+                                            "class, because entry D-000 removes attribution and distributes the cost. "
+                                            "Publishing the register changes nothing on its own, and this deliverable "
+                                            "does not claim otherwise.",
+            "the_cheapest_available_lever": "procurement. A buyer can require D-201 (retained reference sample), D-202 "
+                                            "(stamped envelope) and D-204 (bill of materials) as delivery conditions "
+                                            "without any regulator acting, because all three are artifacts rather than "
+                                            "behaviours."},
+        "F_F_artifact_present_assumption": {
+            "status": "CHECKED PER ENTRY",
+            "reads": "the classical lost-technology cases retained the object and lost the documentation, which is "
+                     "why reconstruction was possible. Here the object is usually not retained either. D-207 is the "
+                     "one entry where the object IS retained and the reader is lost, and it names what and where. "
+                     "D-201 and D-301 are the opposite case and are worded as WAS NEVER CAPTURED, not WILL BE LOST.",
+            "entries_that_assume_something_recoverable_exists": ["D-207 (the deposit's bytes)",
+                                                                 "D-105 (a retained artifact to probe)"]},
+        "F_G_reader_precondition_blindness": {
+            "status": "NOT RUN",
+            "why": "the test requires a reader outside the domain, who is not available to this session. Running it "
+                   "on the author would reproduce exactly the blindness it tests for.",
+            "packaged": "outsider_test.md: the field definitions plus five entries stripped of their classifications, "
+                        "for an outside reader to classify. Disagreement on a field means that field is "
+                        "underspecified, and the field definition is what gets fixed.",
+            "known_weak_definitions": ["onset: 'drift' versus 'dormant-until-triggered' is a judgement call on any "
+                                       "mode that both accumulates and needs a trigger (D-203, D-205)",
+                                       "reconstruction PARTIAL versus NO: the boundary is 'approximately rebuild' "
+                                       "versus 'identify', which is stated in the header and not operationalised",
+                                       "existing_control PARTIAL: means the mechanism exists somewhere, not that this "
+                                       "deployment uses it"]},
+        "F_H_event_definition": {"status": "DEFINED BEFORE ANY COUNT", "definition": hdr["event_definition_F_H"],
+                                 "counts_present_in_this_deliverable": "entry counts, citation counts and the "
+                                                                       "reconstruction distribution only. No failure "
+                                                                       "count appears anywhere."},
+    }
+
+
+def emit(path=STORE):
+    hdr, entries = load(path)
+    rep = report(path)
+    L = ["# Durability and reconstructability failure-mode register", "",
+         "BUILD PRODUCT of `failure_register.py emit`; never hand-edit. The store is `register.jsonl`.", "",
+         "```", "artifact      %s" % hdr["artifact"], "deployment class", "  %s" % hdr["deployment_class"], "",
+         "NON-GOALS"]
+    for g in hdr["non_goals"]:
+        L.append("  - %s" % g)
+    L += ["", "entries %d (rated %d, unrated parts %d) | projected %.1f%% of a %.0f%% cap | detection gap %d entries"
+          % (rep["entries"], rep["rated"], rep["unrated_parts"], 100 * hdr["projected_fraction"],
+             100 * hdr["projected_cap"], len(rep["detection_gap_entries"])),
+          "reconstruction  %s" % "  ".join("%s %d" % (k, v) for k, v in sorted(rep["reconstruction_distribution"].items())),
+          "citations  verified this session %d | from memory, unverified %d"
+          % (rep["citations"]["verified_this_session"], rep["citations"]["from_memory_unverified"]), "```", "",
+          "FIDELITY and CUSTODY are separate axes. " + hdr["fidelity_vs_custody"], "",
+          "EVENT DEFINITION (F_H). " + hdr["event_definition_F_H"], ""]
+    sec_names = {"0": "Entry 0 - the detection gap itself", "3A": "3A MEASURED", "3B": "3B TRANSPORTED",
+                 "3C": "3C PROJECTED and UNRATED PARTS"}
+    for sec in ("0", "3A", "3B", "3C"):
+        L += ["## %s" % sec_names[sec], ""]
+        for e in [x for x in entries if x["section"] == sec]:
+            L.append("### %s  %s%s" % (e["id"], e["title"], "  [UNRATED PART]" if e["status"] == "UNRATED_PART" else ""))
+            L.append("")
+            L.append("- mechanism: %s" % e["mechanism"])
+            L.append("- load condition: %s" % e["load_condition"])
+            L.append("- onset: %s | evidence: %s | reconstruction: %s" % (e["onset"], e["evidence_class"], e["reconstruction"]))
+            L.append("- detection channel: %s" % (e["detection_channel"] or "EMPTY (unrated part)"))
+            L.append("- detection latency: %s" % (e["detection_latency"] or "EMPTY (unrated part)"))
+            L.append("- attribution: %s" % e["attribution"])
+            L.append("- consequence: %s" % e["consequence"])
+            L.append("- existing control: %s" % (e["existing_control"] or "EMPTY (unrated part)"))
+            L.append("- validity range: %s" % (e["validity_range"] or "EMPTY (unrated part)"))
+            if e.get("transport"):
+                t = e["transport"]
+                L.append("- transported from %s: %s" % (t["source_domain"], t["home_practice"]))
+                L.append("- why it carries: %s" % t["why_it_carries"])
+            if e.get("requirement"):
+                L.append("- minimum artifact that would close it: %s" % e["requirement"])
+            if e.get("cross_reference"):
+                L.append("- cross-reference (not re-derived): %s" % "; ".join(e["cross_reference"]))
+            for c in e.get("citations", []):
+                L.append("- citation [%s]: %s%s" % (c["status"], c["ref"], " (%s)" % c["url"] if c.get("url") else ""))
+            if e.get("note"):
+                L.append("- note: %s" % e["note"])
+            L.append("")
+    L += ["## Requirement set (step 6)", "", "Modes with no existing control, and the minimum artifact that would close each:", ""]
+    for r in rep["requirements_where_no_control_exists"]:
+        L.append("- **%s %s** -> %s" % (r["id"], r["title"], r["requirement"]))
+    L += ["", "Modes with a partial control, where the mechanism exists and nothing attaches it:", ""]
+    for r in rep["requirements_where_control_is_partial"]:
+        L.append("- **%s %s** -> %s" % (r["id"], r["title"], r["requirement"]))
+    L += ["", "## Null set (step 7): modes checked and found already controlled", ""]
+    for n in rep["null_set"]:
+        L.append("- **%s** %s" % (n["id"], n["mode"]))
+        L.append("    - %s (%s)" % (n["why_controlled"], n["control_status"]))
+        L.append("    - residual: %s" % n["residual"])
+    L += ["", "## Headline", "", rep["reconstruction_headline"], ""]
+    open(os.path.join(HERE, "REGISTER.md"), "w").write("\n".join(L) + "\n")
+
+    # F_G test sheet: five entries stripped of their classifications, for an outside reader
+    fg = falsifiers(path)["F_G_reader_precondition_blindness"]
+    pick = [e for e in entries if e["id"] in ("D-102", "D-202", "D-203", "D-302", "D-401")]
+    T = ["# F_G reader-precondition test (NOT RUN)", "",
+         "Hand this to someone outside the domain. They classify each of the five entries on the four fields below,",
+         "using only the definitions given. Disagreement with the register's own classification means the FIELD",
+         "DEFINITION is underspecified, and the definition is what gets fixed, not the reader.", "",
+         "Status: NOT RUN. " + fg["why"], "",
+         "## Field definitions, as they must stand without asking the author", "",
+         "- **onset**: immediate (present from the moment of deployment) | drift (accumulates while in service) | "
+         "dormant-until-triggered (present from the start, expresses only on a particular condition)",
+         "- **detection channel**: the signal that would reveal this, or NONE if no signal would. NONE is an answer.",
+         "- **reconstruction**: YES (the object can be rebuilt and identified from the retained record) | PARTIAL "
+         "(something approximate can be rebuilt; the object cannot be identified) | NO",
+         "- **evidence class**: MEASURED (a study established it) | TRANSPORTED (the mechanism is established in "
+         "another domain and the abstract structure carries) | PROJECTED (no anchor)", "",
+         "## Known-weak definitions (the reader is not told these in advance)", ""]
+    for w in fg["known_weak_definitions"]:
+        T.append("- %s" % w)
+    T += ["", "## Entries to classify", ""]
+    for e in pick:
+        T.append("### %s" % e["id"])
+        T.append("")
+        T.append("mechanism: %s" % e["mechanism"])
+        T.append("")
+        T.append("load condition: %s" % e["load_condition"])
+        T.append("")
+        T.append("consequence: %s" % e["consequence"])
+        T.append("")
+        T.append("onset: ______  detection channel: ______  reconstruction: ______  evidence class: ______")
+        T.append("")
+    open(os.path.join(HERE, "outsider_test.md"), "w").write("\n".join(T) + "\n")
+    return os.path.join(HERE, "REGISTER.md"), os.path.join(HERE, "outsider_test.md")
+
+
+def selftest():
+    errs = validate()
+    assert errs == [], errs
+    hdr, entries = load()
+    # the register is short by design: a long one is a warning sign
+    assert len(entries) <= 30, len(entries)
+    # entry 0 is the detection gap and it is first
+    assert entries[0]["id"] == "D-000" and entries[0]["detection_channel"] == "NONE"
+    # every section is populated and measured entries exist to set the floor
+    secs = {e["section"] for e in entries}
+    assert secs == {"0", "3A", "3B", "3C"}
+    assert sum(1 for e in entries if e["evidence_class"] == "MEASURED") >= 5
+    # projection cap holds and is reported
+    assert hdr["projected_fraction"] <= hdr["projected_cap"]
+    # F_A: at least one transport survives without appeal to resemblance
+    f = falsifiers()
+    assert f["F_A_bridge_transport_valid"]["status"] == "PASS"
+    assert all((e.get("transport") or {}).get("rests_on_analogy") is False
+               for e in entries if e["evidence_class"] == "TRANSPORTED")
+    # F_C audit: the two UNRATED PARTS are the only rejectable entries, and the rate is computed not asserted
+    a = audit(frac=1.0)
+    assert {r["id"] for r in a["rejected"]} == {"D-401", "D-402"}
+    assert all(r["filed_as"] == "UNRATED_PART" for r in a["rejected"])            # filed, not discarded
+    assert a["rejection_rate"] == round(2 / len(entries), 3)
+    # F_G is NOT RUN and says so
+    assert f["F_G_reader_precondition_blindness"]["status"] == "NOT RUN"
+    # F_H: no failure count anywhere; only entry, citation and distribution counts
+    assert "EVENT" in hdr["event_definition_F_H"] and "fidelity" in hdr["event_definition_F_H"]
+    # F_E does not claim publishing is sufficient
+    fe = f["F_E_the_enumeration_is_not_the_mechanism"]
+    assert "changes nothing on its own" in fe["what_would_make_this_binding"]
+    assert len(fe["forcing_functions_that_exist"]) == 2
+    # step 7 null set is non-empty: a register that finds everything broken is advocating
+    assert len(hdr["null_set"]) >= 3
+    for n in hdr["null_set"]:
+        assert n["residual"] and n["why_controlled"]
+    # step 5 headline: PARTIAL is modal
+    rep = report()
+    d = rep["reconstruction_distribution"]
+    assert d.get("PARTIAL", 0) == max(d.values()) and "YES" not in d
+    # every RATED entry with no control states a requirement (step 6)
+    for e in rated(entries):
+        if control_is(e, "NONE"):
+            assert e.get("requirement")
+    assert len(rep["requirements_where_no_control_exists"]) >= 6          # the prefix match, not equality
+    assert {"D-000", "D-104", "D-201", "D-205", "D-301", "D-304"} <= {r["id"] for r in rep["requirements_where_no_control_exists"]}
+    # custody entries whose path runs through one firm are NO / UNBOUNDED by the section 6 rule
+    d301 = [e for e in entries if e["id"] == "D-301"][0]
+    assert d301["reconstruction"] == "NO" and "UNBOUNDED" in d301["detection_latency"]
+    # citations carry a status and the unverified ones are visible
+    assert rep["citations"]["verified_this_session"] >= 6 and rep["citations"]["from_memory_unverified"] >= 6
+    # emissions are generated, not hand-written
+    md, ot = emit()
+    assert os.path.exists(md) and os.path.exists(ot)
+    body = open(md).read()
+    assert "BUILD PRODUCT" in body and "UNRATED PART" in body and "Null set" in body
+    assert "EMPTY (unrated part)" in body                                        # empty is distinct from NONE
+    print("failure_register selftest ok")
+
+
+def main(argv):
+    if not argv:
+        print(__doc__); return 0
+    cmd = argv[0]
+    if cmd == "validate":
+        errs = validate()
+        for i, m in errs:
+            print("%-12s %s" % (i, m))
+        hdr, entries = load()
+        print("register.jsonl: %d entries, %d failing" % (len(entries), len({i for i, _ in errs})))
+        return 1 if errs else 0
+    if cmd == "audit":
+        print(json.dumps(audit(), indent=1)); return 0
+    if cmd == "report":
+        print(json.dumps(report(), indent=1)); return 0
+    if cmd == "falsifiers":
+        print(json.dumps(falsifiers(), indent=1)); return 0
+    if cmd == "emit":
+        for p in emit():
+            print(p)
+        return 0
+    if cmd == "selftest":
+        selftest(); return 0
+    print(__doc__); return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
