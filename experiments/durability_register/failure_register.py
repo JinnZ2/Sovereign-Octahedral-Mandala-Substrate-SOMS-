@@ -43,6 +43,10 @@ REDUNDANCY_WORDS = ("redundan", "replica", "multiple copies", "several copies", 
 NUMBER_IN_CONJUNCTION = re.compile(r"\b0?\.\d+\b|\b\d+(\.\d+)?\s*(%|percent)\b")
 # 6C-1 register consequence: substrate slowness is not a custody control.
 HARDWARE_STABILITY_CLAIM = re.compile(r"hardware is stable|substrate is stable|hardware slowness (is|as) a? ?control", re.I)
+# F2 (section 1B-1): V9 demand continuity is at maximum here and does not protect, because V10 replacement velocity
+# outruns documentation. "It is widely used, it will be fine" may not be accepted as an existing_control.
+DEMAND_AS_CONTROL = re.compile(r"widely used|widely adopted|large user base|many users|popular|heavily used|"
+                               r"demand is high|continuous use (protects|ensures)|everyone uses", re.I)
 ONSETS = ("immediate", "drift", "dormant-until-triggered")
 EVIDENCE = ("MEASURED", "TRANSPORTED", "PROJECTED")
 RECONSTRUCTION = ("YES", "PARTIAL", "NO", "NOT_APPLICABLE")
@@ -107,6 +111,17 @@ def validate(path=STORE):
         if e.get("section") == "6C" and e.get("evidence_class") != "PROJECTED" and not e.get("current_instance"):
             errs.append((i, "6C entry not PROJECTED and citing no current instance (F_J): a strong structural "
                            "argument may not be scored as measured"))
+        ctrl_txt = str(e.get("existing_control") or "")
+        for ob in hdr.get("obligations_not_in_application", []):
+            for nm in ob.get("names", []):
+                if nm.lower() in ctrl_txt.lower() and "not in application" not in ctrl_txt.lower():
+                    errs.append((i, "cites %r as an existing_control: that obligation is NOT IN APPLICATION until %s. "
+                                    "A scheduled control whose date moves behaves exactly like no control "
+                                    "(register_corrections R-01)" % (nm, ob.get("until"))))
+        if DEMAND_AS_CONTROL.search(ctrl_txt):
+            errs.append((i, "cites demand or popularity as an existing_control (F2): V9 is at maximum here and does "
+                           "not protect, because V10 replacement velocity outruns documentation. 'It is widely used, "
+                           "it will be fine' is not a control."))
         if HARDWARE_STABILITY_CLAIM.search(str(e.get("existing_control") or "")):
             errs.append((i, "cites substrate or hardware stability as a custody control (6C-1 register consequence): "
                            "hardware slowness protects nothing if the representation is redefined between cycles"))
@@ -138,6 +153,29 @@ def validate(path=STORE):
                 errs.append((i, "transport rests on analogy: rejected at review (step 3 transport rule)"))
         if e["status"] == "RATED" and control_is(e, "NONE") and not e.get("requirement"):
             errs.append((i, "existing_control NONE with no requirement stated (step 6)"))
+    # F_M: a carrier-side condition enters the ACTIVE set only with a named producing mechanism AND a measurable
+    # production rate; the DUR-005-C screen has no null result (PRODUCED or FLAGGED, never clean).
+    ca = hdr.get("carrier_ambient") or {}
+    for c in ca.get("capacities", []):
+        if c.get("screen") not in ("PRODUCED", "FLAGGED"):
+            errs.append(("<header>", "carrier capacity %r scored %r: the DUR-005-C screen has no null result, every "
+                                     "capacity is PRODUCED or FLAGGED" % (c.get("capacity", "")[:40], c.get("screen"))))
+        if c.get("screen") == "PRODUCED" and not c.get("producing_mechanism"):
+            errs.append(("<header>", "carrier capacity %r scored PRODUCED with no producing mechanism named (F_M a)"
+                         % c.get("capacity", "")[:40]))
+        active = str(c.get("F_M", "")).startswith("ACTIVE")
+        if active and not c.get("measurable_production_rate"):
+            errs.append(("<header>", "carrier capacity %r admitted to the active set with no measurable production "
+                                     "rate (F_M b)" % c.get("capacity", "")[:40]))
+        if not active and c.get("measurable_production_rate") and "UNINSTRUMENTED" in str(c.get("F_M", "")):
+            errs.append(("<header>", "carrier capacity %r has a measurable rate and is recorded UNINSTRUMENTED"
+                         % c.get("capacity", "")[:40]))
+    # the axes must not be merged: a with-control or moving score lives in its own field, never in `reconstruction`
+    for e in entries:
+        note = str(e.get("reconstruction_note") or "")
+        if ("with the control" in note.lower() or "with control" in note.lower()) and not e.get("reconstruction_with_control"):
+            errs.append((e.get("id", "?"), "declares a with-control reconstruction reading in prose and carries no "
+                                           "reconstruction_with_control field: the axes may not be merged"))
     # F_K: every ambient condition carries a horizon judgement, and out-of-horizon ones are excluded not admitted
     amb = hdr.get("ambient_enumeration") or {}
     if amb:
@@ -204,6 +242,8 @@ def report(path=STORE):
     for e in entries:
         dist[e["reconstruction"]] = dist.get(e["reconstruction"], 0) + 1
     claiming = [e for e in entries if e["reconstruction"] != "NOT_APPLICABLE"]
+    with_control = {e["id"]: e["reconstruction_with_control"] for e in entries if e.get("reconstruction_with_control")}
+    trajectories = {e["id"]: e["reconstruction_trajectory"] for e in entries if e.get("reconstruction_trajectory")}
     by_section = {}
     for e in entries:
         by_section.setdefault(e["section"], []).append(e["id"])
@@ -214,7 +254,15 @@ def report(path=STORE):
                     for e in R if control_is(e, "PARTIAL") and e.get("requirement")]
     cites = [(c.get("status"), c.get("ref")) for e in entries for c in e.get("citations", [])]
     return {"entries": len(entries), "rated": len(R), "unrated_parts": len(entries) - len(R),
+            "reconstruction_distribution_AS_IS": dist,
             "reconstruction_distribution": dist,
+            "reconstruction_axes": {
+                "as_is": "the distribution above: what the retained record supports today, no proposed control in place",
+                "with_control": with_control,
+                "trajectory": trajectories,
+                "not_merged": "no distribution mixing these is published. Merging an as-is score, a with-control score "
+                              "and a moving score puts a control state and a date in one column. The rule and the "
+                              "sibling instrument that found the defect are in the header's reconstruction_axis_rule."},
             "reconstruction_headline": (
                 "Of the %d entries that make a reconstruction claim, PARTIAL %d and NO %d, and NOT ONE scores YES. %s "
                 "PARTIAL means enough of the record exists to rebuild something approximate and not enough to identify "
@@ -245,6 +293,11 @@ def report(path=STORE):
             "requirements_where_control_is_partial": partial_reqs,
             "null_set": hdr["null_set"],
             "hop_accounting": hdr["hop_budget"],
+            "loss_variable_map": hdr["loss_variable_map"],
+            "still_open_9_1": hdr["still_open_9_1"],
+            "amendments": sorted(k for k in hdr["corrections"] if k.startswith("A-")),
+            "register_corrections": sorted(k for k in hdr["register_corrections"] if k.startswith("R-")),
+            "forcing_functions": hdr["forcing_functions"],
             "length_watch": hdr["length_watch"],
             "volume_and_correlation": {"volume": hdr["volume_accounting"], "correlation": hdr["independence_correction"]},
             "shock_exposure": hdr["shock_recut"],
@@ -292,7 +345,14 @@ def falsifiers(path=STORE):
                                                "reconstructability, carrying a detection channel (permitted to be "
                                                "NONE) and a reconstruction score, for a fixed deployment class.",
             "caveat": "the prior-art check was four targeted searches on one day. It establishes that the major "
-                      "catalogues are harm-scoped; it does not establish that no durability catalogue exists anywhere."},
+                      "catalogues are harm-scoped; it does not establish that no durability catalogue exists anywhere.",
+            "prior_art_found_INSIDE_the_ecosystem_2026_09_13": hdr.get("prior_art_in_ecosystem"),
+            "F_B_status_correction": "F_B was answered against public catalogues and is now also answered against the "
+                                     "ecosystem: a sibling implementation of this same order exists at "
+                                     "JinnZ2/Simulators failure-mode-register/. It is a conformance instrument over "
+                                     "the order rather than a populated register, so this is not a second copy of the "
+                                     "same list, but two registers for one order is itself a durability hazard and the "
+                                     "consolidation recommendation is recorded rather than left implicit."},
         "F_C_unbounded_scope": {"status": "AUDITED", "sampled_rejection_rate": a["rejection_rate"],
                                 "sample": a["sampled"], "rejected_in_sample": a["rejected"],
                                 "whole_register_rejection_rate": a["whole_register_rejection_rate"],
@@ -306,13 +366,14 @@ def falsifiers(path=STORE):
                      "one instead."},
         "F_E_the_enumeration_is_not_the_mechanism": {
             "status": "STATED, AND THE HONEST ANSWER IS MOSTLY NOTHING",
-            "forcing_functions_that_exist": [
-                "EU AI Act Article 12 (automatic logging over the system lifetime) and Article 26 (deployer retention "
-                "of logs, minimum six months), plus Annex IV technical documentation. Real, binding, and scoped to the "
-                "Act's high-risk categories. The six-month floor is shorter than every reconstruction question here.",
-                "FDA Predetermined Change Control Plan, final guidance 2024-12-03: a pre-authorised modification "
-                "protocol with an impact assessment. This is as-built drift control with teeth, for AI-enabled "
-                "medical device software functions only."],
+            "forcing_functions": hdr.get("forcing_functions"),
+            "count_in_application": (hdr.get("forcing_functions") or {}).get("count_in_application"),
+            "corrected_at": "register_corrections R-01: the EU AI Act duties were named here as a real forcing "
+                            "function and are NOT IN APPLICATION. Two became one.",
+            "the_order_was_right": "section 9-1 states that the register has no forcing function and that this is the "
+                                  "finding rather than an omission. The earlier answer here softened that by naming "
+                                  "two levers; one of them is not in application, and the other is medical device "
+                                  "software. The order's statement stands.",
             "what_would_make_this_binding": "attributable, expensive failure. Neither exists for the fixed deployment "
                                             "class, because entry D-000 removes attribution and distributes the cost. "
                                             "Publishing the register changes nothing on its own, and this deliverable "
@@ -338,6 +399,18 @@ def falsifiers(path=STORE):
             "substrate_correction": "D-207 no longer reads as decay. The bits do not rot; the READER is gone. Intact "
                                     "and unreadable is a distinct state from decayed and it is worse, because it "
                                     "reads as retained."},
+        "F_M_carrier_side_unfalsifiable": {
+            "status": "BOUNDED, and mostly UNINSTRUMENTED",
+            "rule": "a carrier-side condition enters the ACTIVE set only with (a) a named producing mechanism and (b) a "
+                    "currently measurable production rate. Failing (b) it is recorded as UNINSTRUMENTED and excluded "
+                    "from the active set rather than carried as a claim.",
+            "result": (hdr.get("carrier_ambient") or {}).get("F_M_result"),
+            "screen": "DUR-005-C has no null result: every capacity scores PRODUCED or FLAGGED, nothing scores clean. "
+                      "validate enforces both that and the F_M bar.",
+            "reads": "four of five candidate carrier-side conditions have no production-rate measure and are excluded "
+                     "as UNINSTRUMENTED. The one admitted is admitted because DUR-004 already measures its local form. "
+                     "The class is real and the instrument for four fifths of it does not exist, which is what the "
+                     "register records instead of asserting an unbounded hazard."},
         "F_J_recursive_case_speculation": {
             "status": "ENFORCED",
             "rule": "every 6C entry is evidence_class PROJECTED unless it cites a current instance; validate refuses "
@@ -481,7 +554,30 @@ COVERAGE = [
      [], ["compounding_6C"], ["falsifiers:F_E"]),
     ("6C-7 minimal arrest", "a frozen interchange layer, frozen outside the generating system; the format is in the set",
      ["DUR-008", "DUR-008-N1"], ["compounding_6C"], []),
-    ("7 F_A..F_L", "every falsifier answered with a status", [], [], ["falsifiers"]),
+    ("patch 2026-09-13 h1", "carrier-side ambient as a second class, not reachable by the artifact-side question",
+     ["DUR-005-B", "DUR-005"], ["carrier_ambient"], []),
+    ("patch 2026-09-13 h1", "DUR-005-C intrinsic-vs-produced screen, no null result", ["DUR-005-B"],
+     ["carrier_ambient"], ["validate"]),
+    ("patch 2026-09-13 h2", "F_M: a carrier-side condition needs a producing mechanism and a measurable rate",
+     ["DUR-005-B"], ["carrier_ambient"], ["falsifiers:F_M", "validate"]),
+    ("patch 2026-09-13 h3", "correction A-11: the rev-6 ambient set was artifact-side only", [],
+     ["corrections", "ambient_enumeration"], []),
+    ("patch 2026-09-13 h4", "still open: the screen has no detection channel and is run by the population it tests",
+     ["DUR-005-B"], ["still_open"], []),
+    ("sibling instrument", "the control-state axis: as-is, with-control and moving scores never merged",
+     ["DUR-001", "DUR-003"], ["reconstruction_axis_rule", "prior_art_in_ecosystem"], ["report", "validate"]),
+    ("1B loss-variable map", "V1 to V14 scored, amended scores authoritative, originals retained", [],
+     ["loss_variable_map"], ["report"]),
+    ("1B-1 F1", "the verification channel is blocked: a failed rebuild is indistinguishable from a bad draw",
+     ["DUR-018"], ["loss_variable_map"], []),
+    ("1B-1 F2", "demand at maximum does not protect; popularity is not an existing_control", [],
+     ["loss_variable_map"], ["DEMAND_AS_CONTROL", "validate"]),
+    ("1B-1 F3", "the protective set is thin and entirely document-side", [], ["loss_variable_map"], []),
+    ("9 amendment record", "A-01 to A-11 with the superseded statement retained in each", [], ["corrections"], []),
+    ("9-1 still open", "reconciled against what this register holds, item by item", [], ["still_open_9_1"], []),
+    ("F_E forcing function", "what is actually in application, and a rule against citing what is not", [],
+     ["forcing_functions", "obligations_not_in_application", "register_corrections"], ["validate", "falsifiers:F_E"]),
+    ("7 F_A..F_M", "every falsifier answered with a status", [], [], ["falsifiers"]),
     ("Step 5", "reconstruction distribution as a headline", [], [], ["report"]),
     ("Step 6", "requirement set for every entry with no control", [], [], ["report"]),
     ("Step 7", "the null set: modes checked and found already controlled", [], ["null_set"], []),
@@ -655,9 +751,9 @@ def selftest():
     hdr, entries = load()
     # the register is short by design: a long one is a warning sign (section 8). The guard is a TRIPWIRE, and the
     # length is reported with its growth accounting rather than silently accommodated.
-    assert len(entries) <= 40, len(entries)
+    assert len(entries) <= 40, len(entries)   # tripwire; 38 now, and the order is still growing
     lw = hdr["length_watch"]
-    assert lw["entries"] == len(entries) and lw["growth"]["rev 6"] == len(entries)
+    assert lw["entries"] == len(entries) and lw["growth"]["rev 8"] == len(entries)
     assert "no longer short" in lw["status"] and "tripwire" in lw["status"]
     assert "own durability failure" in lw["status"]          # the register's length is itself a durability risk
     assert "No entry was self-generated" in lw["accounting"]
@@ -691,7 +787,8 @@ def selftest():
     # F_E does not claim publishing is sufficient
     fe = f["F_E_the_enumeration_is_not_the_mechanism"]
     assert "changes nothing on its own" in fe["what_would_make_this_binding"]
-    assert len(fe["forcing_functions_that_exist"]) == 2
+    assert fe["count_in_application"] == 1            # was 2 until R-01 withdrew the deferred one
+    assert len(fe["forcing_functions"]["levers"]) == 2
     # step 7 null set is non-empty: a register that finds everything broken is advocating
     assert len(hdr["null_set"]) >= 3
     for n in hdr["null_set"]:
@@ -706,6 +803,7 @@ def selftest():
     assert "wrong in the direction of optimism" in rep["reconstruction_headline"]
     assert d.get("NOT_APPLICABLE", 0) == 4
     assert "6C" in {e.get("section") for e in entries}
+    assert rep["reconstruction_distribution_AS_IS"] == d
     assert len(rep["entries_with_a_real_detection_channel"]) >= 1                  # DUR-004 at minimum
     # every RATED entry with no control states a requirement (step 6)
     for e in rated(entries):
@@ -863,6 +961,120 @@ def selftest():
     assert "6C-2" in json.dumps(by_id["DUR-008"]["citations"]) and "now supplied" in json.dumps(by_id["DUR-008"]["citations"])
     assert f["F_K_ambient_set_unbounded"]["status"] == "BOUNDED"
     assert f["F_L_conjunction_arithmetic"]["status"] == "NO NUMBER PUT ON IT"
+    # rev 7: the carrier-side class, the screen with no null result, and F_M's bar
+    assert "DUR-005-B" in by_id
+    b5 = by_id["DUR-005-B"]
+    assert b5["detection_channel"].startswith("NONE") and "run by the same population" in b5["detection_channel"]
+    assert "UPSTREAM OF EVERY TRANSMISSION VARIABLE" in b5["mechanism"]
+    assert "LOSS DOES NOT SCALE WITH THE SIZE OF THE CAUSE" in b5["consequence"]
+    assert b5["evidence_class"] == "PROJECTED" and "NOT NAMED" in b5["evidence_note"]
+    ca = hdr["carrier_ambient"]
+    assert len(ca["capacities"]) == 5
+    assert all(c["screen"] in ("PRODUCED", "FLAGGED") for c in ca["capacities"])      # no null result
+    assert ca["F_M_result"]["active"] == 1 and ca["F_M_result"]["uninstrumented_excluded"] == 4
+    assert "DUR-004" in [c.get("candidate_measure", "") for c in ca["capacities"]][4]
+    assert f["F_M_carrier_side_unfalsifiable"]["status"].startswith("BOUNDED")
+    assert hdr["corrections"]["A-11"]["superseded"].startswith("DUR-005")
+    assert "supplied in full" in hdr["corrections"]["note"]          # rev 7's gap note is now superseded
+    assert "earlier gap note is superseded" in hdr["corrections"]["note"]
+    # the patch was not applied as a patch, and the entry says why
+    assert "does not exist in this repository" in json.dumps(b5["citations"])
+    assert "NOT applied as a patch" in json.dumps(b5["citations"])
+    # the axes are split, never merged, and the defect's source is credited
+    ax = rep["reconstruction_axes"]
+    assert ax["with_control"] == {"DUR-001": "PARTIAL"} and set(ax["trajectory"]) == {"DUR-003"}
+    assert "control state and a date in one column" in ax["not_merged"]
+    assert "Simulators" in hdr["reconstruction_axis_rule"]["found_by"]
+    # a with-control reading declared only in prose is refused
+    import copy, tempfile
+    bad3 = copy.deepcopy(by_id["DUR-002"]); bad3["id"] = "SYNTH-4"
+    bad3["reconstruction_note"] = "NO as deployed, PARTIAL with the control"
+    bad3.pop("reconstruction_with_control", None)
+    with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as tf3:
+        tf3.write(json.dumps(hdr) + "\n")
+        for x in entries + [bad3]:
+            tf3.write(json.dumps(x) + "\n")
+    ve3 = validate(tf3.name)
+    assert any(i == "SYNTH-4" and "axes may not be merged" in m for i, m in ve3), ve3
+    os.unlink(tf3.name)
+    # F_B now also answers against the ecosystem, and names what the sibling does better
+    pa = hdr["prior_art_in_ecosystem"]
+    assert "CONFORMANCE instrument" in pa["what_it_is"] and pa["revision_it_holds"].startswith("rev 3")
+    assert any("retyped" in x for x in pa["what_it_does_better"])
+    assert "push access" in pa["recommendation"]
+    assert "F_B_status_correction" in f["F_B_prior_art"]
+    # rev 8: the loss-variable map, its three findings, the full amendment record, DUR-018 and the F2 rule
+    vm = hdr["loss_variable_map"]
+    assert len(vm["variables"]) == 14 and {v["v"] for v in vm["variables"]} == {"V%d" % i for i in range(1, 15)}
+    assert vm["variables"][2]["amended"].startswith("--")                      # V3 amended by A-01
+    assert vm["variables"][5]["amended"].startswith("--")                      # V6 amended by A-02
+    assert "split" in vm["variables"][13]["amended"]                           # V14 split by A-03
+    assert vm["findings"]["F1"]["entry"] == "DUR-018"
+    assert "original_form_retained" in vm["findings"]["F3"]                    # the withdrawn claim stays visible
+    amds = sorted(k for k in hdr["corrections"] if k.startswith("A-"))
+    assert amds == ["A-%02d" % i for i in range(1, 12)], amds
+    for k in amds:
+        assert hdr["corrections"][k]["superseded"] and hdr["corrections"][k]["replacement"]
+    assert "ANY CONTROL THAT VERIFIES BIT INTEGRITY IS NOT A CONTROL" in hdr["corrections"]["A-02"]["consequence"]
+    assert "FLOOR, NOT AN ESTIMATE" in hdr["corrections"]["A-06"]["consequence"]
+    assert "A_06" in hdr["hop_budget"]
+    # DUR-018: the test, not the record, and it caps every other score
+    d18 = by_id["DUR-018"]
+    assert d18["evidence_class"] == "MEASURED" and d18["section"] == "3A"
+    assert "MISSING TEST IS WORSE THAN A MISSING RECORD" in d18["consequence"]
+    assert "UNVERIFIABLE" in d18["requirement"] and d18["reconstruction"] == "NO"
+    assert any(p.get("entry") == "DUR-001-N2" for p in d18["control_preconditions"])   # it closes A-10's open item
+    # the F2 rule bites
+    import copy, tempfile
+    bad4 = copy.deepcopy(by_id["D-101"]); bad4["id"] = "SYNTH-5"
+    bad4["existing_control"] = "PARTIAL: the component is widely used, so problems would be noticed"
+    with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as tf4:
+        tf4.write(json.dumps(hdr) + "\n")
+        for x in entries + [bad4]:
+            tf4.write(json.dumps(x) + "\n")
+    ve4 = validate(tf4.name)
+    assert any(i == "SYNTH-5" and "not a control" in m for i, m in ve4), ve4
+    os.unlink(tf4.name)
+    # 9-1 reconciled: three closed here, one partly, one open, and F_E's disagreement stated rather than hidden
+    so = hdr["still_open_9_1"]["items"]
+    assert len(so) == 5
+    assert sum(1 for x in so if x["status"] == "CLOSED HERE") == 2
+    assert any("PARTLY CLOSED" in x["status"] for x in so)
+    fe = [x for x in so if "forcing function" in x["item"]][0]
+    assert "the order was right" in fe["status"] and "Nothing in general scope forces" in fe["entry"]
+    # rev 9: the forcing-function correction, verified, with the superseded claim retained
+    ff = hdr["forcing_functions"]
+    assert ff["count_in_application"] == 1
+    eu = [l for l in ff["levers"] if "EU AI Act" in l["lever"]][0]
+    assert eu["status"] == "NOT IN APPLICATION" and "2027" in eu["why"] and "2028" in eu["why"]
+    assert "at least six months" in eu["retention_text"] and "FLOOR, not a ceiling" in eu["retention_text"]
+    assert "NO MEASURAND ATTACHED" in eu["measurand_finding"] and "DUR-002" in eu["measurand_finding"]
+    fda = [l for l in ff["levers"] if "FDA" in l["lever"]][0]
+    assert fda["status"] == "IN APPLICATION"
+    r1 = hdr["register_corrections"]["R-01"]
+    assert r1["superseded"].startswith("F_E named the EU AI Act") and "Enacted and applicable are different states" \
+        in r1["how_the_error_happened"].replace("enacted and applicable", "Enacted and applicable")
+    assert len(r1["consequence"]) == 4
+    n04 = [n for n in hdr["null_set"] if n["id"] == "N-04"][0]
+    assert n04["control_status"].startswith("NOT IN APPLICATION") and n04["why_controlled"].startswith("WITHDRAWN")
+    assert n04["superseded_2026_09_13"]                                     # the withdrawn claim stays visible
+    assert f["F_E_the_enumeration_is_not_the_mechanism"]["count_in_application"] == 1
+    assert "order's statement stands" in f["F_E_the_enumeration_is_not_the_mechanism"]["the_order_was_right"]
+    fe91 = [x for x in hdr["still_open_9_1"]["items"] if "forcing function" in x["item"]][0]
+    assert "the order was right" in fe91["status"]
+    # the rule bites: an entry citing a deferred obligation as a control is refused
+    import copy, tempfile
+    bad5 = copy.deepcopy(by_id["D-000"]); bad5["id"] = "SYNTH-6"
+    bad5["existing_control"] = "PARTIAL: EU AI Act Article 12 requires logging over the lifetime"
+    with tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as tf5:
+        tf5.write(json.dumps(hdr) + "\n")
+        for x in entries + [bad5]:
+            tf5.write(json.dumps(x) + "\n")
+    ve5 = validate(tf5.name)
+    assert any(i == "SYNTH-6" and "NOT IN APPLICATION" in m for i, m in ve5), ve5
+    os.unlink(tf5.name)
+    # and the register's own entries do not trip it
+    assert not any("NOT IN APPLICATION" in m for _, m in validate())
     # citations carry a status and the unverified ones are visible
     assert rep["citations"]["verified_this_session"] >= 6 and rep["citations"]["from_memory_unverified"] >= 6
     # emissions are generated, not hand-written

@@ -24,19 +24,182 @@ python experiments/durability_register/failure_register.py emit        # REGISTE
 python experiments/durability_register/failure_register.py selftest
 ```
 
-## What came out (rev 6)
+## What came out (rev 8)
 
 ```
-entries 36     rated 34     unrated parts 2      LENGTH WATCH: tripwire moved 35 -> 40, see below
-sections       0: 1   3A: 6   3B-W WORKED: 10   3B: 8   3C: 8   6C COMPOUNDING: 3
-reconstruction PARTIAL 16   NO 16   NOT_APPLICABLE 4   YES 0     <- section 8's prediction no longer holds
-detection gap  28 of 36 entries: channel begins NONE, or latency is unbounded
-projection     30.6% against a stated 35% cap  (33.3 -> 29.2 -> 25.9 -> 24.1 -> 25.8 -> 30.6)
-citations      35 verified this session   23 named from memory and NOT verified
-requirements   20 modes with no control at all   14 where the mechanism exists and nothing attaches it
-null set       4 modes checked and found already controlled
-coverage audit 57 rows, 0 gaps, 1 entry not mapped to an order section (D-105, derived from D-102)
+entries 38     rated 36     unrated parts 2      LENGTH WATCH: 38 of a 40 tripwire
+sections       0: 1   3A: 7   3B-W: 11   3B: 8   3C: 8   6C: 3
+reconstruction AS-IS: NO 18   PARTIAL 16   NOT_APPLICABLE 4   YES 0
+detection gap  30 of 38      projection 31.6% of a 35% cap      citations 38 verified / 23 from memory
+coverage audit 69 rows, 0 gaps      amendments A-01..A-11 all recorded with their superseded statements
 ```
+
+### Rev 8: the loss-variable map and the amendment record arrived
+
+Section 1B and section 9 had never been supplied. Both are now in the header, and two things in them were real work
+rather than transcription.
+
+**Finding F1 had no entry, and it is the sharpest thing in the order.** DUR-018: every classical recovery ran on a
+verification test. Mix a candidate concrete, test it against the surviving wall, and a failed rebuild is
+distinguishable from a successful one. Here the test is gone, because with the variance D-101 measures, a candidate
+that misses the published number is indistinguishable from a bad draw of the correct procedure, and one that hits it
+may be a good draw of a wrong procedure. **A missing test is worse than a missing record.** The entry says what that
+implies for the rest of the register: every other reconstruction score is capped by this one, and no amount of
+deposit, custody or hop logging lifts a rebuild to verified while the comparison stays undecidable. Its proposed
+control is the pair, not a single artifact: publish the variance basis with the figure, and retain DUR-001's
+reference sample so the candidate has something to be tested against. That pair is also the procedure test A-10 left
+open, so DUR-018 partly closes a 9-1 item.
+
+**Finding F2 was a rule my validator did not enforce.** "It is widely used, it will be fine" may not be accepted as
+an existing_control, because V9 demand continuity is at maximum here and still loses to V10 replacement velocity.
+`validate` now rejects an entry whose control cites popularity, adoption or user count, and the selftest proves it
+with a synthetic entry claiming a component is widely used.
+
+**The amendment record is now complete, A-01 to A-11**, each retaining its superseded statement. Two of its
+consequences are enforcement, not prose: A-02 says any control verifying bit integrity is not a control for the
+reader problem, and A-06 says section 6B is a floor rather than an estimate, which is now recorded on the hop budget
+itself. A-09's design constraint went onto DUR-008's requirement: keep the frozen interchange set small and readable
+**without** the stack.
+
+### Section 9-1 reconciled, item by item
+
+```
+CORRELATED-BLOCK LOSS        CLOSED HERE      DUR-009 (renumbered when the order claimed DUR-005)
+PROCEDURE REPRODUCIBILITY    PARTLY CLOSED    DUR-001-N2 entry exists; DUR-018 now proposes the control
+PROVENANCE REGRESS           CLOSED HERE      DUR-008 + DUR-008-N1
+CARRIER-SIDE DETECTION       OPEN, as stated  DUR-005-B records it; F_M excludes 4 of 5 as UNINSTRUMENTED
+NO FORCING FUNCTION          OPEN in general  two sector-scoped exceptions recorded, neither general
+```
+
+**Rev 9 withdrew that disagreement. I was wrong and the order was right.**
+
+I had named the EU AI Act record-keeping and deployer-retention duties as one of two real forcing functions. They are
+**not in application.** The Digital Omnibus on AI defers the Chapter III high-risk obligations, where both articles
+sit: political agreement 7 May 2026, in force 27 July 2026, Annex III standalone moved to **2 December 2027** and
+Annex I embedded to **2 August 2028**. Article 50 transparency stayed live on 2 August 2026; these duties did not.
+Verified independently this session against the Omnibus summaries, dates consistent across every source located.
+
+```
+forcing functions in application, as of 2026-09-13:   1
+  EU AI Act Art. 12 / Art. 26(6) / Annex IV     NOT IN APPLICATION until 2027-12-02 / 2028-08-02
+  FDA Predetermined Change Control Plan          IN APPLICATION, US medical device software only
+```
+
+So section 9-1's statement stands unqualified: the register has no forcing function, and that is the finding.
+Procurement remains the only lever needing no regulator.
+
+Three consequences, all recorded rather than quietly edited:
+
+- **Null-set entry N-04 is withdrawn.** It scored use-logging as CONTROLLED BY REGULATION. That put a not-yet-
+  applicable obligation in the list of things already handled, which is an error in the reassuring direction, in the
+  one section whose whole job is to stop the register from claiming everything is broken.
+- **A new validate rule**, and it immediately caught two stale claims in this register's own entries. An obligation
+  that is not in application may not be cited as an existing_control, because a scheduled control whose date moves
+  behaves exactly like no control, which is the same shape as the unbudgeted scheduled shock in 6B-3. D-000 and D-208
+  both leaned on the deferred duties and both now say so, with the superseded text kept on the entry.
+- **Article 26(6) is carried with the operator's finding, which strengthens the register.** The text requires logs be
+  kept for "a period appropriate to the intended purpose of the high-risk AI system, of at least six months". The
+  qualifying clause is unquantified, so the only binding number is six months. That is an envelope requirement with no
+  measurand attached: DUR-002's exact defect appearing inside the instrument meant to force record-keeping.
+
+Register-side corrections are numbered R-nn so the operator's A-series stays unambiguous. R-01 records how the error
+happened: the claim was built from sources describing the articles as enacted, without checking whether the
+obligations were in application. Enacted and applicable are different states, and this register of all things should
+not have conflated them.
+
+```
+entries 37     rated 35     unrated parts 2      (rev 7 figures below)
+sections       0: 1   3A: 6   3B-W WORKED: 11   3B: 8   3C: 8   6C COMPOUNDING: 3
+reconstruction AS-IS: NO 17   PARTIAL 16   NOT_APPLICABLE 4   YES 0
+               axes NOT merged: with-control {DUR-001: PARTIAL} · trajectory {DUR-003: PARTIAL -> NO}
+detection gap  29 of 37 entries: channel begins NONE, or latency is unbounded
+projection     32.4% against a stated 35% cap  (33.3 -> 29.2 -> 25.9 -> 24.1 -> 25.8 -> 30.6 -> 32.4)
+citations      36 verified this session   23 named from memory and NOT verified
+coverage audit 63 rows, 0 gaps, 1 entry not mapped to an order section (D-105, derived from D-102)
+```
+
+### The patch was NOT applied, per its own instruction
+
+The patch targets `WORKORDER_failure_mode_enumeration.md` and says to stop and report if an anchor is not found
+exactly once. That file exists in neither repository, and **none of the four anchors was found anywhere**, including
+in JinnZ2/Simulators at head b2b1232:
+
+```
+target WORKORDER_failure_mode_enumeration.md   ABSENT from SOMS, GlyphAI and Simulators
+hunk 1 "...ECONOMICS AND INSTITUTIONS presented as"   0 matches (the text exists only inside this
+                                                      register's header as a JSON value, not as a line)
+hunk 2 "F_K  AMBIENT SET IS UNBOUNDED."               0 matches
+hunk 3 the A-10 block, before "### 9-1  STILL OPEN"   0 matches; no A-series log and no section 9-1 anywhere
+hunk 4 the PROVENANCE REGRESS bullet in 9-1           0 matches
+```
+
+The patch's target is a third artifact: an operator working copy further ahead than either repository, carrying an
+A-numbered correction log to A-10 and a section 9-1. Nothing was guessed. The patch CONTENT is implemented in the
+register instead, which is where the previous six revisions landed, and the entry citation records that the patch was
+not applied as a patch and why.
+
+### DUR-005-B carrier-side ambient
+
+```
+ARTIFACT-SIDE   conditions the OBJECT needs to exist and be read        DUR-005
+CARRIER-SIDE    conditions the CARRIER needs to be able to PERFORM      DUR-005-B   (new)
+                not reachable by the artifact-side question: a carrier-side condition does not make
+                the record unreadable, it makes the method unrunnable while the record stays legible
+```
+
+The mechanism is that a reliably produced capacity reads as an intrinsic property of a population rather than as an
+output of conditions, so the dependency is never stated, and the precondition that fails sits upstream of every
+transmission variable. The transmission chain can be intact throughout. **Loss does not scale with the size of the
+cause.**
+
+The DUR-005-C screen has no null result: every capacity scores PRODUCED or FLAGGED, nothing scores clean, and
+`validate` enforces that. Then F_M bounds it, and the result is the finding:
+
+```
+capacity                                                    screen    F_M
+working memory sufficient to audit a representation         PRODUCED  UNINSTRUMENTED, excluded
+ability to read low-level implementation                    PRODUCED  UNINSTRUMENTED, excluded
+training pipelines producing these at replacement rate      PRODUCED  UNINSTRUMENTED, excluded
+working conditions permitting sustained single-task attention PRODUCED UNINSTRUMENTED, excluded
+willingness to do maintenance work with no attribution      PRODUCED  ACTIVE - DUR-004 already measures it
+```
+
+Four of five have no production-rate measure and are excluded as UNINSTRUMENTED rather than carried as claims. The
+one admitted is admitted because DUR-004's bus-factor and time-to-first-modification signals already measure its
+local form. The class is real and the instrument for four fifths of it does not exist, which is what the register
+records instead of asserting a hazard it cannot bound.
+
+The entry is PROJECTED, not MEASURED. The operator states a documented historical form and does not name the case;
+naming it is the cheapest available upgrade to this entry.
+
+### A sibling register exists, and it found a defect in this one
+
+Checking Simulators for the patch target turned up `failure-mode-register/` (WORK_ORDER.md, entries.py, register.py,
+test_register.py, CLAIM_TABLE.md) at rev 3 of the order. It is a **conformance instrument over the order, not a
+populated register**: it parses the order at call time, reports filing state, vocabulary conformance and step status
+over the order's own four ENTRY blocks, and authors nothing. Four entries, projected fraction 0.0.
+
+It does three things better than this register, by this register's own criteria:
+
+- **It derives instead of transcribing.** The order is delivered verbatim in-repo and parsed at call time, nothing
+  retyped. This register transcribes entry text into `register.jsonl`, which is a custody weakness of exactly the
+  kind DUR-010 describes.
+- **It imports `effective-redundancy-audit::n_eff` as code**, where DUR-009 only cross-references that instrument by
+  name.
+- **It refuses to merge the reconstruction axes**, and that is a real defect it caught here. This register published
+  one distribution over cells carrying different axes: an as-is score, a with-control score and a moving score.
+  Merging them puts a control state and a date in one column. Fixed: the stored value is the as-is score,
+  `reconstruction_with_control` and `reconstruction_trajectory` hold the others, the report publishes the as-is
+  distribution labelled as such plus the two other axes separately, and `validate` refuses an entry that declares a
+  with-control reading in prose without the field.
+
+What this register has that it lacks: its Step 0 is BLOCKED because its egress refuses the catalogue hosts, so its
+F_B is unresolved and it says it is not cleared to ship. The prior-art map here supplies that. Its Step 1 is NOT_RUN
+with no deployment class declared. And it holds none of rev 4 to rev 7.
+
+**Recommendation: consolidate into the Simulators copy.** It derives rather than transcribes, it sits beside the
+instruments it needs to import, and it already has a conformance layer this register lacks. That requires push access
+to JinnZ2/Simulators, which this session does not have: the clone here is read-only. Recorded in `still_open`.
 
 **The expected yield inverted.** Section 8 predicted PARTIAL would dominate and NO would be rare. After rev 6 the
 two are tied at 16, and every entry the operator added in this revision scores NO: ambient precondition, custodian
@@ -313,13 +476,17 @@ F_A  transport valid       PASS. 8 transported entries, all stating an abstract 
                            to rebuild the object) rather than a resemblance. The two highest-value transports are
                            the retained reference sample and the stamped validity envelope: both cheap, both
                            mandatory at home, neither exists here.
-F_B  prior art             CHECKED, not redundant, scoped to the residual (above).
+F_B  prior art             CHECKED against public catalogues AND, as of rev 7, against the ecosystem: a sibling
+                           implementation exists at JinnZ2/Simulators failure-mode-register/. Not a second copy of
+                           the same list (conformance instrument vs populated register), but two registers for one
+                           order is itself a durability hazard, so the consolidation recommendation is recorded.
 F_C  unbounded scope       AUDITED, and the sample is reported against the whole register because the mandated 20%
                            sample (7 of 36, seed 13) happened to contain NEITHER rejectable entry and reads 0.0.
                            Whole-register rate: 2 of 36 (5.6%), both already filed as UNRATED PARTS rather than
                            discarded. A 0% sampled rate reported alone would have been the register's own
                            detection gap reproduced in its audit. Author-run, which is the weak case F_G fixes.
-F_D  projection inflation  30.6% against a 35% cap (33.3 -> 29.2 -> 25.9 -> 24.1 -> 25.8 -> 30.6). Rev 6 rose
+F_D  projection inflation  32.4% against a 35% cap, and now close enough that the next unanchored entry must
+                           displace one rather than be added. Rev 6 rose
                            because F_J forces all three compounding entries to PROJECTED. That is the falsifier
                            working: the fraction is the price of not scoring a structural argument as measured. because every
                            entry the operator has added is anchored: rev 3 adds two TRANSPORTED, one MEASURED and
@@ -346,6 +513,10 @@ F_J  recursive speculation ENFORCED. Every 6C entry is PROJECTED unless it cites
                            refuses otherwise, and the selftest proves it with a synthetic MEASURED 6C entry.
 F_K  ambient set bounded   BOUNDED. Horizon declared, seven conditions admitted with a horizon judgement each,
                            three out-of-horizon candidates recorded as excluded. validate refuses an unbounded set.
+F2   demand is not a control ENFORCED. validate rejects an existing_control citing popularity, adoption or user
+                           count, per section 1B-1 finding F2.
+F_M  carrier-side bounded  BOUNDED, and mostly UNINSTRUMENTED: 1 of 5 conditions admitted to the active set, 4
+                           excluded for having no production-rate measure. The screen has no null result.
 F_L  conjunction arithmetic NO NUMBER PUT ON IT. validate scans the conjunction for any probability or percentage
                            and fails if one appears. The conclusion rests on the inability to ensure each term.
 F_H  event definition      DEFINED BEFORE ANY COUNT. An event is a bounded change in the reconstruction state of
