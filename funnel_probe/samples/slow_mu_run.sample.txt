@@ -1,0 +1,31 @@
+DISCRETE FUNNEL ANALOG on SOMSEngine energy, n=4 cells, alpha=0.50
+  J (nn normalised to 1):
+    [[1.     1.     0.0251 0.0051]
+ [1.     1.     1.     0.0251]
+ [0.0251 1.     1.     1.    ]
+ [0.0051 0.0251 1.     1.    ]]
+  twin energy vs SOMSEngine.energy_landscape on 200 random configs: max |dE| = 4.44e-16  PASS
+  4096 configurations: E_max = 1.7054, exact ground states (E=0): 8, m(s0) range [0.000, 1]
+  K=10    self-consistency map: stable fixed points ['-1.92'], unstable []
+  K=15    self-consistency map: stable fixed points ['-1.94', '0.85'], unstable ['0.34']
+  K used: 15  (P1 bistability: HELD)
+  control (mu frozen at 4): ground visited within 400 sweeps in 100.0% of (config, seed) pairs
+
+  eps      |F|   maxP(dis)  meanP(dis)  P(dis|m0 min)  ground-visit  inconclusive   (F = configs with P(DISORDERED) > 0.5)
+  0.4      4096      1.000      0.874        0.800        0.791        0.008    by m0 quartile ['0.88', '0.88', '0.87', '0.87']
+  0.2      3163      0.950      0.605        0.800        0.954        0.024    by m0 quartile ['0.60', '0.61', '0.61', '0.60']
+  0.1        12      0.550      0.249        0.200        0.997        0.035    by m0 quartile ['0.25', '0.25', '0.25', '0.24']
+  0.05        0      0.250      0.037        0.000        1.000        0.023    by m0 quartile ['0.04', '0.04', '0.04', '0.04']
+  0.025       0      0.050      0.000        0.000        1.000        0.004    by m0 quartile ['0.00', '0.00', '0.00', '0.00']
+
+PRE-REGISTERED PREDICTIONS
+  HELD   P1 bistability at the chosen K
+  HELD   P2 control (mu frozen at 4): ground visited in >= 95% of pairs
+  HELD   P3 |F(eps)| non-increasing as eps decreases
+  FAILED P4 |F| > 0 at the smallest eps (persists)
+  HELD   P5 ln(max P_dis) falls linearly in 1/eps (slope -0.082)
+  FAILED P6 lowest-m0 quartile has the highest P(dis) at every eps
+
+OUTCOME: FUNNEL_FOUND (discrete analog)
+scope: stochastic (Metropolis, fixed seeds), K=15, a=3, b=2, mu0=4, T_MAX=400, 20 seeds/config, DISCRETE state space with a continuous slow variable; 326 s
+exit 0
