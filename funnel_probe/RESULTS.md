@@ -127,3 +127,28 @@ Scope: stochastic (Metropolis, fixed seeds, 20 per start), K = 15, a = 3,
 b = 2, mu0 = 4, T_MAX = 400 sweeps, Euler step dt = 1 sweep on mu (coarse
 at eps = 0.4, pre-registered), n = 4 cells on MandalaMap(u=20, depth=1)
 ring-1 petals with J_nn = 1; DISCRETE state space, continuous slow variable.
+
+## Re-scored under RULES V2 (noise band + thinness; `RULES_V2.md`, `rescore_v2.py`, nothing re-run)
+
+Output `samples/rescore_v2.sample.txt`, numbers `samples/rescore_v2_results.json`.
+
+    RULES V2 re-scoring -- SOMS slow-mu sweep (per-configuration counts, 20 seeds, 4096 configs), eps grid [0.4, 0.2, 0.1, 0.05, 0.025]
+      Rule N on |F| (predicted non-increasing as eps falls): ['4096', '3163', '12', '0', '0']
+         step 0: change -933  band +-49.26  ok
+         step 1: change -3151  band +-52.56  ok
+         step 2: change -12  band +-19.83  ok
+         step 3: change +0  band +-0.3183  ok
+      Rule N on mean P(dis): ['0.8743', '0.6052', '0.2486', '0.03662', '0.0002441']
+         step 0: change -0.2691  band +-0.004006  ok
+         step 1: change -0.3565  band +-0.004454  ok
+         step 2: change -0.212  band +-0.003258  ok
+         step 3: change -0.03638  band +-0.00132  ok
+      T gates at the slowest drive with F non-empty (eps = 0.1): |F|/N = 0.0029 -> T1 True ; dispersion 1.012 chi2 tail 0.291 flagged 0 -> T2 False
+      delivered-rule reading: FUNNEL_FOUND ; V2 OUTCOME: NOT_FOUND_IN_RANGE, `not start-selective` (dispersion 1.012, chi2 tail 0.291, flagged 0)
+      RULES_V2 prediction for SOMS: NOT_FOUND_IN_RANGE, `not start-selective` -> HELD
+
+What V2 changes here: the delivered rule's FUNNEL_FOUND falls to NOT_FOUND_IN_RANGE
+on the T2 gate alone -- the set at eps = 0.1 is thin (12 of 4096) and is NOT
+start-selective (dispersion 1.012, no configuration flagged), which is a
+binomial tail wearing a funnel's size. Rule N finds no violation anywhere
+(the sequence was genuinely monotone). The re-scoring prediction HELD.

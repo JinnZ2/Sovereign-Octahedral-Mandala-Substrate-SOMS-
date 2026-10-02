@@ -1,0 +1,27 @@
+{
+ "F": [
+  4096,
+  3163,
+  12,
+  0,
+  0
+ ],
+ "meanP": [
+  0.87431640625,
+  0.60517578125,
+  0.24863281250000002,
+  0.03662109375,
+  0.000244140625
+ ],
+ "gates": {
+  "share": 0.0029296875,
+  "T1": true,
+  "dispersion": 1.0118330133906284,
+  "chi2_tail": 0.29054613877028734,
+  "flagged": 0,
+  "T2": false,
+  "p": 0.2486328125
+ },
+ "outcome": "NOT_FOUND_IN_RANGE, `not start-selective` (dispersion 1.012, chi2 tail 0.291, flagged 0)",
+ "prediction_held": true
+}
