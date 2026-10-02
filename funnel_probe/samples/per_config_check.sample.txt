@@ -1,0 +1,9 @@
+per-configuration check, 20 seeds each, Bonferroni threshold 1.22e-05
+  eps     p_hat   flagged(Bonf)  flagged(0.05)  expected(0.05)  dispersion  chi2 tail   min P  max P
+  0.4     0.874               0            140             204       1.034     0.0623   0.55   1.00
+  0.2     0.605               0            160             204       1.023      0.143   0.15   0.95
+  0.1     0.249               0            157             204       1.012      0.291   0.00   0.55
+  0.05    0.037               0            142             204       0.988      0.694   0.00   0.25
+  0.025   0.000               0             20             204       0.995      0.576   0.00   0.05
+
+VERDICT: all configurations inside sampling error at every eps -> genuinely start-independent; P6 fails cleanly

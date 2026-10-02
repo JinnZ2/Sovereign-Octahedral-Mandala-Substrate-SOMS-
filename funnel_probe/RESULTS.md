@@ -35,6 +35,43 @@ goes 4096, 3163, 12, 0, 0 because a start-independent probability crosses
 0.5 between eps = 0.2 and 0.1, not because a thin set of starts survives;
 the 12 at eps = 0.1 are the upper tail of 4096 draws from Binomial(20, 0.25).
 
+## Per-configuration check (follow-on order, 2026-10-02)
+
+The quartile reading above averages 1024 starts per bin, which is exactly
+where a thin start set would vanish. The map is exhaustive, so the check is
+run per CONFIGURATION: each of the 4096 starts has 20 seeds, so its hit
+count is Binomial(20, p) if the start carries no information, with p the
+pooled rate at that eps. `per_config_check.py` scores every configuration
+with an exact two-sided binomial tail against the pooled p, flags a
+configuration when its tail is below 0.05/4096 (Bonferroni), and reports
+the dispersion ratio (variance across configs / binomial variance) with a
+chi-square tail. Output: `samples/per_config_check.sample.txt`,
+`samples/per_config_check.json`.
+
+    eps     p_hat   flagged(Bonf)  flagged(0.05)  expected(0.05)  dispersion  chi2 tail   min P  max P
+    0.4     0.874               0            140             204       1.034     0.0623   0.55   1.00
+    0.2     0.605               0            160             204       1.023      0.143   0.15   0.95
+    0.1     0.249               0            157             204       1.012      0.291   0.00   0.55
+    0.05    0.037               0            142             204       0.988      0.694   0.00   0.25
+    0.025   0.000               0             20             204       0.995      0.576   0.00   0.05
+
+Zero configurations flagged at Bonferroni at every eps; the uncorrected
+0.05 flags come in BELOW the 204 expected by chance; dispersion sits at 1.0
+with chi-square tails of 0.06 to 0.69. The per-configuration spread is the
+20-seed binomial noise and nothing else, at the finest resolution the
+exhaustive map allows.
+
+    VERDICT   all inside sampling error at every eps
+              -> genuinely start-independent; P6 fails cleanly
+              -> no thin structure hidden by the quartiles
+
+The 12 configurations in F at eps = 0.1 are the upper tail of 4096 draws
+from Binomial(20, 0.25): P(X >= 11) = 0.0094, expected count 4096 x 0.0094
+= 38, observed 12 (a deficit, not an excess). The one caveat is power: 20
+seeds per start resolves a per-config p that differs from the pool by about
+0.3 at Bonferroni; a start set whose P differed by less than that would
+not be flagged here and would need more seeds per start, not more starts.
+
 ## Outcome enum, two readings kept apart
 
     by the pre-registered rule   FUNNEL_FOUND (discrete analog)
